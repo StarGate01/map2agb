@@ -6,32 +6,39 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Windows;
 using map2agblib;
+using map2agblib.Map;
 
 namespace map2agbgui.Models
 {
     public class MapModel : INotifyPropertyChanged, IFormatable
     {
 
-        private string _name;
+        private MapHeader _mapHeader;
         
+        public MapHeader MapHeader
+        {
+            get
+            {
+                return _mapHeader;
+            }
+            set
+            {
+                _mapHeader = value;
+                RaisePropertyChanged("MapHeader");
+            }
+        }
+
         public string Name
         {
             get
             {
-                return _name;
-            }
-            set
-            {
-                _name = value;
-                RaisePropertyChanged("Name");
+                return Convert.ToString(_mapHeader.Name);
             }
         }
 
-        public MapModel() : this("NONAME") { }
-
-        public MapModel(string name)
+        public MapModel(MapHeader mapHeader)
         {
-            Name = name;
+            MapHeader = mapHeader;
         }
         public string FormatString
         {
