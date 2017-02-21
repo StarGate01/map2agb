@@ -5,8 +5,42 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:map2agbgui"
         mc:Ignorable="d"
-        Title="map2agb GUI" Height="600" Width="800" WindowStartupLocation="CenterScreen" WindowState="Maximized">
-    <Grid>
+        xmlns:model="clr-namespace:map2agbgui.Models"
+        Title="map2agb GUI" Height="600" Width="800" WindowStartupLocation="CenterScreen" WindowState="Maximized" Loaded="Window_Loaded">
+
+    <Window.Resources>
+        <Style TargetType="TreeViewItem" x:Key="BankStyle">
+            <Setter Property="Focusable" Value="False"/>
+        </Style>
+        <Style TargetType="TreeViewItem" x:Key="MapStyle">
+            <Setter Property="Focusable" Value="True"/>
+            <EventSetter Event="MouseDoubleClick" Handler="MapTreeViewElement_DoubleClick" />
+        </Style>
+        <HierarchicalDataTemplate x:Key="MapTemplate">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="3" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Image Height="Auto" Width="Auto" Source="Assets/Document_16x.png" Grid.Column="0" />
+                <TextBlock Grid.Column="2" Text="{Binding DisplayValue}" />
+            </Grid>
+        </HierarchicalDataTemplate>
+        <HierarchicalDataTemplate x:Key="BankTemplate" ItemsSource="{Binding Value.Maps}" ItemTemplate="{StaticResource MapTemplate}" ItemContainerStyle="{StaticResource MapStyle}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="3" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Image Height="Auto" Width="Auto" Source="Assets/Folder_16x.png" Grid.Column="0" />
+                <TextBlock Grid.Column="2" Text="{Binding DisplayValue}" />
+            </Grid>
+        </HierarchicalDataTemplate>
+    </Window.Resources>
+
+    <Grid d:DataContext="{d:DesignInstance Type=model:MainModel, IsDesignTimeCreatable=True}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -46,9 +80,14 @@
         </DockPanel>
         <DockPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3">
             <Menu DockPanel.Dock="Top" Padding="3">
-                <MenuItem>
+                <MenuItem ToolTip="Add map" x:Name="AddMapButton" Click="AddMapButton_Click">
                     <MenuItem.Header>
-                        <Image Width="40" Height="40" Source="assets/GitHub-Mark-120px-plus.png" Margin="3" />
+                        <Image Width="32" Height="32" Source="Assets/Create_32x.png" Margin="3" />
+                    </MenuItem.Header>
+                </MenuItem>
+                <MenuItem ToolTip="Blockeditor" x:Name="BlockeditorButton" Click="BlockeditorButton_Click">
+                    <MenuItem.Header>
+                        <Image Width="32" Height="32" Source="Assets/ConfigureComputer_32x.png" Margin="3" />
                     </MenuItem.Header>
                 </MenuItem>
             </Menu>
@@ -58,23 +97,7 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <TreeView Grid.Row="0">
-                <TreeViewItem Header="Foodings">
-                    <TreeViewItem Header="Jesper"/>
-                    <TreeViewItem Header="Aaberg"/>
-                    <TreeViewItem Header="12345"/>
-                </TreeViewItem>
-                <TreeViewItem Header="Bla Test">
-                    <TreeViewItem Header="zzzyyzzxcz"/>
-                    <TreeViewItem Header="Paiha"/>
-                    <TreeViewItem Header="Bla Tddest">
-                        <TreeViewItem Header="zzzyyzzxcz"/>
-                        <TreeViewItem Header="Paiha"/>
-                        <TreeViewItem Header="98765"/>
-                    </TreeViewItem>
-                    <TreeViewItem Header="98765"/>
-                </TreeViewItem>
-            </TreeView>
+            <TreeView x:Name="MapTreeView" Grid.Row="0" ItemsSource="{Binding Banks}" ItemTemplate="{StaticResource BankTemplate}" ItemContainerStyle="{StaticResource BankStyle}" />
             <StackPanel Grid.Row="1">
                 <Label Content="Name" />
             </StackPanel>
@@ -102,8 +125,8 @@
                     </Grid>
                     <GridSplitter Grid.Row="2" Grid.Column="1" Width="5" HorizontalAlignment="Center" />
                     <StackPanel Grid.Row="1" Grid.Column="2">
-                        <Label Grid.Row="0" Content="Auswahl" />
-                        <Label Grid.Row="1" Content="Blockliste" />
+                        <Label Grid.Row="0" Content="Foo" />
+                        <Label Grid.Row="1" Content="Bar" />
                     </StackPanel>
                 </Grid>
             </TabItem>
@@ -112,7 +135,7 @@
         
         <DockPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3">
             <Menu DockPanel.Dock="Bottom">
-                <Label Content="Statusanzeige" />
+                <Label Content="{Binding Status}" />
             </Menu>
         </DockPanel>
     </Grid>

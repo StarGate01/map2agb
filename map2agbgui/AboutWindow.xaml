@@ -19,7 +19,7 @@
         </Grid.ColumnDefinitions>
         <Label Content="map2agb GUI" Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" FontSize="18" />
         <Label Content="Version 1.0" Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center"></Label>
-        <Image Margin="5" Source="assets/GitHub-Mark-120px-plus.png" Grid.Row="2" Grid.Column="0" Width="50" Height="50" VerticalAlignment="Top" />
+        <Image Margin="5" Source="Assets/GitHub-Mark-120px-plus.png" Grid.Row="2" Grid.Column="0" Width="50" Height="50" VerticalAlignment="Top" />
         <StackPanel Grid.Column="1" Grid.Row="2">
             <TextBlock Padding="6">           
                 <Hyperlink NavigateUri="https://github.com/StarGate01/map2agb" RequestNavigate="Hyperlink_RequestNavigate">

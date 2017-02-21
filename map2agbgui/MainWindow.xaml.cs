@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using map2agbgui.Models;
 
 namespace map2agbgui
 {
@@ -28,5 +29,29 @@ namespace map2agbgui
             AboutWindow aboutWindow = new AboutWindow();
             aboutWindow.ShowDialog();
         }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            DataContext = App.MainViewModel;
+            //For Debugging mock
+            App.MainViewModel.PopulateDesignerData();
+            App.MainViewModel.Status = "Data loaded while runtime";
+        }
+
+        private void AddMapButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BlockeditorButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+        private void MapTreeViewElement_DoubleClick(object sender, RoutedEventArgs e)
+        {
+            NumericDisplayTuple<MapModel> selected = (NumericDisplayTuple<MapModel>)MapTreeView.SelectedItem;
+            MessageBox.Show(selected.Value.Name.ToString());
+        }
+
     }
 }
