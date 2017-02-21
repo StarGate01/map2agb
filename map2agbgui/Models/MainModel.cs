@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using map2agblib;
 using System.ComponentModel;
 using System.Windows;
+using map2agblib.Map;
+using map2agblib.String;
 
 namespace map2agbgui.Models
 {
@@ -57,7 +59,7 @@ namespace map2agbgui.Models
             Banks = new List<NumericDisplayTuple<BankModel>>()
             {
                 new NumericDisplayTuple<BankModel>(0, new BankModel(new List<NumericDisplayTuple<MapModel>>() {
-                    new NumericDisplayTuple<MapModel>(0, new MapModel("TESTMAP")),
+                    new NumericDisplayTuple<MapModel>(0, new MapModel("BLABLA")),
                     new NumericDisplayTuple<MapModel>(1, new MapModel("BLABLA")),
                     new NumericDisplayTuple<MapModel>(2, new MapModel("OKTEST"))
                 })),
