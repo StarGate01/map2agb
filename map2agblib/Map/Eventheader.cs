@@ -11,22 +11,35 @@ namespace map2agblib.Map
         #region Structures
         public struct Person
         {
-            //TODO: Implement
+            public byte Id, Picture, Field2, Field3;
+            public short X, Y;
+            public byte Height, Behaviour, Movement, IsTrainer, FieldD, AlertRadius;
+            public String Script;
+            public ushort Flag;
+            public byte Field16, Field17;
+
         }
 
         public struct Warp
         {
-            //TODO: Implement
+            public short X, Y;
+            public byte Height, TargetWarp, TargetMap, TargetBank;
         }
 
-        public struct Script
+        public struct Trigger
         {
-            //TODO: Implement
+            short X, Y;
+            byte Height, Field5;
+            ushort Var, Value;
+            byte FieldA, FieldB;
+            String Script;
         }
 
         public struct Sign
         {
-            //TODO: Implement
+            short X, Y;
+            byte Height, Type;
+            byte[] Data; //Usage depends on type, might be flag or script or whatever
         }
         #endregion
 
@@ -47,7 +60,7 @@ namespace map2agblib.Map
         /// <summary>
         /// Gets the list of Scripts on the Event Page
         /// </summary>
-        public List<Script> Scripts { get; private set; }
+        public List<Trigger> ScriptTriggers { get; private set; }
 
         /// <summary>
         /// Gets the list of Signs on the Event Page

@@ -45,7 +45,7 @@
     <Compile Include="Map\Eventheader.cs" />
     <Compile Include="Map\Mapfooter.cs" />
     <Compile Include="Map\Mapheader.cs" />
-    <Compile Include="Map\Scriptheader.cs" />
+    <Compile Include="Map\Mapscriptheader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tilesets\Tileset.cs" />
   </ItemGroup>

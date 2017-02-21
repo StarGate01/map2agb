@@ -22,7 +22,7 @@ namespace map2agblib.Map
         /// <summary>
         /// The ScriptHeader, containing information about OnEnter activated Scripts
         /// </summary>
-        public ScriptHeader LevelScripts { get; set; }
+        public MapScriptHeader MapScripts { get; set; }
 
         /// <summary>
         /// The ConnectionHeader, containing information about the physical connection between this map and others
