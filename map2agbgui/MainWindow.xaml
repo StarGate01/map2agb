@@ -14,18 +14,28 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition MinWidth="150" Width="Auto"/>
+            <ColumnDefinition MinWidth="150" Width="*"/>
             <ColumnDefinition Width="5" />
-            <ColumnDefinition MinWidth="600" Width="*" />
-            <ColumnDefinition Width="5" />
-            <ColumnDefinition MinWidth="150" Width="Auto"/>
+            <ColumnDefinition Width="6*" MinWidth="600"/>
         </Grid.ColumnDefinitions>
-        <DockPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="5">
+        <DockPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
             <Menu DockPanel.Dock="Top" Padding="3">
                 <MenuItem Header="_Project">
-                    <MenuItem Header="_Open"/>
-                    <MenuItem Header="_Save"/>
-                    <MenuItem Header="Save _As"/>
+                    <MenuItem Header="_Open">
+                        <MenuItem.Icon>
+                            <Image Source="assets/Open_16x.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="_Save">
+                        <MenuItem.Icon>
+                            <Image Source="assets/Save_16x.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Save _As">
+                        <MenuItem.Icon>
+                            <Image Source="assets/SaveAs_16x.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
                     <Separator HorizontalAlignment="Left" Width="120"/>
                     <MenuItem Header="_Exit"/>
                 </MenuItem>
@@ -34,7 +44,7 @@
                 </MenuItem>
             </Menu>
         </DockPanel>
-        <DockPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5">
+        <DockPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3">
             <Menu DockPanel.Dock="Top" Padding="3">
                 <MenuItem>
                     <MenuItem.Header>
@@ -72,19 +82,35 @@
         <GridSplitter Grid.Row="2" Grid.Column="1" Width="5" HorizontalAlignment="Center" />
         <TabControl Grid.Row="2" Grid.Column="2">
             <TabItem Header="Map">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="6*" MinWidth="400"/>
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="*" MinWidth="150"/>
+                    </Grid.ColumnDefinitions>
+                    <DockPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
+                        <Menu DockPanel.Dock="Top" Padding="3">
+                            <MenuItem Header="Bla" />
+                        </Menu>
+                    </DockPanel>
+                    <Grid Grid.Row="1" Grid.Column="0">
+                        
+                    </Grid>
+                    <GridSplitter Grid.Row="2" Grid.Column="1" Width="5" HorizontalAlignment="Center" />
+                    <StackPanel Grid.Row="1" Grid.Column="2">
+                        <Label Grid.Row="0" Content="Auswahl" />
+                        <Label Grid.Row="1" Content="Blockliste" />
+                    </StackPanel>
+                </Grid>
             </TabItem>
             <TabItem Header="Header" />
         </TabControl>
-        <GridSplitter Grid.Row="2" Grid.Column="3" Width="5" HorizontalAlignment="Center" />
-        <Grid Grid.Row="2" Grid.Column="4">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <Label Grid.Row="0" Content="Auswahl" />
-            <Label Grid.Row="1" Content="Blockliste" />
-        </Grid>
-        <DockPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="5">
+        
+        <DockPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3">
             <Menu DockPanel.Dock="Bottom">
                 <Label Content="Statusanzeige" />
             </Menu>

@@ -138,6 +138,15 @@
   <ItemGroup>
     <Resource Include="assets\GitHub-Mark-120px-plus.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="assets\SaveAs_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="assets\Save_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="assets\Open_16x.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
