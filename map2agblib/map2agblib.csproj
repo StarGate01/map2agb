@@ -40,14 +40,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
-    <Compile Include="Map\Connectionheader.cs" />
-    <Compile Include="Map\Eventheader.cs" />
-    <Compile Include="Map\Mapfooter.cs" />
-    <Compile Include="Map\Mapheader.cs" />
-    <Compile Include="Map\Mapscriptheader.cs" />
+    <Compile Include="Map\ConnectionHeader.cs" />
+    <Compile Include="Map\EventHeader.cs" />
+    <Compile Include="Map\MapFooter.cs" />
+    <Compile Include="Map\MapHeader.cs" />
+    <Compile Include="Map\MapScriptHeader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="String\PokeString.cs" />
     <Compile Include="Tilesets\Tileset.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
