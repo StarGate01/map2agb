@@ -10,23 +10,24 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Diagnostics;
+using System.Windows.Navigation;
 
 namespace map2agbgui
 {
- 
-    public partial class MainWindow : Window
+
+    public partial class AboutWindow : Window
     {
-        public MainWindow()
+        public AboutWindow()
         {
             InitializeComponent();
         }
 
-        private void AboutMenuButton_Click(object sender, RoutedEventArgs e)
+        private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
         {
-            AboutWindow aboutWindow = new AboutWindow();
-            aboutWindow.ShowDialog();
+            Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
+            e.Handled = true;
         }
     }
 }

@@ -5,8 +5,89 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:map2agbgui"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="map2agb GUI" Height="600" Width="800" WindowStartupLocation="CenterScreen" WindowState="Maximized">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition MinWidth="150" Width="Auto"/>
+            <ColumnDefinition Width="5" />
+            <ColumnDefinition MinWidth="600" Width="*" />
+            <ColumnDefinition Width="5" />
+            <ColumnDefinition MinWidth="150" Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <DockPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="5">
+            <Menu DockPanel.Dock="Top" Padding="3">
+                <MenuItem Header="_Project">
+                    <MenuItem Header="_Open"/>
+                    <MenuItem Header="_Save"/>
+                    <MenuItem Header="Save _As"/>
+                    <Separator HorizontalAlignment="Left" Width="120"/>
+                    <MenuItem Header="_Exit"/>
+                </MenuItem>
+                <MenuItem Header="_Help">
+                    <MenuItem x:Name="AboutMenuButton" Header="_About" Click="AboutMenuButton_Click"/>
+                </MenuItem>
+            </Menu>
+        </DockPanel>
+        <DockPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5">
+            <Menu DockPanel.Dock="Top" Padding="3">
+                <MenuItem>
+                    <MenuItem.Header>
+                        <Image Width="40" Height="40" Source="assets/GitHub-Mark-120px-plus.png" Margin="3" />
+                    </MenuItem.Header>
+                </MenuItem>
+            </Menu>
+        </DockPanel>
+        <Grid Grid.Column="0" Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <TreeView Grid.Row="0">
+                <TreeViewItem Header="Foodings">
+                    <TreeViewItem Header="Jesper"/>
+                    <TreeViewItem Header="Aaberg"/>
+                    <TreeViewItem Header="12345"/>
+                </TreeViewItem>
+                <TreeViewItem Header="Bla Test">
+                    <TreeViewItem Header="zzzyyzzxcz"/>
+                    <TreeViewItem Header="Paiha"/>
+                    <TreeViewItem Header="Bla Tddest">
+                        <TreeViewItem Header="zzzyyzzxcz"/>
+                        <TreeViewItem Header="Paiha"/>
+                        <TreeViewItem Header="98765"/>
+                    </TreeViewItem>
+                    <TreeViewItem Header="98765"/>
+                </TreeViewItem>
+            </TreeView>
+            <StackPanel Grid.Row="1">
+                <Label Content="Name" />
+            </StackPanel>
+        </Grid>
+        <GridSplitter Grid.Row="2" Grid.Column="1" Width="5" HorizontalAlignment="Center" />
+        <TabControl Grid.Row="2" Grid.Column="2">
+            <TabItem Header="Map">
+            </TabItem>
+            <TabItem Header="Header" />
+        </TabControl>
+        <GridSplitter Grid.Row="2" Grid.Column="3" Width="5" HorizontalAlignment="Center" />
+        <Grid Grid.Row="2" Grid.Column="4">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" Content="Auswahl" />
+            <Label Grid.Row="1" Content="Blockliste" />
+        </Grid>
+        <DockPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="5">
+            <Menu DockPanel.Dock="Bottom">
+                <Label Content="Statusanzeige" />
+            </Menu>
+        </DockPanel>
     </Grid>
 </Window>
