@@ -40,7 +40,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Color\Color.cs" />
+    <Compile Include="Color\Palette.cs" />
     <Compile Include="Data\MapNameTable.cs" />
+    <Compile Include="Map\Connection.cs" />
     <Compile Include="Map\ConnectionHeader.cs" />
     <Compile Include="Map\EventHeader.cs" />
     <Compile Include="Map\Event\EventEntitySign.cs" />
@@ -52,6 +55,8 @@
     <Compile Include="Map\MapHeader.cs" />
     <Compile Include="Map\MapScriptHeader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tilesets\BlockTileMap.cs" />
+    <Compile Include="Tilesets\BlockBehaviour.cs" />
     <Compile Include="Tilesets\Tileset.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
