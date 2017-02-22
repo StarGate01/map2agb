@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\MapNameTable.cs" />
     <Compile Include="Map\ConnectionHeader.cs" />
     <Compile Include="Map\EventHeader.cs" />
     <Compile Include="Map\Event\EventEntitySign.cs" />
