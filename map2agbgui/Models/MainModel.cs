@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using map2agblib;
 using System.ComponentModel;
 using System.Windows;
+using map2agblib.Data;
 using map2agblib.Map;
 
 namespace map2agbgui.Models
@@ -13,12 +14,30 @@ namespace map2agbgui.Models
     public class MainModel : INotifyPropertyChanged
     {
 
+        private RomData _data;
+        public RomData Data
+        {
+            get
+            {
+                return _data;
+            }
+            set
+            {
+                _data = value;
+                RaisePropertyChanged("Data");
+                RaisePropertyChanged("Banks");
+            }
+        }
+
+
         private List<NumericDisplayTuple<BankModel>> _banks;
         public List<NumericDisplayTuple<BankModel>> Banks
         {
             get
             {
-                return _banks;
+                return _data.Banks.Select((p, pi) => 
+                    new NumericDisplayTuple<BankModel>(pi, new BankModel(p.Select((k, ki) =>
+                        new NumericDisplayTuple<IMapModel>(ki, ((k != null)? (IMapModel)(new MapModel(k, _data)): (new NullpointerMapModel())))).ToList()))).ToList();
             }
             set
             {
@@ -43,32 +62,24 @@ namespace map2agbgui.Models
 
         public MainModel()
         {
+            _data = new RomData();
 #if DEBUG
             if ((bool)(DesignerProperties.IsInDesignModeProperty.GetMetadata(typeof(DependencyObject)).DefaultValue))
             {
                 PopulateDesignerData();
-                return;
             }
 #endif
-            _banks = new List<NumericDisplayTuple<BankModel>>();
         }
 
+        public MainModel(RomData romData)
+        {
+            _data = romData;
+        }
+        
         public void PopulateDesignerData()
         {
-            Banks = new List<NumericDisplayTuple<BankModel>>();
-            /*{
-                new NumericDisplayTuple<BankModel>(0, new BankModel(new List<NumericDisplayTuple<MapModel>>() {
-                    new NumericDisplayTuple<MapModel>(0, new MapModel("BLABLA")),
-                    new NumericDisplayTuple<MapModel>(1, new MapModel("BLABLA")),
-                    new NumericDisplayTuple<MapModel>(2, new MapModel("OKTEST"))
-                })),
-                new NumericDisplayTuple<BankModel>(1, new BankModel(new List<NumericDisplayTuple<MapModel>>() {
-                    new NumericDisplayTuple<MapModel>(0, new MapModel("DEINMUM")),
-                    new NumericDisplayTuple< MapModel>(1, new MapModel("NOCHNTEST")),
-                    new NumericDisplayTuple<MapModel>(2, new MapModel("ALLESKLAR"))
-                }))
-            };*/
-            Status = "Data loaded";
+            _data.Banks.Add(new List<MapHeader>() { new MapHeader(), null, new MapHeader(), new MapHeader() });
+            _data.Banks.Add(new List<MapHeader>() { new MapHeader(), new MapHeader(), new MapHeader(), null });
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

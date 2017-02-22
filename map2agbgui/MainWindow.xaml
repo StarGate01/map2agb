@@ -11,6 +11,7 @@
     <Window.Resources>
         <Style TargetType="TreeViewItem" x:Key="BankStyle">
             <Setter Property="Focusable" Value="False"/>
+            <Setter Property="IsExpanded" Value="True" />
         </Style>
         <Style TargetType="TreeViewItem" x:Key="MapStyle">
             <Setter Property="Focusable" Value="True"/>
@@ -23,7 +24,7 @@
                     <ColumnDefinition Width="3" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Image Height="Auto" Width="Auto" Source="Assets/Document_16x.png" Grid.Column="0" />
+                <Image Height="Auto" Width="Auto" Source="{Binding Value.IconPath}" Grid.Column="0" />
                 <TextBlock Grid.Column="2" Text="{Binding DisplayValue}" />
             </Grid>
         </HierarchicalDataTemplate>

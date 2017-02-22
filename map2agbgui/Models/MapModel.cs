@@ -7,14 +7,16 @@ using System.ComponentModel;
 using System.Windows;
 using map2agblib;
 using map2agblib.Map;
+using map2agblib.Data;
 
 namespace map2agbgui.Models
 {
-    public class MapModel : INotifyPropertyChanged, IFormatable
+    public class MapModel : IMapModel, INotifyPropertyChanged
     {
 
+        private RomData _dataRef;
+
         private MapHeader _mapHeader;
-        
         public MapHeader MapHeader
         {
             get
@@ -32,19 +34,51 @@ namespace map2agbgui.Models
         {
             get
             {
-                return Convert.ToString(_mapHeader.Name);
+                return _dataRef.NameTable[_mapHeader.Name];
             }
         }
 
-        public MapModel(MapHeader mapHeader)
+        private int _nameID;
+        public int NameID
+        {
+            get
+            {
+                return _nameID;
+            }
+            set
+            {
+                _nameID = value;
+                RaisePropertyChanged("NameID");
+                RaisePropertyChanged("Name");
+            }
+        }
+
+        public MapModel(MapHeader mapHeader, RomData dataRef)
         {
             MapHeader = mapHeader;
+            _dataRef = dataRef;
         }
         public string FormatString
         {
             get
             {
                 return "{1} {0}";
+            }
+        }
+
+        public MapEntryType Mode
+        {
+            get
+            {
+                return MapEntryType.Map;
+            }
+        }
+
+        public Uri IconPath
+        {
+            get
+            {
+                return new Uri(@"/Assets/Document_16x.png", UriKind.Relative);
             }
         }
 
@@ -65,4 +99,5 @@ namespace map2agbgui.Models
         }
 
     }
+
 }

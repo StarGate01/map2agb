@@ -92,9 +92,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\BankModel.cs" />
-    <Compile Include="Models\IFormatable.cs" />
+    <Compile Include="Models\ITupelFormattable.cs" />
+    <Compile Include="Models\IMapModel.cs" />
     <Compile Include="Models\MainModel.cs" />
     <Compile Include="Models\MapModel.cs" />
+    <Compile Include="Models\NullpointerMapModel.cs" />
     <Compile Include="Models\NumericDisplayTuple.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -163,6 +165,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\Create_32x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\None_16x.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

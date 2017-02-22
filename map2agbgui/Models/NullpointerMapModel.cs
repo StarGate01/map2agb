@@ -4,39 +4,41 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
-using System.Windows;
 
 namespace map2agbgui.Models
 {
-
-    public class BankModel : INotifyPropertyChanged, ITupelFormattable
+    public class NullpointerMapModel : IMapModel, INotifyPropertyChanged
     {
 
-        private List<NumericDisplayTuple<IMapModel>> _maps;
+        public NullpointerMapModel() { }
 
-        public List<NumericDisplayTuple<IMapModel>> Maps
-        {
-            get
-            {
-                return _maps;
-            }
-            set
-            {
-                _maps = value;
-                RaisePropertyChanged("Maps");
-            }
-        }
         public string FormatString
         {
             get
             {
-                return "Bank {0}";
+                return ToString();
             }
         }
 
-        public BankModel(List<NumericDisplayTuple<IMapModel>> maps)
+        public MapEntryType Mode
         {
-            Maps = maps;
+            get
+            {
+                return MapEntryType.Nullpointer;
+            }
+        }
+
+        public Uri IconPath
+        {
+            get
+            {
+                return new Uri(@"/Assets/None_16x.png", UriKind.Relative);
+            }
+        }
+
+        public override string ToString()
+        {
+            return "Nullpointer";
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -44,9 +46,9 @@ namespace map2agbgui.Models
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        public BankModel GetCopy()
+        public NullpointerMapModel GetCopy()
         {
-            BankModel copy = (BankModel)this.MemberwiseClone();
+            NullpointerMapModel copy = (NullpointerMapModel)this.MemberwiseClone();
             return copy;
         }
 

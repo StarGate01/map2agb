@@ -67,7 +67,7 @@ namespace map2agblib.Map
         /// </summary>
         public MapFooter()
         {
-            throw new NotImplementedException();
+
         }
         #endregion
     }

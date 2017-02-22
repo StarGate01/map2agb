@@ -43,6 +43,7 @@
     <Compile Include="Color\Color.cs" />
     <Compile Include="Color\Palette.cs" />
     <Compile Include="Data\MapNameTable.cs" />
+    <Compile Include="Data\RomData.cs" />
     <Compile Include="Map\Connection.cs" />
     <Compile Include="Map\ConnectionHeader.cs" />
     <Compile Include="Map\EventHeader.cs" />

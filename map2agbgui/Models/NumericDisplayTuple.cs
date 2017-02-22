@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace map2agbgui.Models
 {
-    public class NumericDisplayTuple<T> where T : IFormatable
+    public class NumericDisplayTuple<T> where T : ITupelFormattable
     {
 
         private int _index;
