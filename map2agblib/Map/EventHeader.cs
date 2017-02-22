@@ -39,16 +39,12 @@ namespace map2agblib.Map
         /// <summary>
         /// Initializes a new instance of the EventHeader class
         /// </summary>
-        /// <param name="personCount">Initial capacity of NPCs</param>
-        /// <param name="warpCount">Initial capacity of Warps</param>
-        /// <param name="triggerCount">Initial capacity of Triggers</param>
-        /// <param name="signCount">Initial capacity of Signs</param>
-        public EventHeader(int personCount, int warpCount, int triggerCount, int signCount)
+        public EventHeader()
         {
-            Persons = new List<EventEntityPerson>(personCount);
-            Warps = new List<EventEntityWarp>(warpCount);
-            ScriptTriggers = new List<EventEntityTrigger>(triggerCount);
-            Signs = new List<EventEntitySign>(signCount);
+            Persons = new List<EventEntityPerson>();
+            Warps = new List<EventEntityWarp>();
+            ScriptTriggers = new List<EventEntityTrigger>();
+            Signs = new List<EventEntitySign>();
         }
         #endregion
     }

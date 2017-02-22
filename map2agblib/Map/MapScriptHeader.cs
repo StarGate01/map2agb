@@ -32,7 +32,7 @@ namespace map2agblib.Map
         #region Constructor
         public MapScriptHeader()
         {
-            throw new NotImplementedException();
+           
         }
         #endregion
 

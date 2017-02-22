@@ -83,7 +83,10 @@ namespace map2agblib.Map
         /// </summary>
         public MapHeader()
         {
-            throw new NotImplementedException();
+            Footer = new MapFooter();
+            Events = new EventHeader();
+            MapScripts = new MapScriptHeader();
+            Connections = new ConnectionHeader();
         }
 
         #endregion

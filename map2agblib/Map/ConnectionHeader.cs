@@ -20,10 +20,9 @@ namespace map2agblib.Map
         /// <summary>
         /// Creates a new ConnectionHeader object with initial connection capacity of count
         /// </summary>
-        /// <param name="count">Initial capacity of the Connections List</param>
-        public ConnectionHeader(int count)
+        public ConnectionHeader()
         {
-            Connections = new List<Connection>(count);
+            Connections = new List<Connection>();
         }
         #endregion
     }
