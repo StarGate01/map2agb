@@ -39,7 +39,7 @@ namespace map2agblib.Map
         {
             short X, Y;
             byte Height, Type;
-            byte[] Data; //Usage depends on type, might be flag or script or whatever
+            byte[] Data; //Usage depends on type, might be flag or script or whatever TODO: interface
         }
         #endregion
 

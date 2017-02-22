@@ -10,7 +10,7 @@ namespace map2agblib.Map
     {
 
         #region Enums
-        public enum MapScriptTypes { None, AtBlockDeltaSync, AfterStepOrEnter, BeforeSetup, AfterEventSync, Type5, Type6, Type7};
+        public enum MapScriptTypes { None, OnBlockDeltaSync, AfterStepOrEnter, BeforeSetup, AfterEventSync, Type5, Type6, Type7};
         #endregion
 
         #region Structures

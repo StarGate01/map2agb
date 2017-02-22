@@ -16,9 +16,9 @@ namespace map2agblib.Map
         #region Structures
         public struct Connection
         {
-            ConnectionDirection direction;
-            uint displacement;
-            byte bank, map, FieldA, FieldB;
+            ConnectionDirection Direction;
+            uint Displacement;
+            byte Bank, Map, FieldA, FieldB;
         }
         #endregion
 
