@@ -49,8 +49,11 @@ namespace map2agbgui
         }
         private void MapTreeViewElement_DoubleClick(object sender, RoutedEventArgs e)
         {
-            NumericDisplayTuple<MapModel> selected = (NumericDisplayTuple<MapModel>)MapTreeView.SelectedItem;
-            MessageBox.Show(selected.Value.Name.ToString());
+            NumericDisplayTuple<IMapModel> selected = (NumericDisplayTuple<IMapModel>)MapTreeView.SelectedItem;
+            if (selected.Value.Mode == MapEntryType.Map)
+            {
+                MessageBox.Show(((MapModel)selected.Value).Name.ToString());
+            }
         }
 
     }
