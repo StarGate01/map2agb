@@ -42,6 +42,11 @@
   <ItemGroup>
     <Compile Include="Map\ConnectionHeader.cs" />
     <Compile Include="Map\EventHeader.cs" />
+    <Compile Include="Map\Event\EventEntitySign.cs" />
+    <Compile Include="Map\Event\EventEntityTrigger.cs" />
+    <Compile Include="Map\Event\IEventEntity.cs" />
+    <Compile Include="Map\Event\EventEntityPerson.cs" />
+    <Compile Include="Map\Event\EventEntityWarp.cs" />
     <Compile Include="Map\MapFooter.cs" />
     <Compile Include="Map\MapHeader.cs" />
     <Compile Include="Map\MapScriptHeader.cs" />
