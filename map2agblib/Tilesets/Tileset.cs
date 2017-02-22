@@ -1,10 +1,18 @@
-﻿namespace map2agblib.Tilesets
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace map2agblib.Tilesets
 {
     /// <summary>
     /// Represents a tileset that is referenced by a map
     /// </summary>
     public class Tileset
     {
+        const int MAX_SECOND_TILESET_SIZE = 0x180;
+        const int MAX_FIRST_TILESET_SIZE = 0x280;
+        const int MAX_PALETTES = 6;
+
         #region Properties
 
         /// <summary>
@@ -30,31 +38,44 @@
         /// <summary>
         /// Reference to a compiled (and maybe compressed) .png 4 4bpp tileset graphic
         /// </summary>
-        public String Graphic { get; set; }
+        public string Graphic { get; set; }
 
         /// <summary>
         /// Reference to an array of 6 Palettes (with 16 colors each)
         /// </summary>
-        public Color.Palette[] P { get; set; }
+        public Color.Palette[] Palettes { get; set; }
 
         /// <summary>
         /// Reference to a list of blocks (tilemaps as well as behaviors)
         /// </summary>
-        public List<Tuple<BlockTileMap, BlockBehaviour>> Blocks { private set; get; }
+        public Tuple<BlockTileMap, BlockBehaviour>[] Blocks { private set; get; }
 
         /// <summary>
         /// Refers to a label or offset of the animation init function
         /// </summary>
-        public String AnimationInitFunction { set; get; }
+        public string AnimationInitFunction { set; get; }
 
 
 
         #endregion
 
         #region Constructor
-        public Tileset()
+
+        /// <summary>
+        /// Creates a new Tileset with the default Array sizes and given parameters
+        /// </summary>
+        /// <param name="isSecondary">true: the tileset is classified as secondary and has less blocks</param>
+        /// <param name="compressed">true: the tileset will be compiled with the -gzl flag on grit</param>
+        public Tileset(bool isSecondary, bool compressed)
         {
-            //todo
+            Compressed = compressed;
+            Secondary = isSecondary;
+
+            Blocks = Secondary ? new Tuple<BlockTileMap, BlockBehaviour>[MAX_SECOND_TILESET_SIZE] : new Tuple<BlockTileMap, BlockBehaviour>[MAX_FIRST_TILESET_SIZE];
+            Palettes = Enumerable.Repeat(new Color.Palette(), MAX_PALETTES).ToArray();
+
+            Graphic = string.Empty;
+            AnimationInitFunction = string.Empty;
         }
         #endregion
 
