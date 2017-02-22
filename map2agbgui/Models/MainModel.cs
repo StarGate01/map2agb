@@ -7,7 +7,6 @@ using map2agblib;
 using System.ComponentModel;
 using System.Windows;
 using map2agblib.Map;
-using map2agblib.String;
 
 namespace map2agbgui.Models
 {
