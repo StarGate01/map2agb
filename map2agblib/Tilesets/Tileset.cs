@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace map2agblib.Tilesets
+﻿namespace map2agblib.Tilesets
 {
     /// <summary>
     /// Represents a tileset that is referenced by a map
