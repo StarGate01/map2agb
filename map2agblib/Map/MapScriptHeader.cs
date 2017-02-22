@@ -17,7 +17,7 @@ namespace map2agblib.Map
         public struct MapScript
         {
             public MapScriptTypes Type;
-            public string MapScriptData; //Todo - interface for different MapScript Data Structures
+            public string MapScriptData;
         }
         #endregion
 

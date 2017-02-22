@@ -8,32 +8,22 @@ namespace map2agblib.Map
 {
     public class ConnectionHeader
     {
-
-        #region Enums
-        public enum ConnectionDirection { None, South, North, West, East, Dive, ReturnFromDive };
-        #endregion
-
-        #region Structures
-        public struct Connection
-        {
-            ConnectionDirection Direction;
-            uint Displacement;
-            byte Bank, Map, FieldA, FieldB;
-        }
-        #endregion
-
-
         #region Properties
         /// <summary>
-        /// All connected Maps
+        /// Gets the List of Maps stored in this ConnectionHeader
         /// </summary>
         public List<Connection> Connections { get; private set; }
         #endregion
 
         #region Constructor
-        public ConnectionHeader()
+
+        /// <summary>
+        /// Creates a new ConnectionHeader object with initial connection capacity of count
+        /// </summary>
+        /// <param name="count">Initial capacity of the Connections List</param>
+        public ConnectionHeader(int count)
         {
-            throw new NotImplementedException();
+            Connections = new List<Connection>(count);
         }
         #endregion
     }
