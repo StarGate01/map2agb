@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace map2agbgui.Models
 {
-    public interface IFormatable
+    public interface ITupelFormattable
     {
         string FormatString { get; }
     
