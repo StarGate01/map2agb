@@ -1,0 +1,22 @@
+some objects use a structure which can be easily realized in an enumerable structure, enum.
+Though, for the sake of expandability we might want to take another aproach: load the enumeration names from the project structure.
+e.g.: The user reworks how a signpost works, he adds more types to it or changes how the old ones work.
+
+The project is created with a structure that looks like (and defaults to) this
+(again taking signs for the sake of ease, also the format changes to xml or whatever serialization we want to use.):
+Type 0: Name: "Script" Layout: "Script"
+Type 1: Name: "Script from Side X" Layout: "Script"
+...
+Type 5 Name "Hidden Item_0" Layout: "Item"
+
+A similar aproach might be taken considering connections and, very important: limiting constants (for example MAX_NAMES, MAX_CHARS in MapNameTable)
+
+Getting rid of enumerations might also help with localization. The structures our project wizard (or whatever it will be called) creates can be in different languages.
+
+Pros:
+- Expandability
+- Localization
+- Adaptability
+
+Cons:
+- Loss of coding comfort (C# ENUM)
