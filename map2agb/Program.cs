@@ -15,7 +15,7 @@ namespace map2agb
         {
             /* some test code to serialize a bunch of maps */
             XmlSerializer serializer = new XmlSerializer(typeof(MapHeader));
-            MapHeader header = new MapHeader();
+            MapHeader header = new MapHeader(20,24,2,2);
             header.Weather = 5;
             header.Name = 42;
             header.Music = 0x12;

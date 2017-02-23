@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Xml.Serialization;
+using map2agblib.Imaging;
 
 namespace map2agblib.Tilesets
 {
@@ -43,13 +44,14 @@ namespace map2agblib.Tilesets
         /// <summary>
         /// Reference to an array of 6 Palettes (with 16 colors each)
         /// </summary>
-        public Color.Palette[] Palettes { get; set; }
+        public Palette[] Palettes { get; set; }
 
         /// <summary>
         /// Reference to a list of blocks (tilemaps as well as behaviors)
         /// </summary>
-        [XmlIgnore]
-        public Tuple<BlockTileMap, BlockBehaviour>[] Blocks { private set; get; }
+        public TilesetEntry[] Blocks { get; set; }
+
+        
 
         /// <summary>
         /// Refers to a label or offset of the animation init function
@@ -72,8 +74,8 @@ namespace map2agblib.Tilesets
             Compressed = compressed;
             Secondary = isSecondary;
 
-            Blocks = Secondary ? new Tuple<BlockTileMap, BlockBehaviour>[MAX_SECOND_TILESET_SIZE] : new Tuple<BlockTileMap, BlockBehaviour>[MAX_FIRST_TILESET_SIZE];
-            Palettes = Enumerable.Repeat(new Color.Palette(), MAX_PALETTES).ToArray();
+            Blocks = Secondary ? new TilesetEntry[MAX_SECOND_TILESET_SIZE] : new TilesetEntry[MAX_FIRST_TILESET_SIZE];
+            Palettes = Enumerable.Repeat(new Palette(), MAX_PALETTES).ToArray();
 
             Graphic = string.Empty;
             AnimationInitFunction = string.Empty;
