@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace map2agbgui.Models.Main
 {
-    public class NumericDisplayTuple<T> : INotifyPropertyChanged where T : ITupleFormattable
+    public class NumericDisplayTuple<T> : INotifyPropertyChanged where T : ITupleFormattable, INotifyPropertyChanged
     {
 
         #region Properties
@@ -38,6 +38,7 @@ namespace map2agbgui.Models.Main
             set
             {
                 _value = value;
+                _value.PropertyChanged += Value_PropertyChanged;
                 RaisePropertyChanged("Value");
                 RaisePropertyChanged("DisplayValue");
             }
@@ -59,6 +60,17 @@ namespace map2agbgui.Models.Main
         {
             Index = index;
             Value = value;
+            value.PropertyChanged += Value_PropertyChanged;
+        }
+
+        #endregion
+
+        #region Events
+
+        private void Value_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            RaisePropertyChanged("Value");
+            RaisePropertyChanged("DisplayValue");
         }
 
         #endregion

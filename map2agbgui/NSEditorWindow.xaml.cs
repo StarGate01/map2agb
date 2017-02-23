@@ -32,6 +32,7 @@ namespace map2agbgui
         private void Window_SourceInitialized(object sender, EventArgs e)
         {
             WindowMods.RemoveMaximizeBox(this);
+            WindowMods.RemoveMinimizeBox(this);
             WindowMods.RemoveIcon(this);
         }
 

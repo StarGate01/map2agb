@@ -67,13 +67,14 @@ namespace map2agbgui.Models.Main
         {
             if (!(bool)(DesignerProperties.IsInDesignModeProperty.GetMetadata(typeof(DependencyObject)).DefaultValue))
                 throw new InvalidOperationException("MainModel can only be constructed without parameters by the designer");
+            Banks.First().Value.Maps.First().Value.IsSelected = true;
         }
 
         public MainModel(RomData romData)
         {
             _NSEditorDataModel = new NSEditorModel(romData.NameTable.Names);
             _NSEditorDataModel.Names.ListChanged += NSEditor_Names_ListChanged;
-            _banks = new BindingList<NumericDisplayTuple<BankModel>>(romData.Banks.Select((p, pi) => new NumericDisplayTuple<BankModel>(pi, new BankModel(p))).ToList());
+            _banks = new BindingList<NumericDisplayTuple<BankModel>>(romData.Banks.Select((p, pi) => new NumericDisplayTuple<BankModel>(pi, new BankModel(p, this))).ToList());
         }
 
         #endregion

@@ -26,6 +26,7 @@ namespace map2agbgui.Native
 
         private const int GWL_STYLE = -16;
         private const int WS_MAXIMIZEBOX = 0x10000;
+        private const int WS_MINIMIZEBOX = 0x20000;
         private const int GWL_EXSTYLE = -20;
         private const int WS_EX_DLGMODALFRAME = 0x0001;
 
@@ -42,6 +43,17 @@ namespace map2agbgui.Native
             var hwnd = new WindowInteropHelper(target).Handle;
             var extendedStyle = GetWindowLong(hwnd, GWL_STYLE);
             SetWindowLong(hwnd, GWL_STYLE, extendedStyle & ~WS_MAXIMIZEBOX);
+        }
+
+        /// <summary>
+        /// Removes the minimize box of a window
+        /// </summary>
+        /// <param name="target">The target window</param>
+        public static void RemoveMinimizeBox(Window target)
+        {
+            var hwnd = new WindowInteropHelper(target).Handle;
+            var extendedStyle = GetWindowLong(hwnd, GWL_STYLE);
+            SetWindowLong(hwnd, GWL_STYLE, extendedStyle & ~WS_MINIMIZEBOX);
         }
 
         /// <summary>

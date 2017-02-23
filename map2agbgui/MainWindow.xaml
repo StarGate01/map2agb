@@ -11,16 +11,16 @@
         Title="map2agb GUI" Height="600" Width="800" WindowStartupLocation="CenterScreen" WindowState="Maximized" Loaded="Window_Loaded" MinWidth="800" MinHeight="600">
 
     <Window.Resources>
-        <model:TreeViewSeletedItemToBooleanConverter x:Key="treeViewSeletedItemToBooleanConverter" />
-        <model:TreeViewSeletedItemToMapConverter x:Key="treeViewSeletedItemToMapConverter" />
+        <model:TreeViewSelectedItemToBooleanConverter x:Key="treeViewSelectedItemToBooleanConverter" />
+        <model:TreeViewSelectedItemToMapConverter x:Key="treeViewSelectedItemToMapConverter" />
         <model:MapEntryTypeToFontStyleConverter x:Key="mapEntryTypeToFontStyleConverter" />
-        <c:ValueConverterGroup x:Key="treeViewSeletedItemToVisibilityConverter">
-            <model:TreeViewSeletedItemToMapConverter/>
+        <c:ValueConverterGroup x:Key="treeViewSelectedItemToVisibilityConverter">
+            <model:TreeViewSelectedItemToMapConverter/>
             <c:NullToBooleanConverter />
             <BooleanToVisibilityConverter/>
         </c:ValueConverterGroup>
-        <c:ValueConverterGroup x:Key="treeViewSeletedItemToNonVisibilityConverter">
-            <model:TreeViewSeletedItemToMapConverter/>
+        <c:ValueConverterGroup x:Key="treeViewSelectedItemToNonVisibilityConverter">
+            <model:TreeViewSelectedItemToMapConverter/>
             <c:NullToBooleanConverter />
             <c:InverseBooleanConverter />
             <BooleanToVisibilityConverter/>
@@ -118,7 +118,7 @@
                         <Image Width="32" Height="32" Source="Assets/Create_32x.png" Margin="3" />
                     </MenuItem.Header>
                 </MenuItem>
-                <MenuItem ToolTip="Remove map" x:Name="RemoveMapButton" Click="RemoveMapButton_Click" IsEnabled="{Binding ElementName=MapTreeView, Path=SelectedItem, Converter={StaticResource treeViewSeletedItemToBooleanConverter}}">
+                <MenuItem ToolTip="Remove map" x:Name="RemoveMapButton" Click="RemoveMapButton_Click" IsEnabled="{Binding ElementName=MapTreeView, Path=SelectedItem, Converter={StaticResource treeViewSelectedItemToBooleanConverter}}">
                     <MenuItem.Header>
                         <Image Width="32" Height="32" Source="Assets/CloseDocument_32x.png" Margin="3" />
                     </MenuItem.Header>
@@ -147,9 +147,9 @@
             </StackPanel>
         </Grid>
         <GridSplitter Grid.Row="2" Grid.Column="1" Width="5" HorizontalAlignment="Center" />
-        
-        <controls:MapTabControl Grid.Column="2" Grid.Row="2" Visibility="{Binding ElementName=MapTreeView, Path=SelectedItem, Converter={StaticResource treeViewSeletedItemToVisibilityConverter}}" DataContext="{Binding ElementName=MapTreeView, Path=SelectedItem, Converter={StaticResource treeViewSeletedItemToMapConverter}}" />
-        <Grid Grid.Column="2" Grid.Row="2" Visibility="{Binding ElementName=MapTreeView, Path=SelectedItem, Converter={StaticResource treeViewSeletedItemToNonVisibilityConverter}}">
+
+        <controls:MapTabControl Grid.Column="2" Grid.Row="2" Visibility="{Binding ElementName=MapTreeView, Path=SelectedItem, Converter={StaticResource treeViewSelectedItemToVisibilityConverter}}" DataContext="{Binding ElementName=MapTreeView, Path=SelectedItem, Converter={StaticResource treeViewSelectedItemToMapConverter}}" />
+        <Grid Grid.Column="2" Grid.Row="2" Visibility="{Binding ElementName=MapTreeView, Path=SelectedItem, Converter={StaticResource treeViewSelectedItemToNonVisibilityConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />

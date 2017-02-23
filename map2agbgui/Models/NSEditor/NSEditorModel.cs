@@ -38,6 +38,12 @@ namespace map2agbgui.Models.NSEditor
             _names = new BindingList<NameEntryModel>(names.Select((p, pi) => new NameEntryModel(pi, p)).ToList());
         }
 
+        public NSEditorModel() : this((MockData.MockRomData()).NameTable.Names)
+        {
+            if (!(bool)(DesignerProperties.IsInDesignModeProperty.GetMetadata(typeof(DependencyObject)).DefaultValue))
+                throw new InvalidOperationException("NSEditorModel can only be constructed without parameters by the designer");
+        }
+
         #endregion
 
         #region Methods

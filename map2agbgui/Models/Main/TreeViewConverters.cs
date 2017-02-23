@@ -10,7 +10,7 @@ namespace map2agbgui.Models.Main
 {
 
     [ValueConversion(typeof(NumericDisplayTuple<ITupleFormattable>), typeof(bool))]
-    public class TreeViewSeletedItemToBooleanConverter : IValueConverter
+    public class TreeViewSelectedItemToBooleanConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -26,7 +26,7 @@ namespace map2agbgui.Models.Main
     }
 
     [ValueConversion(typeof(NumericDisplayTuple<ITupleFormattable>), typeof(MapModel))]
-    public class TreeViewSeletedItemToMapConverter : IValueConverter
+    public class TreeViewSelectedItemToMapConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -34,7 +34,7 @@ namespace map2agbgui.Models.Main
             else if (value.GetType() == typeof(NumericDisplayTuple<IMapModel>))
             {
                 IMapModel model = ((NumericDisplayTuple<IMapModel>)value).Value;
-                if (model.GetType() == typeof(MapModel)) return (MapModel)model;
+                if (model.EntryMode == MapEntryType.Map) return (MapModel)model;
                 else return null;
             }
             else return null;

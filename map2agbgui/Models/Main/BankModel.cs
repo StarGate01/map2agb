@@ -42,10 +42,10 @@ namespace map2agbgui.Models.Main
 
         #region Constructor
 
-        public BankModel(List<MapHeader> headers)
+        public BankModel(List<MapHeader> headers, MainModel mainModel)
         {
             _maps = new BindingList<NumericDisplayTuple<IMapModel>>(headers.Select((p, pi) => 
-                new NumericDisplayTuple<IMapModel>(pi, (p == null) ? (IMapModel)(new NullpointerMapModel(this)) : new MapModel(this, p))).ToList());
+                new NumericDisplayTuple<IMapModel>(pi, (p == null) ? (IMapModel)(new NullpointerMapModel(this)) : new MapModel(this, p, mainModel))).ToList());
         }
 
         #endregion

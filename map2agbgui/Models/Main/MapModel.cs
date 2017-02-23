@@ -10,6 +10,7 @@ using map2agblib.Map;
 using map2agblib.Data;
 using System.Globalization;
 using System.Windows.Data;
+using System.Collections.ObjectModel;
 
 namespace map2agbgui.Models.Main
 {
@@ -57,7 +58,7 @@ namespace map2agbgui.Models.Main
         {
             get
             {
-                return App.MainViewModel.NSEditorViewModel.Names[_nameID].Name;
+                return _mainModel.NSEditorViewModel.Names[_nameID].Name;
             }
         }
 
@@ -76,20 +77,30 @@ namespace map2agbgui.Models.Main
             }
         }
 
+        private MainModel _mainModel;
+        public MainModel MainModel
+        {
+            get
+            {
+                return _mainModel;
+            }
+        }
+
         #endregion
 
         #region Constructor
 
-        public MapModel(BankModel bank, MapHeader header)
+        public MapModel(BankModel bank, MapHeader header, MainModel mainModel)
         {
             _bank = bank;
             _nameID = header.Name;
+            _mainModel = mainModel;
         }
 
-        public MapModel()
+        public MapModel() : this(null, new MapHeader() { Name = 0 }, new MainModel(MockData.MockRomData()))
         {
-            _bank = null;
-            _nameID = 0;
+            if (!(bool)(DesignerProperties.IsInDesignModeProperty.GetMetadata(typeof(DependencyObject)).DefaultValue))
+                throw new InvalidOperationException("MapModel can only be constructed without parameters by the designer");
         }
 
         #endregion
