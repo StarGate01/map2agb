@@ -52,6 +52,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -74,6 +76,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\MapTabControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\DeleteMapDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -85,19 +95,42 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Common\InverseBooleanConverter.cs" />
+    <Compile Include="Common\NullToBooleanConverter.cs" />
+    <Compile Include="Common\ValueConverterGroup.cs" />
+    <Compile Include="Controls\MapTabControl.xaml.cs">
+      <DependentUpon>MapTabControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\DeleteMapDialog.xaml.cs">
+      <DependentUpon>DeleteMapDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Common\IconMods.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="NSEditorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\BankModel.cs" />
-    <Compile Include="Models\ITupelFormattable.cs" />
-    <Compile Include="Models\IMapModel.cs" />
-    <Compile Include="Models\MainModel.cs" />
-    <Compile Include="Models\MapModel.cs" />
-    <Compile Include="Models\NullpointerMapModel.cs" />
-    <Compile Include="Models\NumericDisplayTuple.cs" />
+    <Compile Include="MockData.cs" />
+    <Compile Include="Models\Main\BankModel.cs" />
+    <Compile Include="Models\Main\ITupleFormattable.cs" />
+    <Compile Include="Models\Main\IMapModel.cs" />
+    <Compile Include="Models\Main\MainModel.cs" />
+    <Compile Include="Models\Main\MapEntryTypeToFontStyleConverter.cs" />
+    <Compile Include="Models\Main\MapModel.cs" />
+    <Compile Include="Models\Main\TreeViewConverters.cs" />
+    <Compile Include="Models\NSEditor\NameEntryModel.cs" />
+    <Compile Include="Models\NSEditor\NSEditorModel.cs" />
+    <Compile Include="Models\Main\NullpointerMapModel.cs" />
+    <Compile Include="Models\Main\NumericDisplayTuple.cs" />
+    <Compile Include="Native\WindowMods.cs" />
+    <Compile Include="NSEditorWindow.xaml.cs">
+      <DependentUpon>NSEditorWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -168,6 +201,24 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\None_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\CloseDocument_32x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Rename_32x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Document_256x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Document_64x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\StatusInformation_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Close_16x.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

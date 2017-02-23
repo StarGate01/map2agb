@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,12 +13,24 @@ namespace map2agblib.Data
     public class MapNameTable
     {
         #region Constances
-        private const int MAX_NAME = 0x6C;
-        private const int MAX_CHARS = 16;
+        public const int MAX_NAME = 0x6C;
+        public const int MAX_CHARS = 16;
         #endregion
 
         #region Fields
         private string[] _names;
+        public string[] Names
+        {
+            get
+            {
+                return _names;
+            }
+            set
+            {
+                _names = value;
+            }
+        }
+
         #endregion
 
         #region Indexed Properties
@@ -53,6 +66,12 @@ namespace map2agblib.Data
         {
             _names = Enumerable.Repeat("DUMMY_NAME", MAX_NAME).ToArray();
         }
+        public MapNameTable(string[] names)
+        {
+            _names = names;
+        }
+
         #endregion
+
     }
 }

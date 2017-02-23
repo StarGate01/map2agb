@@ -11,30 +11,28 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using System.Diagnostics;
-using System.Windows.Navigation;
+using map2agbgui.Models.NSEditor;
 using map2agbgui.Native;
 
 namespace map2agbgui
 {
 
-    public partial class AboutWindow : Window
+    public partial class NSEditorWindow : Window
     {
 
-        public AboutWindow()
+        NSEditorModel dataModel;
+
+        public NSEditorWindow(NSEditorModel model)
         {
             InitializeComponent();
+            dataModel = model;
+            DataContext = dataModel;
         }
 
         private void Window_SourceInitialized(object sender, EventArgs e)
         {
+            WindowMods.RemoveMaximizeBox(this);
             WindowMods.RemoveIcon(this);
-        }
-
-        private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
-        {
-            Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
-            e.Handled = true;
         }
 
     }

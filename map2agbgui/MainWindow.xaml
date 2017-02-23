@@ -5,17 +5,41 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:map2agbgui"
         mc:Ignorable="d"
-        xmlns:model="clr-namespace:map2agbgui.Models"
-        Title="map2agb GUI" Height="600" Width="800" WindowStartupLocation="CenterScreen" WindowState="Maximized" Loaded="Window_Loaded">
+        xmlns:model="clr-namespace:map2agbgui.Models.Main"
+        xmlns:c="clr-namespace:map2agbgui.Common"
+        xmlns:controls="clr-namespace:map2agbgui.Controls"
+        Title="map2agb GUI" Height="600" Width="800" WindowStartupLocation="CenterScreen" WindowState="Maximized" Loaded="Window_Loaded" MinWidth="800" MinHeight="600">
 
     <Window.Resources>
+        <model:TreeViewSeletedItemToBooleanConverter x:Key="treeViewSeletedItemToBooleanConverter" />
+        <model:TreeViewSeletedItemToMapConverter x:Key="treeViewSeletedItemToMapConverter" />
+        <model:MapEntryTypeToFontStyleConverter x:Key="mapEntryTypeToFontStyleConverter" />
+        <c:ValueConverterGroup x:Key="treeViewSeletedItemToVisibilityConverter">
+            <model:TreeViewSeletedItemToMapConverter/>
+            <c:NullToBooleanConverter />
+            <BooleanToVisibilityConverter/>
+        </c:ValueConverterGroup>
+        <c:ValueConverterGroup x:Key="treeViewSeletedItemToNonVisibilityConverter">
+            <model:TreeViewSeletedItemToMapConverter/>
+            <c:NullToBooleanConverter />
+            <c:InverseBooleanConverter />
+            <BooleanToVisibilityConverter/>
+        </c:ValueConverterGroup>
+        <Style TargetType="{x:Type MenuItem}">
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.4" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
         <Style TargetType="TreeViewItem" x:Key="BankStyle">
             <Setter Property="Focusable" Value="False"/>
-            <Setter Property="IsExpanded" Value="True" />
+            <Setter Property="IsExpanded" Value="True"/>
         </Style>
         <Style TargetType="TreeViewItem" x:Key="MapStyle">
             <Setter Property="Focusable" Value="True"/>
-            <EventSetter Event="MouseDoubleClick" Handler="MapTreeViewElement_DoubleClick" />
+            <Setter Property="IsSelected" Value="{Binding Value.IsSelected, Mode=TwoWay}" />
+            <!--<EventSetter Event="MouseDoubleClick" Handler="MapTreeViewElement_DoubleClick" />-->
         </Style>
         <HierarchicalDataTemplate x:Key="MapTemplate">
             <Grid>
@@ -25,7 +49,7 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Image Height="Auto" Width="Auto" Source="{Binding Value.IconPath}" Grid.Column="0" />
-                <TextBlock Grid.Column="2" Text="{Binding DisplayValue}" />
+                <TextBlock Grid.Column="2" Text="{Binding DisplayValue}" FontStyle="{Binding Value.EntryMode, Converter={StaticResource mapEntryTypeToFontStyleConverter}}" />
             </Grid>
         </HierarchicalDataTemplate>
         <HierarchicalDataTemplate x:Key="BankTemplate" ItemsSource="{Binding Value.Maps}" ItemTemplate="{StaticResource MapTemplate}" ItemContainerStyle="{StaticResource MapStyle}">
@@ -56,26 +80,34 @@
         <DockPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
             <Menu DockPanel.Dock="Top" Padding="3">
                 <MenuItem Header="_Project">
-                    <MenuItem Header="_Open">
+                    <MenuItem x:Name="OpenMenuButton" Header="_Open">
                         <MenuItem.Icon>
-                            <Image Source="assets/Open_16x.png"/>
+                            <Image Source="Assets/Open_16x.png"/>
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Header="_Save">
+                    <MenuItem x:Name="SaveMenuButton" Header="_Save">
                         <MenuItem.Icon>
-                            <Image Source="assets/Save_16x.png"/>
+                            <Image Source="Assets/Save_16x.png"/>
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Header="Save _As">
+                    <MenuItem x:Name="SaveAsMenuButton" Header="Save _As">
                         <MenuItem.Icon>
-                            <Image Source="assets/SaveAs_16x.png"/>
+                            <Image Source="Assets/SaveAs_16x.png"/>
                         </MenuItem.Icon>
                     </MenuItem>
                     <Separator HorizontalAlignment="Left" Width="120"/>
-                    <MenuItem Header="_Exit"/>
+                    <MenuItem x:Name="ExitMenuButton" Header="_Exit" Click="ExitMenuButton_Click">
+                        <MenuItem.Icon>
+                            <Image Source="Assets/Close_16x.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
                 </MenuItem>
                 <MenuItem Header="_Help">
-                    <MenuItem x:Name="AboutMenuButton" Header="_About" Click="AboutMenuButton_Click"/>
+                    <MenuItem x:Name="AboutMenuButton" Header="_About" Click="AboutMenuButton_Click">
+                        <MenuItem.Icon>
+                            <Image Source="Assets/StatusInformation_16x.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
                 </MenuItem>
             </Menu>
         </DockPanel>
@@ -86,9 +118,20 @@
                         <Image Width="32" Height="32" Source="Assets/Create_32x.png" Margin="3" />
                     </MenuItem.Header>
                 </MenuItem>
-                <MenuItem ToolTip="Blockeditor" x:Name="BlockeditorButton" Click="BlockeditorButton_Click">
+                <MenuItem ToolTip="Remove map" x:Name="RemoveMapButton" Click="RemoveMapButton_Click" IsEnabled="{Binding ElementName=MapTreeView, Path=SelectedItem, Converter={StaticResource treeViewSeletedItemToBooleanConverter}}">
+                    <MenuItem.Header>
+                        <Image Width="32" Height="32" Source="Assets/CloseDocument_32x.png" Margin="3" />
+                    </MenuItem.Header>
+                </MenuItem>
+                <Border Width="1" Height="32" Background="Gray" />
+                <MenuItem ToolTip="Block editor" x:Name="BlockeditorButton" Click="BlockeditorButton_Click">
                     <MenuItem.Header>
                         <Image Width="32" Height="32" Source="Assets/ConfigureComputer_32x.png" Margin="3" />
+                    </MenuItem.Header>
+                </MenuItem>
+                <MenuItem ToolTip="Namespace editor" x:Name="NamespaceeditorButton" Click="NamespaceeditorButton_Click">
+                    <MenuItem.Header>
+                        <Image Width="32" Height="32" Source="Assets/Rename_32x.png" Margin="3" />
                     </MenuItem.Header>
                 </MenuItem>
             </Menu>
@@ -104,35 +147,16 @@
             </StackPanel>
         </Grid>
         <GridSplitter Grid.Row="2" Grid.Column="1" Width="5" HorizontalAlignment="Center" />
-        <TabControl Grid.Row="2" Grid.Column="2">
-            <TabItem Header="Map">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="6*" MinWidth="400"/>
-                        <ColumnDefinition Width="5" />
-                        <ColumnDefinition Width="*" MinWidth="150"/>
-                    </Grid.ColumnDefinitions>
-                    <DockPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
-                        <Menu DockPanel.Dock="Top" Padding="3">
-                            <MenuItem Header="Bla" />
-                        </Menu>
-                    </DockPanel>
-                    <Grid Grid.Row="1" Grid.Column="0">
-                        
-                    </Grid>
-                    <GridSplitter Grid.Row="2" Grid.Column="1" Width="5" HorizontalAlignment="Center" />
-                    <StackPanel Grid.Row="1" Grid.Column="2">
-                        <Label Grid.Row="0" Content="Foo" />
-                        <Label Grid.Row="1" Content="Bar" />
-                    </StackPanel>
-                </Grid>
-            </TabItem>
-            <TabItem Header="Header" />
-        </TabControl>
+        
+        <controls:MapTabControl Grid.Column="2" Grid.Row="2" Visibility="{Binding ElementName=MapTreeView, Path=SelectedItem, Converter={StaticResource treeViewSeletedItemToVisibilityConverter}}" DataContext="{Binding ElementName=MapTreeView, Path=SelectedItem, Converter={StaticResource treeViewSeletedItemToMapConverter}}" />
+        <Grid Grid.Column="2" Grid.Row="2" Visibility="{Binding ElementName=MapTreeView, Path=SelectedItem, Converter={StaticResource treeViewSeletedItemToNonVisibilityConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Image Grid.Row="0" Source="Assets/Document_256x.png" Width="128" Height="128" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
+            <TextBlock Grid.Row="1" Text="No map selected" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="20" />
+        </Grid>
         
         <DockPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3">
             <Menu DockPanel.Dock="Bottom">

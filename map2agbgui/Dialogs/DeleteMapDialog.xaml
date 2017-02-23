@@ -1,0 +1,38 @@
+﻿<Window x:Class="map2agbgui.Dialogs.DeleteMapDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:map2agbgui.Dialogs"
+        mc:Ignorable="d"
+        xmlns:c="clr-namespace:map2agbgui.Common"
+        Title="Delete map?" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" Width="350" Loaded="Window_Loaded" SourceInitialized="Window_SourceInitialized" SizeToContent="Height">
+    <Window.Resources>
+        <c:SystemIconToImageSourceConverter x:Key="systemIconToImageSourceConverter" />
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Image  Grid.Column="0" Source="{Binding ConverterParameter=Warning, Converter={StaticResource systemIconToImageSourceConverter}}" Width="32" Height="32" Margin="15,15,10,10" />
+            <TextBlock Grid.Column="1" Grid.Row="0" Text="You are about to delete a map.&#10;What do you want to do?" VerticalAlignment="Center" TextWrapping="Wrap" Margin="0,15,15,10" />
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.Background>
+                <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlColorKey}}"/>
+            </Grid.Background>
+            <WrapPanel VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,5,5,5">
+                <Button TabIndex="1" x:Name="ButtonReplace" Margin="5" Content="Replace with empty" Padding="5,1" IsDefault="True" Click="ButtonReplace_Click"/>
+                <Button TabIndex="2" x:Name="ButtonUpdate" Margin="5" Content="Update indices" Padding="5,1" Click="ButtonUpdate_Click"/>
+                <Button TabIndex="3" x:Name="ButtonCancel" Margin="5" Content="Cancel" Padding="5,1" IsCancel="True" />
+            </WrapPanel>
+        </Grid>
+    </Grid>
+</Window>

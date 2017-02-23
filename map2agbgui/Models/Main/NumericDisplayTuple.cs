@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Windows;
 
-namespace map2agbgui.Models
+namespace map2agbgui.Models.Main
 {
-    public class NumericDisplayTuple<T> where T : ITupelFormattable
+    public class NumericDisplayTuple<T> : INotifyPropertyChanged where T : ITupleFormattable
     {
+
+        #region Properties
 
         private int _index;
         public int Index
@@ -22,6 +24,7 @@ namespace map2agbgui.Models
             {
                 _index = value;
                 RaisePropertyChanged("Index");
+                RaisePropertyChanged("DisplayValue");
             }
         }
 
@@ -36,6 +39,7 @@ namespace map2agbgui.Models
             {
                 _value = value;
                 RaisePropertyChanged("Value");
+                RaisePropertyChanged("DisplayValue");
             }
         }
 
@@ -47,11 +51,19 @@ namespace map2agbgui.Models
             }
         }
 
+        #endregion
+
+        #region Constructors
+
         public NumericDisplayTuple(int index, T value)
         {
             Index = index;
             Value = value;
         }
+
+        #endregion
+
+        #region INotifyPropertyChanged
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void RaisePropertyChanged(string propertyName)
@@ -64,6 +76,8 @@ namespace map2agbgui.Models
             return copy;
         }
 
+        #endregion
 
     }
+
 }

@@ -5,7 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using map2agbgui.Models;
+using map2agbgui.Models.Main;
 
 namespace map2agbgui
 { 
@@ -13,11 +13,11 @@ namespace map2agbgui
     public partial class App : Application
     {
 
-        public static MainModel MainViewModel { get; private set; }
+        public static MainModel MainViewModel { get; set; }
 
         public App()
         {
-            MainViewModel = new MainModel();
+           
         }
 
     }

@@ -4,17 +4,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace map2agbgui.Models
+
+namespace map2agbgui.Models.Main
 {
 
     public enum MapEntryType { Map, Nullpointer }
 
-    public interface IMapModel : ITupelFormattable
+    public interface IMapModel : ITupleFormattable
     {
 
-        MapEntryType Mode { get; }
+        bool IsSelected { get; set; }
+
+        MapEntryType EntryMode { get; }
 
         Uri IconPath { get; }
+
+        BankModel Bank { get; }
 
     }
 

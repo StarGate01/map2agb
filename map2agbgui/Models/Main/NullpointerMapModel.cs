@@ -5,29 +5,42 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
 
-namespace map2agbgui.Models
+namespace map2agbgui.Models.Main
 {
     public class NullpointerMapModel : IMapModel, INotifyPropertyChanged
     {
 
-        public NullpointerMapModel() { }
+        #region Properties
+
+        public bool IsSelected { get; set; }
+
+        public bool IsExpanded { get; set; }
+
+        private BankModel _bank;
+        public BankModel Bank
+        {
+            get
+            {
+                return _bank;
+            }
+        }
 
         public string FormatString
         {
             get
             {
-                return ToString();
+                return "{0} {1}";
             }
         }
 
-        public MapEntryType Mode
+        public MapEntryType EntryMode
         {
             get
             {
                 return MapEntryType.Nullpointer;
             }
         }
-
+     
         public Uri IconPath
         {
             get
@@ -36,10 +49,27 @@ namespace map2agbgui.Models
             }
         }
 
+        #endregion
+
+        #region Constructors
+
+        public NullpointerMapModel(BankModel bank)
+        {
+            _bank = bank;
+        }
+
+        #endregion
+
+        #region Methods
+
         public override string ToString()
         {
-            return "Nullpointer";
+            return "Empty";
         }
+
+        #endregion
+
+        #region INotifyPropertyChanged
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void RaisePropertyChanged(string propertyName)
@@ -51,6 +81,8 @@ namespace map2agbgui.Models
             NullpointerMapModel copy = (NullpointerMapModel)this.MemberwiseClone();
             return copy;
         }
+
+        #endregion
 
     }
 
