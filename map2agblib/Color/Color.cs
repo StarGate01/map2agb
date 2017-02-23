@@ -42,6 +42,16 @@ namespace map2agblib.Color
             this.Green = Green;
         }
 
+        /// <summary>
+        /// Creates a new color instance resembling the color black
+        /// </summary>
+        public Color()
+        {
+            Red = 0;
+            Blue = 0;
+            Green = 0;
+        }
+
 
         //Todo: Constructor from to RGB
 

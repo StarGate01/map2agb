@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Xml.Serialization;
 
 namespace map2agblib.Tilesets
 {
@@ -47,6 +48,7 @@ namespace map2agblib.Tilesets
         /// <summary>
         /// Reference to a list of blocks (tilemaps as well as behaviors)
         /// </summary>
+        [XmlIgnore]
         public Tuple<BlockTileMap, BlockBehaviour>[] Blocks { private set; get; }
 
         /// <summary>
@@ -75,6 +77,11 @@ namespace map2agblib.Tilesets
 
             Graphic = string.Empty;
             AnimationInitFunction = string.Empty;
+        }
+
+        public Tileset()
+        {
+
         }
         #endregion
 

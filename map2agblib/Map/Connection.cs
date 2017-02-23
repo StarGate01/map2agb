@@ -47,5 +47,13 @@ namespace map2agblib.Map
         /// Gets or sets FieldB, possibly a Padding
         /// </summary>
         byte FieldB { get; set; }
+
+        /// <summary>
+        /// Creates a new skeleton connection
+        /// </summary>
+        public Connection()
+        {
+
+        }
     }
 }

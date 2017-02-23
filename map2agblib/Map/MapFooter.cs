@@ -1,5 +1,7 @@
 ﻿using System;
 using map2agblib.Tilesets;
+using System.Xml.Serialization;
+using System.Linq;
 
 namespace map2agblib.Map
 {
@@ -10,27 +12,28 @@ namespace map2agblib.Map
     {
         #region Properties
 
+        //TODO: Explicit setter to hold consistancy with BorderBlock and MapBlock Arrays
         /// <summary>
         /// The Width of the Map in Tiles (16x16)
         /// </summary>
-        public uint Width { get; private set; }
+        public uint Width { get; set; }
 
         /// <summary>
         /// The Height of the Map in Tiles (16x16)
         /// </summary>
-        public uint Height { get; private set; }
+        public uint Height { get; set; }
 
         //TODO: Create Block objects
-
+        //TODO: Create explicit setter to hold consitancy with Width and Height or find a better solution
         /// <summary>
         /// The BorderBlock which is displayed when the camera hits the border
         /// </summary>
-        public ushort[][] BorderBlock { get; private set; }
+        public ushort[][] BorderBlock { get; set; }
 
         /// <summary>
         /// The actual MapBlock, contains Graphical tile data as well as the collision Map
         /// </summary>
-        public ushort[][] MapBlock { get; private set; }
+        public ushort[][] MapBlock { get; set; }
 
         /// <summary>
         /// The Main Tileset for this Map
@@ -47,12 +50,12 @@ namespace map2agblib.Map
         /// <summary>
         /// The Width of the BorderBlock
         /// </summary>
-        public byte BorderWidth { get; private set; }
+        public byte BorderWidth { get; set; }
 
         /// <summary>
         /// The Height of the BorderBlock
         /// </summary>
-        public byte Borderheight { get; private set; }
+        public byte BorderHeight { get; set; }
 
         /// <summary>
         /// Bytes used to assure alignment, probably unused otherwise
@@ -63,7 +66,18 @@ namespace map2agblib.Map
         #region Constructor
 
         /// <summary>
-        /// Creates a new MapFooter object //TODO: Implement
+        /// Creates a new MapFooter object //TODO: Tilesets
+        /// </summary>
+        public MapFooter(uint width, uint height, byte borderWidth, byte borderHeight)
+        {
+            Width = width;
+            Height = height;
+            BorderBlock = Enumerable.Repeat(new ushort[BorderHeight], BorderWidth).ToArray();
+            MapBlock = Enumerable.Repeat(new ushort[Height], (int)Width).ToArray();
+        }
+
+        /// <summary>
+        /// Creates a new empty MapFooter object
         /// </summary>
         public MapFooter()
         {

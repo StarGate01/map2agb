@@ -61,5 +61,13 @@ namespace map2agblib.Tilesets
         /// </summary>
         public bool VFlip { get; set; }
         #endregion
+
+        /// <summary>
+        /// Creates a new Tilemap part with values of 0
+        /// </summary>
+        public BlockTileMap()
+        {
+
+        }
     }
 }
