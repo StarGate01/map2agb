@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace map2agblib.Map
 {
+    [DataContract]
     public class MapScriptHeader
     {
 
@@ -26,6 +28,7 @@ namespace map2agblib.Map
         /// <summary>
         /// Gets the list of Scripts on the Event Page
         /// </summary>
+        [DataMember]
         public List<MapScript> MapScripts { get; private set; }
         #endregion
 
