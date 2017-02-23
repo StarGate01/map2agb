@@ -102,6 +102,13 @@
                         </MenuItem.Icon>
                     </MenuItem>
                 </MenuItem>
+                <MenuItem Header="_Invoke">
+                    <MenuItem Header="_Compiler" >
+                        <MenuItem.Icon>
+                            <Image Source="Assets/BuildSolution_16x.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
                 <MenuItem Header="_Help">
                     <MenuItem x:Name="AboutMenuButton" Header="_About" Click="AboutMenuButton_Click">
                         <MenuItem.Icon>

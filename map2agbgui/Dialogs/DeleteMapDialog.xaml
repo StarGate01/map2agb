@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:map2agbgui.Dialogs"
         mc:Ignorable="d"
         xmlns:c="clr-namespace:map2agbgui.Common"
-        Title="Delete map?" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" Width="350" Loaded="Window_Loaded" SourceInitialized="Window_SourceInitialized" SizeToContent="Height">
+        Title="Warning - Delete map" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" Width="350" Loaded="Window_Loaded" SourceInitialized="Window_SourceInitialized" SizeToContent="Height" ShowInTaskbar="False">
     <Window.Resources>
         <c:SystemIconToImageSourceConverter x:Key="systemIconToImageSourceConverter" />
     </Window.Resources>
