@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Xml.Serialization;
 using System.Runtime.Serialization;
+using map2agblib.Map.LevelScript;
 
 namespace map2agblib.Map
 {

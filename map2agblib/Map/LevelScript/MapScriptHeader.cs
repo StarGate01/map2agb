@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace map2agblib.Map
+namespace map2agblib.Map.LevelScript
 {
     [DataContract]
     public class MapScriptHeader

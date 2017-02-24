@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace map2agblib.Tilesets
 {
-    public class BlockTileMap
+    public class BlockTilemap
     {
         #region Fields
         private ushort _tileId;
@@ -65,7 +65,7 @@ namespace map2agblib.Tilesets
         /// <summary>
         /// Creates a new Tilemap part with values of 0
         /// </summary>
-        public BlockTileMap()
+        public BlockTilemap()
         {
 
         }
