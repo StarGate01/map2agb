@@ -19,7 +19,7 @@ namespace map2agb
         /// </summary>
         /// <param name="mapHeader"></param>
         /// <returns></returns>
-        public string ToAssemblyString(MapHeader mapHeader, string baseSymbol)
+        public static string ToAssemblyString(MapHeader mapHeader, string baseSymbol)
         {
             StringBuilder b = new StringBuilder();
             b.Append("@ Map Assembly created by map2agb at ");
@@ -39,7 +39,7 @@ namespace map2agb
         /// <param name="mapHeader"></param>
         /// <param name="baseSymbol"></param>
         /// <returns></returns>
-        private string MapHeaderToString(MapHeader mapHeader, string baseSymbol)
+        private static string MapHeaderToString(MapHeader mapHeader, string baseSymbol)
         {
             StringBuilder b = new StringBuilder();
 
@@ -64,6 +64,10 @@ namespace map2agb
             b.Append(Environment.NewLine);
             b.Append(MapFooterToString(mapHeader.Footer, baseSymbol));
 
+            // Append the MapEvents structure
+            b.Append(Environment.NewLine);
+            b.Append(MapEventsToString(mapHeader.Events, baseSymbol));
+
             return b.ToString();
         }
 
@@ -73,7 +77,7 @@ namespace map2agb
         /// <param name="mapFooter"></param>
         /// <param name="baseSymbol"></param>
         /// <returns></returns>
-        private string MapFooterToString(MapFooter mapFooter, string baseSymbol)
+        private static string MapFooterToString(MapFooter mapFooter, string baseSymbol)
         {
 
             StringBuilder b = new StringBuilder();
@@ -85,8 +89,8 @@ namespace map2agb
             b.Append("\t.word "); b.Append(mapFooter.Height.ToString()); b.Append(Environment.NewLine);
             b.Append("\t.word mapborderblocks_"); b.Append(baseSymbol); b.Append(Environment.NewLine);
             b.Append("\t.word mapblocks_"); b.Append(baseSymbol); b.Append(Environment.NewLine);
-            b.Append("\t.word 0"); b.Append(Environment.NewLine);//Todo export tileset identifier b.App
-            b.Append("\t.word 0"); b.Append(Environment.NewLine);//Todo export tileset identifier b.App
+            b.Append("\t.word "); b.Append(mapFooter.FirstTilesetID); b.Append(Environment.NewLine);
+            b.Append("\t.word 0"); b.Append(mapFooter.FirstTilesetID); b.Append(Environment.NewLine);
             b.Append("\t.byte "); b.Append(mapFooter.BorderWidth.ToString()); b.Append(Environment.NewLine);
             b.Append("\t.byte "); b.Append(mapFooter.BorderHeight.ToString()); b.Append(Environment.NewLine);
             b.Append("\t.hword "); b.Append(mapFooter.Padding); b.Append(Environment.NewLine);
@@ -108,7 +112,7 @@ namespace map2agb
         /// <param name="mapFooter"></param>
         /// <param name="baseSymbol"></param>
         /// <returns></returns>
-        private String MapBorderBlocksToString(MapFooter mapFooter, string baseSymbol)
+        private static String MapBorderBlocksToString(MapFooter mapFooter, string baseSymbol)
         {
 
             StringBuilder b = new StringBuilder();
@@ -132,7 +136,7 @@ namespace map2agb
         /// <param name="mapFooter"></param>
         /// <param name="baseSymbol"></param>
         /// <returns></returns>
-        private String MapBlocksToString(MapFooter mapFooter, string baseSymbol)
+        private static String MapBlocksToString(MapFooter mapFooter, string baseSymbol)
         {
             StringBuilder b = new StringBuilder();
             b.Append("@ Section: MapBlocks"); b.Append(Environment.NewLine);
@@ -155,7 +159,7 @@ namespace map2agb
         /// <param name="eventHeader"></param>
         /// <param name="baseSymbol"></param>
         /// <returns></returns>
-        private String MapEventsToString(EventHeader eventHeader, string baseSymbol)
+        private static String MapEventsToString(EventHeader eventHeader, string baseSymbol)
         {
             StringBuilder b = new StringBuilder();
             // Create EventHeader structure
@@ -171,9 +175,21 @@ namespace map2agb
             b.Append("\t.word mapevents_script_triggers_"); b.Append(baseSymbol); b.Append(Environment.NewLine);
             b.Append("\t.word mapevents_signs_"); b.Append(baseSymbol); b.Append(Environment.NewLine);
 
-            //Append the Persons
+            // Append the Persons
             b.Append(Environment.NewLine);
             b.Append(MapEventsPersonsToString(eventHeader.Persons, baseSymbol));
+
+            // Append the Warps
+            b.Append(Environment.NewLine);
+            b.Append(MapEventsWarpsToString(eventHeader.Warps, baseSymbol));
+
+            // Append the Triggers
+            b.Append(Environment.NewLine);
+            b.Append(MapEventsScriptsToString(eventHeader.ScriptTriggers, baseSymbol));
+
+            // Append the Signs
+            b.Append(Environment.NewLine);
+            b.Append(MapEventsSignsToString(eventHeader.Signs, baseSymbol));
 
             return b.ToString();
         }
@@ -184,7 +200,7 @@ namespace map2agb
         /// <param name="persons"></param>
         /// <param name="baseSymbol"></param>
         /// <returns></returns>
-        private String MapEventsPersonsToString(List<EventEntityPerson> persons, string baseSymbol)
+        private static String MapEventsPersonsToString(List<EventEntityPerson> persons, string baseSymbol)
         {
             StringBuilder b = new StringBuilder();
             b.Append("@ Section: MapEvents, Persons"); b.Append(Environment.NewLine);
@@ -209,6 +225,95 @@ namespace map2agb
                 b.Append("\t.word "); b.Append(person.Script); b.Append(Environment.NewLine);
                 b.Append("\t.hword "); b.Append(person.Flag.ToString()); b.Append(Environment.NewLine);
                 b.Append("\t.hword "); b.Append(person.Padding.ToString()); b.Append(Environment.NewLine);
+            }
+
+            return b.ToString();
+        }
+
+        /// <summary>
+        /// Transforms a list of EventEntityWarp into an assembly string
+        /// </summary>
+        /// <param name="warps"></param>
+        /// <param name="baseSymbol"></param>
+        /// <returns></returns>
+        private static String MapEventsWarpsToString(List<EventEntityWarp> warps, string baseSymbol)
+        {
+            StringBuilder b = new StringBuilder();
+            b.Append("@ Section: MapEvents, Warps"); b.Append(Environment.NewLine);
+            b.Append(".global mapevents_warps_"); b.Append(baseSymbol); b.Append(Environment.NewLine);
+            b.Append("mapevents_warps_"); b.Append(baseSymbol); b.Append(":"); b.Append(Environment.NewLine);
+            foreach (EventEntityWarp warp in warps)
+            {
+                b.Append("@//new structure"); b.Append(Environment.NewLine);
+                b.Append("\t.hword "); b.Append(warp.X.ToString()); b.Append(Environment.NewLine);
+                b.Append("\t.hword "); b.Append(warp.Y.ToString()); b.Append(Environment.NewLine);
+                b.Append("\t.byte "); b.Append(warp.Height.ToString()); b.Append(Environment.NewLine);
+                b.Append("\t.byte "); b.Append(warp.TargetWarp.ToString()); b.Append(Environment.NewLine);
+                b.Append("\t.byte "); b.Append(warp.TargetBank.ToString()); b.Append(Environment.NewLine);
+                b.Append("\t.byte "); b.Append(warp.TargetMap.ToString()); b.Append(Environment.NewLine);
+            }
+
+            return b.ToString();
+        }
+
+        /// <summary>
+        /// Transforms a list of EventEntityTrigger into
+        /// </summary>
+        /// <param name="triggers"></param>
+        /// <param name="baseSymbol"></param>
+        /// <returns></returns>
+        private static String MapEventsScriptsToString(List<EventEntityTrigger> triggers, string baseSymbol)
+        {
+            StringBuilder b = new StringBuilder();
+            b.Append("@ Section: MapEvents, Warps"); b.Append(Environment.NewLine);
+            b.Append(".global mapevents_script_triggers_"); b.Append(baseSymbol); b.Append(Environment.NewLine);
+            b.Append("mapevents_script_triggers_"); b.Append(baseSymbol); b.Append(":"); b.Append(Environment.NewLine);
+            foreach (EventEntityTrigger trigger in triggers)
+            {
+                b.Append("@//new structure"); b.Append(Environment.NewLine);
+                b.Append("\t.hword "); b.Append(trigger.X.ToString()); b.Append(Environment.NewLine);
+                b.Append("\t.hword "); b.Append(trigger.Y.ToString()); b.Append(Environment.NewLine);
+                b.Append("\t.byte "); b.Append(trigger.Height.ToString()); b.Append(Environment.NewLine);
+                b.Append("\t.byte "); b.Append(trigger.Field5.ToString()); b.Append(Environment.NewLine);
+                b.Append("\t.hword "); b.Append(trigger.Variable.ToString()); b.Append(Environment.NewLine);
+                b.Append("\t.hword "); b.Append(trigger.Value.ToString()); b.Append(Environment.NewLine);
+                b.Append("\t.byte "); b.Append(trigger.FieldA.ToString()); b.Append(Environment.NewLine);
+                b.Append("\t.byte "); b.Append(trigger.FieldB.ToString()); b.Append(Environment.NewLine);
+                b.Append("\t.word "); b.Append(trigger.Script); b.Append(Environment.NewLine);
+            }
+
+            return b.ToString();
+        }
+
+        private static String MapEventsSignsToString(List<EventEntitySign> sings, string baseSymbol)
+        {
+            StringBuilder b = new StringBuilder();
+            b.Append("@ Section: MapEvents, Signs"); b.Append(Environment.NewLine);
+            b.Append(".global mapevents_sings_"); b.Append(baseSymbol); b.Append(Environment.NewLine);
+            b.Append("mapevents_sings_"); b.Append(baseSymbol); b.Append(":"); b.Append(Environment.NewLine);
+            foreach (EventEntitySign sing in sings)
+            {
+                b.Append("@//new structure"); b.Append(Environment.NewLine);
+                b.Append("\t.hword "); b.Append(sing.X.ToString()); b.Append(Environment.NewLine);
+                b.Append("\t.hword "); b.Append(sing.Y.ToString()); b.Append(Environment.NewLine);
+                b.Append("\t.byte "); b.Append(sing.Height.ToString()); b.Append(Environment.NewLine);
+                b.Append("\t.byte "); b.Append(sing.Type.ToString()); b.Append(Environment.NewLine);
+                b.Append("\t.hword "); b.Append(sing.Unknown.ToString()); b.Append(Environment.NewLine);
+                if (sing.Layout == EventEntitySign.SignType.Item)
+                {
+                    // Sing layout, so the item related fields are used for exporting
+                    b.Append("\t.hword "); b.Append(sing.ItemId.ToString()); b.Append(Environment.NewLine);
+                    b.Append("\t.byte "); b.Append(sing.HiddenId.ToString()); b.Append(Environment.NewLine);
+                    // The last byte is a bitfield
+                    byte lastMember = (byte)(sing.ItemCount | (sing.IsCoin ? 0x40 : 0x0) | (sing.DetectorDisabled ? 0x80 : 0x0));
+                    b.Append("\t.byte "); b.Append(lastMember.ToString()); b.Append(Environment.NewLine);
+                }
+                else
+                {
+                    // Script layout, so the script related fields are used for exporting
+                    b.Append("\t.hword "); b.Append(sing.ItemId.ToString()); b.Append(Environment.NewLine);
+                    b.Append("\t.word "); b.Append(sing.Script); b.Append(Environment.NewLine);
+                }
             }
 
             return b.ToString();
