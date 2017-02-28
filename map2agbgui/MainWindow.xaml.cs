@@ -14,8 +14,10 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using map2agbgui.Models.Main;
 using map2agblib.Data;
-using map2agblib.IO;
 using System.IO;
+using System.Windows.Interop;
+
+using Win32Forms = System.Windows.Forms;
 
 namespace map2agbgui
 {
@@ -26,8 +28,8 @@ namespace map2agbgui
         #region Private variables
 
         private string lastSaveLocation = null;
-        private Microsoft.Win32.OpenFileDialog openProjectDlg;
-        private Microsoft.Win32.SaveFileDialog saveProjectDlg;
+        private Win32Forms.FolderBrowserDialog projectBrowseDialog;
+        private Win32Forms.NativeWindow win32Window;
 
         #endregion
 
@@ -40,16 +42,9 @@ namespace map2agbgui
             App.MainViewModel = new MainModel(romData);
             DataContext = App.MainViewModel;
             App.MainViewModel.Status = "Data loaded while runtime";
-            openProjectDlg = new Microsoft.Win32.OpenFileDialog();
-            openProjectDlg.CheckFileExists = true;
-            openProjectDlg.DefaultExt = ImportExport.FILE_EXT;
-            openProjectDlg.Filter = "Project files|*." + ImportExport.FILE_EXT;
-            openProjectDlg.Title = "Open project file";
-            saveProjectDlg = new Microsoft.Win32.SaveFileDialog();
-            saveProjectDlg.OverwritePrompt = true;
-            saveProjectDlg.DefaultExt = ImportExport.FILE_EXT;
-            saveProjectDlg.Filter = "Project files|*." + ImportExport.FILE_EXT;
-            saveProjectDlg.Title = "Save project file";
+            projectBrowseDialog = new Win32Forms.FolderBrowserDialog();
+            projectBrowseDialog.RootFolder = Environment.SpecialFolder.Desktop;
+            projectBrowseDialog.ShowNewFolderButton = true;
         }
 
         #endregion
@@ -58,7 +53,8 @@ namespace map2agbgui
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-
+            win32Window = new Win32Forms.NativeWindow();
+            win32Window.AssignHandle((new WindowInteropHelper(this)).Handle);
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -150,15 +146,16 @@ namespace map2agbgui
 
         private bool LoadProject()
         {
-            openProjectDlg.FileName = "";
-            bool result = (bool)openProjectDlg.ShowDialog(this);
-            string fileName = openProjectDlg.FileName;
-            if (fileName == "" || !result) return false;
-            if (!File.Exists(fileName)) return false;
+            projectBrowseDialog.SelectedPath = "";
+            projectBrowseDialog.Description = "Open project from directory";
+            Win32Forms.DialogResult result = projectBrowseDialog.ShowDialog(win32Window);
+            string dirPath = projectBrowseDialog.SelectedPath;
+            if (dirPath == "" || result == Win32Forms.DialogResult.Abort || result == Win32Forms.DialogResult.Cancel) return false;
+            if (!Directory.Exists(dirPath)) return false;
             RomData romData = null;
             try
             {
-                romData = ImportExport.ImportFromFile(fileName);
+                romData = RomData.ImportFromDirectory(dirPath);
             } 
             catch (Exception ex)
             {
@@ -168,8 +165,8 @@ namespace map2agbgui
             App.MainViewModel = new MainModel(romData);
             DataContext = App.MainViewModel;
             App.MainViewModel.Status = "Project loaded";
-            Title = "map2agb - " + System.IO.Path.GetFileName(fileName);
-            lastSaveLocation = fileName;
+            Title = "map2agb - " + dirPath;
+            lastSaveLocation = dirPath;
             return true;
         }
 
@@ -177,23 +174,24 @@ namespace map2agbgui
         {
             if(saveName == null)
             {
-                saveProjectDlg.FileName = "";
-                bool result = (bool)saveProjectDlg.ShowDialog(this);
-                saveName = saveProjectDlg.FileName;
-                if (saveName == "" || !result) return false;
+                projectBrowseDialog.SelectedPath = "";
+                projectBrowseDialog.Description = "Save project to directory";
+                Win32Forms.DialogResult result = projectBrowseDialog.ShowDialog(win32Window);
+                saveName = projectBrowseDialog.SelectedPath;
+                if (saveName == "" || result == Win32Forms.DialogResult.Abort || result == Win32Forms.DialogResult.Cancel) return false;
             }
             RomData romData = App.MainViewModel.SaveToRomData();
             try
             {
-                ImportExport.ExportToFile(romData, saveName);
+                RomData.ExportToDirectory(romData, saveName);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error: " + ex.Message, "Error opening project", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Error: " + ex.Message, "Error saving project", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
             App.MainViewModel.Status = "Project saved";
-            Title = "map2agb - " + System.IO.Path.GetFileName(saveName);
+            Title = "map2agb - " + saveName;
             lastSaveLocation = saveName;
             return true;
         }

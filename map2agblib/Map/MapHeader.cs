@@ -2,6 +2,9 @@
 using System.Xml.Serialization;
 using System.Runtime.Serialization;
 using map2agblib.Map.LevelScript;
+using map2agblib.Data;
+using System.Xml;
+using System.IO;
 
 namespace map2agblib.Map
 {
@@ -9,8 +12,11 @@ namespace map2agblib.Map
     /// Specifies a MapHeader in a Pokémon (GBA) game.
     /// </summary>
     [DataContract]
-    public class MapHeader
+    public class MapHeader: XMLImportExport<MapHeader>
     {
+
+        private static DataContractSerializer serializer = new DataContractSerializer(typeof(RomData));
+
         #region Properties
 
         /// <summary>
@@ -120,5 +126,6 @@ namespace map2agblib.Map
         }
 
         #endregion
+
     }
 }
