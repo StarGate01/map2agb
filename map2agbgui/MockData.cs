@@ -23,7 +23,7 @@ namespace map2agbgui
             {
                 new List<LazyReference<MapHeader>>()
                 {
-                    new LazyReference<MapHeader>(new MapHeader() { Name = 0 }),
+                    new LazyReference<MapHeader>(new MapHeader() { Name = 0, Footer = new MapFooter() { FirstTilesetID = "TSE0" } }),
                     new LazyReference<MapHeader>(new MapHeader() { Name = 2 }),
                     null,
                     new LazyReference<MapHeader>(new MapHeader() { Name = 1 }),
@@ -37,10 +37,10 @@ namespace map2agbgui
                 },
                 null
             };
-            romData.Tilesets = new List<LazyReference<Tileset>>()
+            romData.Tilesets = new Dictionary<string, LazyReference<Tileset>>
             {
-                new LazyReference<Tileset>(new Tileset() { Graphic = @"C:\Users\Christoph\Desktop\Tileset0.bmp" }),
-                new LazyReference<Tileset>(new Tileset() { Graphic = @"C:\Users\Christoph\Desktop\Tileset245157.bmp" })
+                { "TSE0",  new LazyReference<Tileset>(new Tileset() { Graphic = @"C:\Users\Christoph\Desktop\Tileset0.bmp" }) },
+                { "TSE245157", new LazyReference<Tileset>(new Tileset() { Graphic = @"C:\Users\Christoph\Desktop\Tileset245157.bmp" }) }
             };
             return romData;
         }

@@ -10,13 +10,13 @@ using map2agbgui.Models.Main.Maps;
 namespace map2agbgui.Models.Main
 {
 
-    [ValueConversion(typeof(NumericDisplayTuple<ITupleFormattable>), typeof(bool))]
+    [ValueConversion(typeof(DisplayTuple<int, ITupleFormattable>), typeof(bool))]
     public class TreeViewSelectedItemToBooleanConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value == null) return false;
-            else return value.GetType() == typeof(NumericDisplayTuple<IMapModel>);
+            else return value.GetType() == typeof(DisplayTuple<int, IMapModel>);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -26,15 +26,15 @@ namespace map2agbgui.Models.Main
 
     }
 
-    [ValueConversion(typeof(NumericDisplayTuple<ITupleFormattable>), typeof(MapHeaderModel))]
+    [ValueConversion(typeof(DisplayTuple<int, ITupleFormattable>), typeof(MapHeaderModel))]
     public class TreeViewSelectedItemToMapConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value == null) return null;
-            else if (value.GetType() == typeof(NumericDisplayTuple<IMapModel>))
+            else if (value.GetType() == typeof(DisplayTuple<int, IMapModel>))
             {
-                IMapModel model = ((NumericDisplayTuple<IMapModel>)value).Value;
+                IMapModel model = ((DisplayTuple<int, IMapModel>)value).Value;
                 if (model.EntryMode == MapEntryType.Map) return (MapHeaderModel)model;
                 else return null;
             }

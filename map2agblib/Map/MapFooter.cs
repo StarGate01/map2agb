@@ -44,13 +44,13 @@ namespace map2agblib.Map
         /// The Main Tileset for this Map
         /// </summary>
         [DataMember]
-        public int FirstTilesetID { get; set; }
+        public string FirstTilesetID { get; set; }
 
         /// <summary>
         /// The Secondary Tileset for this Map
         /// </summary>
         [DataMember]
-        public int SecondTilesetID { get; set; }
+        public string SecondTilesetID { get; set; }
 
         //TODO: Create resize methode to resize MapBlock and BorderBlock
 

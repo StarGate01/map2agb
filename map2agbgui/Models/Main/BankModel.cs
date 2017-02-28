@@ -20,8 +20,8 @@ namespace map2agbgui.Models.Main
 
         public bool IsSelected { get; set; } = false;
 
-        private ObservableCollection<NumericDisplayTuple<IMapModel>> _maps;
-        public ObservableCollection<NumericDisplayTuple<IMapModel>> Maps
+        private ObservableCollection<DisplayTuple<int, IMapModel>> _maps;
+        public ObservableCollection<DisplayTuple<int, IMapModel>> Maps
         {
             get
             {
@@ -56,8 +56,8 @@ namespace map2agbgui.Models.Main
 
         public BankModel(List<LazyReference<MapHeader>> headers, MainModel mainModel)
         {
-            _maps = new ObservableCollection<NumericDisplayTuple<IMapModel>>(headers.Select((p, pi) => 
-                new NumericDisplayTuple<IMapModel>(pi, (p == null) ? (IMapModel)(new NullpointerMapModel(this)) : new MapHeaderModel(this, p.Data, mainModel))));
+            _maps = new ObservableCollection<DisplayTuple<int, IMapModel>>(headers.Select((p, pi) => 
+                new DisplayTuple<int, IMapModel>(pi, (p == null) ? (IMapModel)(new NullpointerMapModel(this)) : new MapHeaderModel(this, p.Data, mainModel))));
         }
 
         #endregion

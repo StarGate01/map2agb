@@ -34,8 +34,8 @@ namespace map2agbgui.Models.Main
             }
         }
 
-        private ObservableCollection<NumericDisplayTuple<IBankModel>> _banks;
-        public ObservableCollection<NumericDisplayTuple<IBankModel>> Banks
+        private ObservableCollection<DisplayTuple<int, IBankModel>> _banks;
+        public ObservableCollection<DisplayTuple<int, IBankModel>> Banks
         {
             get
             {
@@ -47,8 +47,8 @@ namespace map2agbgui.Models.Main
             }
         }
 
-        private ObservableCollection<TilesetModel> _tilesets;
-        public ObservableCollection<TilesetModel> Tilesets
+        private ObservableCollection<DisplayTuple<string, TilesetModel>> _tilesets;
+        public ObservableCollection<DisplayTuple<string, TilesetModel>> Tilesets
         {
             get
             {
@@ -57,6 +57,7 @@ namespace map2agbgui.Models.Main
             set
             {
                 _tilesets = value;
+                RaisePropertyChanged("Tilesets");
             }
         }
 
@@ -90,9 +91,9 @@ namespace map2agbgui.Models.Main
         {
             _NSEditorDataModel = new NSEditorModel(romData.NameTable.Names);
             _NSEditorDataModel.Names.ListChanged += NSEditor_Names_ListChanged;
-            _banks = new ObservableCollection<NumericDisplayTuple<IBankModel>>(romData.Banks.Select((p, pi) =>
-                new NumericDisplayTuple<IBankModel>(pi, (p == null)? (IBankModel)new NullpointerBankModel() : new BankModel(p, this))));
-            _tilesets = new ObservableCollection<TilesetModel>(romData.Tilesets.Select(p => new TilesetModel(p, this)));
+            _banks = new ObservableCollection<DisplayTuple<int, IBankModel>>(romData.Banks.Select((p, pi) =>
+                new DisplayTuple<int, IBankModel>(pi, (p == null)? (IBankModel)new NullpointerBankModel() : new BankModel(p, this))));
+            _tilesets = new ObservableCollection<DisplayTuple<string, TilesetModel>>(romData.Tilesets.Select(p => new DisplayTuple<string, TilesetModel>(p.Key, new TilesetModel(p.Value, this))));
         }
 
         #endregion
@@ -101,9 +102,9 @@ namespace map2agbgui.Models.Main
 
         private void NSEditor_Names_ListChanged(object sender, ListChangedEventArgs e)
         {
-            foreach(NumericDisplayTuple<IBankModel> bank in _banks)
+            foreach(DisplayTuple<int, IBankModel> bank in _banks)
                 if (bank.Value.EntryMode == BankEntryType.Bank)
-                    foreach(NumericDisplayTuple<IMapModel> map in ((BankModel)bank.Value).Maps)
+                    foreach(DisplayTuple<int, IMapModel> map in ((BankModel)bank.Value).Maps)
                         if(map.Value.EntryMode == MapEntryType.Map) map.RaisePropertyChanged("DisplayValue");
         }
 
@@ -116,7 +117,7 @@ namespace map2agbgui.Models.Main
             RomData romData = new RomData();
             romData.NameTable.Names = NSEditorViewModel.ToRomData();
             romData.Banks = Banks.Select(p => (p.Value.EntryMode == BankEntryType.Bank)? ((BankModel)p.Value).ToRomData() : null).ToList();
-            romData.Tilesets = Tilesets.Select(p => new LazyReference<Tileset>(p.ToRomData())).ToList();
+            romData.Tilesets = Tilesets.ToDictionary(k => k.Index, p => new LazyReference<Tileset>(p.Value.ToRomData()));
             return romData;
         }
 

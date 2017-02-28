@@ -32,8 +32,8 @@ namespace map2agbgui.Models.Main.Maps
 
         #region Data properties
 
-        private int _firstTilesetID, _secondTilesetID;
-        public int FirstTilesetID
+        private string _firstTilesetID, _secondTilesetID;
+        public string FirstTilesetID
         {
             get
             {
@@ -46,7 +46,7 @@ namespace map2agbgui.Models.Main.Maps
                 RaisePropertyChanged("FirstTileset");
             }
         }
-        public int SecondTilesetID
+        public string SecondTilesetID
         {
             get
             {
@@ -64,14 +64,14 @@ namespace map2agbgui.Models.Main.Maps
         {
             get
             {
-                return MainModel.Tilesets[_firstTilesetID];
+                return MainModel.Tilesets.First(p => p.Index == _firstTilesetID).Value;
             }
         }
         public TilesetModel SecondTileset
         {
             get
             {
-                return MainModel.Tilesets[_secondTilesetID];
+                return MainModel.Tilesets.First(p => p.Index == _secondTilesetID).Value;
             }
         }
 

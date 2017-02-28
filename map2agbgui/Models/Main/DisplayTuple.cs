@@ -8,13 +8,13 @@ using System.Windows;
 
 namespace map2agbgui.Models.Main
 {
-    public class NumericDisplayTuple<T> : INotifyPropertyChanged where T : ITupleFormattable, INotifyPropertyChanged
+    public class DisplayTuple<K, T> : INotifyPropertyChanged where T : ITupleFormattable, INotifyPropertyChanged
     {
 
         #region Properties
 
-        private int _index;
-        public int Index
+        private K _index;
+        public K Index
         {
             get
             {
@@ -56,7 +56,7 @@ namespace map2agbgui.Models.Main
 
         #region Constructors
 
-        public NumericDisplayTuple(int index, T value)
+        public DisplayTuple(K index, T value)
         {
             Index = index;
             Value = value;
@@ -82,9 +82,9 @@ namespace map2agbgui.Models.Main
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        public NumericDisplayTuple<T> GetCopy()
+        public DisplayTuple<K, T> GetCopy()
         {
-            NumericDisplayTuple<T> copy = (NumericDisplayTuple<T>)this.MemberwiseClone();
+            DisplayTuple<K, T> copy = (DisplayTuple<K, T>)this.MemberwiseClone();
             return copy;
         }
 

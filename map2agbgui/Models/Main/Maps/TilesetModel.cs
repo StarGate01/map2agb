@@ -12,7 +12,7 @@ using map2agblib.Data;
 namespace map2agbgui.Models.Main.Maps
 {
 
-    public class TilesetModel
+    public class TilesetModel : ITupleFormattable
     {
 
         #region Properties
@@ -54,6 +54,14 @@ namespace map2agbgui.Models.Main.Maps
             }
         }
 
+        public string FormatString
+        {
+            get
+            {
+                return "{0} {1}";
+            }
+        }
+
         #endregion
 
         #endregion
@@ -75,6 +83,11 @@ namespace map2agbgui.Models.Main.Maps
         #endregion
 
         #region Methods
+
+        public override string ToString()
+        {
+            return "Tileset";
+        }
 
         public Tileset ToRomData()
         {

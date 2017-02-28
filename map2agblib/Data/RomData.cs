@@ -36,7 +36,7 @@ namespace map2agblib.Data
         /// List of the ROMs tilesets
         /// </summary>
         [DataMember]
-        public List<LazyReference<Tileset>> Tilesets { get; set; }
+        public Dictionary<string, LazyReference<Tileset>> Tilesets { get; set; }
 
         #endregion
 
@@ -44,7 +44,7 @@ namespace map2agblib.Data
         {
             NameTable = new MapNameTable();
             Banks = new List<List<LazyReference<MapHeader>>>();
-            Tilesets = new List<LazyReference<Tileset>>();
+            Tilesets = new Dictionary<string, LazyReference<Tileset>>();
         }
 
         #region Import and Export
@@ -95,10 +95,10 @@ namespace map2agblib.Data
                     data.Banks[i][j].ExportToFile(Path.Combine((Path.Combine(tempDir, "maps")), i + "_" + j + ".map"));
                 }
             }
-            for (int i = 0; i < data.Tilesets.Count; i++)
+            foreach(KeyValuePair<string, LazyReference<Tileset>> entry in data.Tilesets)
             {
-                data.Tilesets[i].AbsolutePath = Path.Combine((Path.Combine(dirName, "tilesets")), i + ".tileset");
-                data.Tilesets[i].ExportToFile(Path.Combine((Path.Combine(tempDir, "tilesets")), i + ".tileset"));
+                entry.Value.AbsolutePath = Path.Combine((Path.Combine(dirName, "tilesets")), entry.Key + ".tileset");
+                entry.Value.ExportToFile(Path.Combine((Path.Combine(tempDir, "tilesets")), entry.Key + ".tileset"));
             }
             using (FileStream output = File.Open(projFileName, FileMode.Create, FileAccess.Write))
             {

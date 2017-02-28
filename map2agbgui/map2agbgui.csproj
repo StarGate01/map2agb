@@ -123,7 +123,7 @@
     <Compile Include="Models\NSEditor\NameEntryModel.cs" />
     <Compile Include="Models\NSEditor\NSEditorModel.cs" />
     <Compile Include="Models\Main\Maps\NullpointerMapModel.cs" />
-    <Compile Include="Models\Main\NumericDisplayTuple.cs" />
+    <Compile Include="Models\Main\DisplayTuple.cs" />
     <Compile Include="Native\WindowMods.cs" />
     <Compile Include="NSEditorWindow.xaml.cs">
       <DependentUpon>NSEditorWindow.xaml</DependentUpon>
