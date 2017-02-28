@@ -25,6 +25,8 @@ namespace map2agblib.Map.Event
         private ushort _itemId;
         private byte _hiddenId;
         private byte _count;
+        private bool _detectorDisabled;
+        private bool _isCoin;
         #endregion
 
         #region Properties
@@ -151,6 +153,48 @@ namespace map2agblib.Map.Event
             {
                 if (Layout == SignType.Item)
                     _count = value;
+                else
+                    throw new InvalidOperationException();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the ItemCount of the Sign. Throws InvalidOperationException if the Layout is not SignType.Item
+        /// </summary>
+        public bool DetectorDisabled
+        {
+            get
+            {
+                if (Layout == SignType.Item)
+                    return _detectorDisabled;
+                else
+                    throw new InvalidOperationException();
+            }
+            set
+            {
+                if (Layout == SignType.Item)
+                    _detectorDisabled = value;
+                else
+                    throw new InvalidOperationException();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the ItemCount of the Sign. Throws InvalidOperationException if the Layout is not SignType.Item
+        /// </summary>
+        public bool IsCoin
+        {
+            get
+            {
+                if (Layout == SignType.Item)
+                    return _isCoin;
+                else
+                    throw new InvalidOperationException();
+            }
+            set
+            {
+                if (Layout == SignType.Item)
+                    _isCoin = value;
                 else
                     throw new InvalidOperationException();
             }
