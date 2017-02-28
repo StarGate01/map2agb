@@ -72,23 +72,24 @@ namespace map2agbgui
 
         #region Eventhandler Mainmenu
 
-        private void AboutMenuButton_Click(object sender, RoutedEventArgs e)
+        private void HelpCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             AboutWindow aboutWindow = new AboutWindow();
             aboutWindow.Owner = this;
             aboutWindow.ShowDialog();
         }
+
         private void ExitMenuButton_Click(object sender, RoutedEventArgs e)
         {
             Close();
         }
 
-        private void OpenMenuButton_Click(object sender, RoutedEventArgs e)
+        private void OpenCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             LoadProject();
         }
 
-        private void SaveMenuButton_Click(object sender, RoutedEventArgs e)
+        private void SaveCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             SaveProjectAs(lastSaveLocation);
         }
@@ -198,6 +199,7 @@ namespace map2agbgui
         }
 
         #endregion
+
 
     }
 }
