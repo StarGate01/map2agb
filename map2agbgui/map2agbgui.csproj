@@ -80,10 +80,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Dialogs\DeleteMapDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -100,9 +96,6 @@
     <Compile Include="Common\ValueConverterGroup.cs" />
     <Compile Include="Controls\MapTabControl.xaml.cs">
       <DependentUpon>MapTabControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\DeleteMapDialog.xaml.cs">
-      <DependentUpon>DeleteMapDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Common\IconMods.cs" />
     <Compile Include="MainWindow.xaml.cs">

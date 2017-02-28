@@ -45,6 +45,7 @@
     <Compile Include="Imaging\Palette.cs" />
     <Compile Include="Data\MapNameTable.cs" />
     <Compile Include="Data\RomData.cs" />
+    <Compile Include="IO\ImportExport.cs" />
     <Compile Include="Map\Connection\Connection.cs" />
     <Compile Include="Map\Connection\ConnectionHeader.cs" />
     <Compile Include="Map\EventHeader.cs" />

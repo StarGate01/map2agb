@@ -3,31 +3,49 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml;
-using System.Xml.Serialization;
+using map2agblib.IO;
+using map2agblib.Data;
 
 namespace map2agb
 {
+
     class Program
     {
-        static void Main(string[] args)
+
+        static void PrintUsage()
         {
-            /* some test code to serialize a bunch of maps */
-            DataContractSerializer serializer = new DataContractSerializer(typeof(MapHeader));
-            FileStream fs = new FileStream("test.xml", FileMode.Open, FileAccess.Read);
-            MapHeader test = (MapHeader)serializer.ReadObject(fs);
-            fs.Dispose();
-            MapHeader header = new MapHeader(20,24,2,2);
-            header.Weather = 5;
-            header.Name = 42;
-            header.Music = 0x12;
-            XmlWriterSettings settings = new XmlWriterSettings() { Indent = true };
-            XmlWriter writer = XmlWriter.Create("test.xml", settings);
-            serializer.WriteObject(writer, header);
-            writer.Dispose();
+            Console.WriteLine("Usage: " + Environment.NewLine +
+                "map2agb.exe <project_file_path.map2agb>");
         }
+
+        static int Main(string[] args)
+        {
+            if (args.Length != 2)
+            {
+                PrintUsage();
+                return 1;
+            }
+
+            string projectPath = args[1];
+            RomData data = null;
+            try
+            {
+                data = ImportExport.ImportFromFile(projectPath);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("Error opening project file: " + ex.Message);
+                return 1;
+            }
+            Console.WriteLine("Opened project file");
+
+            //Do work with data
+
+            return 0;
+        }
+
     }
+
 }

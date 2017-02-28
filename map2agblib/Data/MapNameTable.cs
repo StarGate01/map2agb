@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,6 +11,7 @@ namespace map2agblib.Data
     /// <summary>
     /// Represents the MapNameTable to read and write names in the project
     /// </summary>
+    [DataContract]
     public class MapNameTable
     {
         #region Constances
@@ -19,6 +21,7 @@ namespace map2agblib.Data
 
         #region Fields
         private string[] _names;
+        [DataMember]
         public string[] Names
         {
             get
