@@ -102,24 +102,11 @@ namespace map2agblib.Map
         #region Constructor
 
         /// <summary>
-        /// Creates a new Mapheader with default width and height
-        /// </summary>
-        /// <param name="width">Width of the Mapfooter</param>
-        /// <param name="height">Height of the Mapfooter</param>
-        public MapHeader(uint width, uint height, byte borderWidth, byte borderHeight)
-        {
-            Footer = new MapFooter(width, height, borderWidth, borderHeight);
-            Events = new EventHeader();
-            MapScripts = new MapScriptHeader();
-            Connections = new ConnectionHeader();
-        }
-
-        /// <summary>
         /// Creates a new MapHeader object with width and height of zero
         /// </summary>
         public MapHeader()
         {
-            Footer = new MapFooter(0,0, 0, 0);
+            Footer = new MapFooter();
             Events = new EventHeader();
             MapScripts = new MapScriptHeader();
             Connections = new ConnectionHeader();

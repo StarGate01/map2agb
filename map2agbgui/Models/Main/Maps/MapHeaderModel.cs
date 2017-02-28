@@ -61,16 +61,8 @@ namespace map2agbgui.Models.Main.Maps
 
         #region Data properties
 
-        public string Name
-        {
-            get
-            {
-                return _mainModel.NSEditorViewModel.Names[_nameID].Name;
-            }
-        }
-
-        private int _nameID;
-        public int NameID
+        private byte _nameID;
+        public byte NameID
         {
             get
             {
@@ -81,6 +73,13 @@ namespace map2agbgui.Models.Main.Maps
                 _nameID = value;
                 RaisePropertyChanged("NameID");
                 RaisePropertyChanged("Name");
+            }
+        }
+        public string Name
+        {
+            get
+            {
+                return _mainModel.NSEditorViewModel.Names[_nameID].Name;
             }
         }
 
@@ -98,6 +97,106 @@ namespace map2agbgui.Models.Main.Maps
             }
         }
 
+        private ushort _music, _index, _unknown;
+        public ushort Music
+        {
+            get
+            {
+                return _music;
+            }
+            set
+            {
+                _music = value;
+                RaisePropertyChanged("Music");
+            }
+        }
+        public ushort Index
+        {
+            get
+            {
+                return _index;
+            }
+            set
+            {
+                _index = value;
+                RaisePropertyChanged("Index");
+            }
+        }
+        public ushort Unknown
+        {
+            get
+            {
+                return _index;
+            }
+            set
+            {
+                _index = value;
+                RaisePropertyChanged("Unknown");
+            }
+        }
+
+        private byte _flash, _weather, _type, _showName, _battleStyle;
+        public byte Flash
+        {
+            get
+            {
+                return _flash;
+            }
+            set
+            {
+                _flash = value;
+                RaisePropertyChanged("Flash");
+            }
+        }
+        public byte Weather
+        {
+            get
+            {
+                return _weather;
+            }
+            set
+            {
+                _weather = value;
+                RaisePropertyChanged("Weather");
+            }
+        }
+        public byte Type
+        {
+            get
+            {
+                return _type;
+            }
+            set
+            {
+                _type = value;
+                RaisePropertyChanged("Type");
+            }
+        }
+        public byte ShowName
+        {
+            get
+            {
+                return _showName;
+            }
+            set
+            {
+                _showName = value;
+                RaisePropertyChanged("ShowName");
+            }
+        }
+        public byte BattleStyle
+        {
+            get
+            {
+                return _battleStyle;
+            }
+            set
+            {
+                _battleStyle = value;
+                RaisePropertyChanged("BattleStyle");
+            }
+        }
+
         #endregion
 
         #endregion
@@ -109,10 +208,20 @@ namespace map2agbgui.Models.Main.Maps
             _bank = bank;
             _nameID = header.Name;
             _footer = new MapFooterModel(header.Footer, mainModel);
+            _music = header.Music;
+            _index = header.Index;
+            _unknown = header.Unknown;
+            _flash = header.Flash;
+            _weather = header.Weather;
+            _type = header.Type;
+            _showName = header.ShowName;
+            _battleStyle = header.BattleStyle;
             _mainModel = mainModel;
         }
 
-        public MapHeaderModel() : this(null, new MapHeader() { Name = 0 }, new MainModel(MockData.MockRomData()))
+        public MapHeaderModel() : this(null, 
+            new MapHeader() { Name = 0, Footer = new MapFooter() { FirstTilesetID = "TSE0", SecondTilesetID = "TSE245157" } }, 
+            new MainModel(MockData.MockRomData()))
         {
             if (!(bool)(DesignerProperties.IsInDesignModeProperty.GetMetadata(typeof(DependencyObject)).DefaultValue))
                 throw new InvalidOperationException("MapModel can only be constructed without parameters by the designer");
@@ -130,8 +239,16 @@ namespace map2agbgui.Models.Main.Maps
         public MapHeader ToRomData()
         {
             MapHeader header = new MapHeader();
-            header.Name = (byte)NameID;
-            header.Footer = Footer.ToRomData();
+            header.Name = _nameID;
+            header.Footer = _footer.ToRomData();
+            header.Music = _music;
+            header.Index = _index;
+            header.Unknown = _unknown;
+            header.Flash = _flash;
+            header.Weather = _weather;
+            header.Type = _type;
+            header.ShowName = _showName;
+            header.BattleStyle = _battleStyle;
             return header;
         }
 

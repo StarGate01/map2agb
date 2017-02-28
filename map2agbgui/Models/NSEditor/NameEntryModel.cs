@@ -29,8 +29,8 @@ namespace map2agbgui.Models.NSEditor
             }
         }
 
-        private int _index;
-        public int Index
+        private byte _index;
+        public byte Index
         {
             get
             {
@@ -50,7 +50,7 @@ namespace map2agbgui.Models.NSEditor
 
         #region Constructors
 
-        public NameEntryModel(int index, string name)
+        public NameEntryModel(byte index, string name)
         {
             _index = index;
             _name = name;

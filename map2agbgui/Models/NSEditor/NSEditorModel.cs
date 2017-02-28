@@ -35,7 +35,7 @@ namespace map2agbgui.Models.NSEditor
 
         public NSEditorModel(string[] names)
         {
-            _names = new BindingList<NameEntryModel>(names.Select((p, pi) => new NameEntryModel(pi, p)).ToList());
+            _names = new BindingList<NameEntryModel>(names.Select((p, pi) => new NameEntryModel((byte)pi, p)).ToList());
         }
 
         public NSEditorModel() : this((MockData.MockRomData()).NameTable.Names)

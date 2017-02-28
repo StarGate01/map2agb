@@ -8,6 +8,12 @@
              xmlns:model="clr-namespace:map2agbgui.Models.Main.Maps"
              xmlns:c="clr-namespace:map2agbgui.Common"
              d:DesignHeight="400" d:DesignWidth="555">
+
+    <UserControl.Resources>
+        <c:ByteToHexStringConverter x:Key="byteToHexStringConverter" />
+        <c:UShortToHexStringConverter x:Key="uShortToHexStringConverter" />
+    </UserControl.Resources>
+    
     <Grid d:DataContext="{d:DesignInstance Type=model:MapHeaderModel, IsDesignTimeCreatable=True}">
         <TabControl>
             <TabItem Header="Map">
@@ -36,32 +42,105 @@
                     </StackPanel>
                 </Grid>
             </TabItem>
-            <TabItem Header="Header">
+            <TabItem Header="Settings">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <GroupBox Grid.Row="0">
                         <GroupBox.Header>
-                            <TextBlock Text="General" FontWeight="Bold" />
+                            <TextBlock Text="Header" FontWeight="Bold" />
                         </GroupBox.Header>
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="200" />
                                 <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Margin="3" Grid.Column="0" Grid.Row="0" Text="Namespace:" VerticalAlignment="Center" />
-                            <ComboBox ItemsSource="{Binding MainModel.NSEditorViewModel.Names}" DisplayMemberPath="Name" SelectedValuePath="Index" SelectedValue="{Binding NameID, Mode=TwoWay}" Margin="3" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" />
-                            <TextBlock Margin="3" Grid.Column="2" Grid.Row="0" VerticalAlignment="Center">
+
+                            <TextBlock Margin="3" Grid.Column="0" Grid.Row="0" Text="Music:" VerticalAlignment="Center" />
+                            <TextBox Text="{Binding Music, Mode=TwoWay, Converter={StaticResource uShortToHexStringConverter}}" Margin="3" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
+                            <TextBlock Margin="3" Grid.Column="2" Grid.Row="0" Text="The music played on this map" VerticalAlignment="Center" Foreground="{DynamicResource {x:Static SystemColors.ControlDarkDarkBrushKey}}" />
+
+                            <TextBlock Margin="3" Grid.Column="0" Grid.Row="1" Text="Index:" VerticalAlignment="Center" />
+                            <TextBox Text="{Binding Index, Mode=TwoWay, Converter={StaticResource uShortToHexStringConverter}}" Margin="3" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
+                            <TextBlock Margin="3" Grid.Column="2" Grid.Row="1" Text="Used in the Map Index Table to regain the Map Header when a game is saved" VerticalAlignment="Center" Foreground="{DynamicResource {x:Static SystemColors.ControlDarkDarkBrushKey}}" />
+
+                            <TextBlock Margin="3" Grid.Column="0" Grid.Row="2" Text="Namespace:" VerticalAlignment="Center" />
+                            <WrapPanel Grid.Row="2" Grid.Column="1">
+                                <ComboBox ItemsSource="{Binding MainModel.NSEditorViewModel.Names}" DisplayMemberPath="Name" SelectedValuePath="Index" SelectedValue="{Binding NameID, Mode=TwoWay}" Margin="3" VerticalAlignment="Center" />
+                                <TextBlock Margin="3" Grid.Column="2" Grid.Row="0" VerticalAlignment="Center">
                                 <Run Text="(ID: " />
                                 <Run Text="{Binding NameID}" />
                                 <Run Text=")" />
-                            </TextBlock>
+                                </TextBlock>
+                            </WrapPanel>
+                            <TextBlock Margin="3" Grid.Column="2" Grid.Row="2" Text="The map name" VerticalAlignment="Center" Foreground="{DynamicResource {x:Static SystemColors.ControlDarkDarkBrushKey}}" />
+
+                            <TextBlock Margin="3" Grid.Column="0" Grid.Row="3" Text="Flash:" VerticalAlignment="Center" />
+                            <TextBox Text="{Binding Flash, Mode=TwoWay, Converter={StaticResource byteToHexStringConverter}}" Margin="3" Grid.Column="1" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
+                            <TextBlock Margin="3" Grid.Column="2" Grid.Row="3" Text="Wether flash can be used on this map (or must be)" VerticalAlignment="Center" Foreground="{DynamicResource {x:Static SystemColors.ControlDarkDarkBrushKey}}" />
+
+                            <TextBlock Margin="3" Grid.Column="0" Grid.Row="4" Text="Weather:" VerticalAlignment="Center" />
+                            <TextBox Text="{Binding Weather, Mode=TwoWay, Converter={StaticResource byteToHexStringConverter}}" Margin="3" Grid.Column="1" Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
+                            <TextBlock Margin="3" Grid.Column="2" Grid.Row="4" Text="Weather effects of the map, also impacting battles" VerticalAlignment="Center" Foreground="{DynamicResource {x:Static SystemColors.ControlDarkDarkBrushKey}}" />
+
+                            <TextBlock Margin="3" Grid.Column="0" Grid.Row="5" Text="Type:" VerticalAlignment="Center" />
+                            <TextBox Text="{Binding Type, Mode=TwoWay, Converter={StaticResource byteToHexStringConverter}}" Margin="3" Grid.Column="1" Grid.Row="5" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
+                            <TextBlock Margin="3" Grid.Column="2" Grid.Row="5" Text="Type of this map" VerticalAlignment="Center" Foreground="{DynamicResource {x:Static SystemColors.ControlDarkDarkBrushKey}}" />
+
+                            <TextBlock Margin="3" Grid.Column="0" Grid.Row="6" Text="Unknown:" VerticalAlignment="Center" />
+                            <TextBox Text="{Binding Unknown, Mode=TwoWay, Converter={StaticResource uShortToHexStringConverter}}" Margin="3" Grid.Column="1" Grid.Row="6" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
+                            <TextBlock Margin="3" Grid.Column="2" Grid.Row="6" Text="Field #18" VerticalAlignment="Center" Foreground="{DynamicResource {x:Static SystemColors.ControlDarkDarkBrushKey}}" />
+
+                            <TextBlock Margin="3" Grid.Column="0" Grid.Row="7" Text="Show Name:" VerticalAlignment="Center" />
+                            <TextBox Text="{Binding ShowName, Mode=TwoWay, Converter={StaticResource byteToHexStringConverter}}" Margin="3" Grid.Column="1" Grid.Row="7" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
+                            <TextBlock Margin="3" Grid.Column="2" Grid.Row="7" Text="Wether the name of the map should be shown, and how it should be shown on entering" VerticalAlignment="Center" Foreground="{DynamicResource {x:Static SystemColors.ControlDarkDarkBrushKey}}" />
+
+                            <TextBlock Margin="3" Grid.Column="0" Grid.Row="8" Text="Battle Style:" VerticalAlignment="Center" />
+                            <TextBox Text="{Binding BattleStyle, Mode=TwoWay, Converter={StaticResource byteToHexStringConverter}}" Margin="3" Grid.Column="1" Grid.Row="8" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
+                            <TextBlock Margin="3" Grid.Column="2" Grid.Row="8" Text="The battle animation style for this map" VerticalAlignment="Center" Foreground="{DynamicResource {x:Static SystemColors.ControlDarkDarkBrushKey}}" />
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox Grid.Row="1">
+                        <GroupBox.Header>
+                            <TextBlock Text="Footer" FontWeight="Bold" />
+                        </GroupBox.Header>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Margin="3" Grid.Column="0" Grid.Row="0" Text="First Tileset:" VerticalAlignment="Center" />
+                            <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding MainModel.Tilesets}" DisplayMemberPath="Index" SelectedValuePath="Index" SelectedValue="{Binding Footer.FirstTilesetID, Mode=TwoWay}" Margin="3" VerticalAlignment="Center" />
+                            <TextBlock Margin="3" Grid.Column="2" Grid.Row="0" Text="The main tileset for this map" VerticalAlignment="Center" Foreground="{DynamicResource {x:Static SystemColors.ControlDarkDarkBrushKey}}" />
+
+                            <TextBlock Margin="3" Grid.Column="0" Grid.Row="1" Text="Second Tileset:" VerticalAlignment="Center" />
+                            <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding MainModel.Tilesets}" DisplayMemberPath="Index" SelectedValuePath="Index" SelectedValue="{Binding Footer.SecondTilesetID, Mode=TwoWay}" Margin="3" VerticalAlignment="Center" />
+                            <TextBlock Margin="3" Grid.Column="2" Grid.Row="1" Text="The secondary tileset for this map" VerticalAlignment="Center" Foreground="{DynamicResource {x:Static SystemColors.ControlDarkDarkBrushKey}}" />
+
+                            <TextBlock Margin="3" Grid.Column="0" Grid.Row="2" Text="Padding:" VerticalAlignment="Center" />
+                            <TextBox Text="{Binding Footer.Padding, Mode=TwoWay, Converter={StaticResource uShortToHexStringConverter}}" Margin="3" Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
+                            <TextBlock Margin="3" Grid.Column="2" Grid.Row="2" Text="Bytes used to assure alignment, probably unused otherwise" VerticalAlignment="Center" Foreground="{DynamicResource {x:Static SystemColors.ControlDarkDarkBrushKey}}" />
                         </Grid>
                     </GroupBox>
                 </Grid>

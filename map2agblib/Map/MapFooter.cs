@@ -18,13 +18,13 @@ namespace map2agblib.Map
         /// The Width of the Map in Tiles (16x16)
         /// </summary>
         [DataMember]
-        public uint Width { get; private set; }
+        public uint Width { get; set; }
 
         /// <summary>
         /// The Height of the Map in Tiles (16x16)
         /// </summary>
         [DataMember]
-        public uint Height { get; private set; }
+        public uint Height { get; set; }
 
         //TODO: Create Block objects
         //TODO: Create explicit setter to hold consitancy with Width and Height or find a better solution
@@ -32,13 +32,13 @@ namespace map2agblib.Map
         /// The BorderBlock which is displayed when the camera hits the border
         /// </summary>
         [DataMember]
-        public ushort[][] BorderBlock { get; private set; }
+        public ushort[][] BorderBlock { get; set; }
 
         /// <summary>
         /// The actual MapBlock, contains Graphical tile data as well as the collision Map
         /// </summary>
         [DataMember]
-        public ushort[][] MapBlock { get; private set; }
+        public ushort[][] MapBlock { get; set; }
 
         /// <summary>
         /// The Main Tileset for this Map
@@ -58,13 +58,13 @@ namespace map2agblib.Map
         /// The Width of the BorderBlock
         /// </summary>
         [DataMember]
-        public byte BorderWidth { get; private set; }
+        public byte BorderWidth { get; set; }
 
         /// <summary>
         /// The Height of the BorderBlock
         /// </summary>
         [DataMember]
-        public byte BorderHeight { get; private set; }
+        public byte BorderHeight { get; set; }
 
         /// <summary>
         /// Bytes used to assure alignment, probably unused otherwise
@@ -75,23 +75,10 @@ namespace map2agblib.Map
 
         #region Constructor
 
-        /// <summary>
-        /// Creates a new MapFooter object //TODO: Tilesets
-        /// </summary>
-        public MapFooter(uint width, uint height, byte borderWidth, byte borderHeight)
-        {
-            Width = width;
-            Height = height;
-            BorderWidth = borderWidth;
-            BorderHeight = borderHeight;
-
-            BorderBlock = Enumerable.Repeat(new ushort[BorderHeight], BorderWidth).ToArray();
-            MapBlock = Enumerable.Repeat(new ushort[Height], (int)Width).ToArray();
-        }
-
         public MapFooter()
         {
-
+            BorderBlock = new ushort[0][];
+            MapBlock = new ushort[0][];
         }
 
         #endregion
