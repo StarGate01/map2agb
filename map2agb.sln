@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "map2agbgui", "map2agbgui\ma
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "map2agblib", "map2agblib\map2agblib.csproj", "{0DCB2103-4515-436C-8CCA-A37267F1ED09}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "map2agbtest", "map2agbtest\map2agbtest.csproj", "{EC1845CF-7879-4E7E-920F-23FA8D455DC1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{0DCB2103-4515-436C-8CCA-A37267F1ED09}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0DCB2103-4515-436C-8CCA-A37267F1ED09}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0DCB2103-4515-436C-8CCA-A37267F1ED09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC1845CF-7879-4E7E-920F-23FA8D455DC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC1845CF-7879-4E7E-920F-23FA8D455DC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC1845CF-7879-4E7E-920F-23FA8D455DC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC1845CF-7879-4E7E-920F-23FA8D455DC1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
