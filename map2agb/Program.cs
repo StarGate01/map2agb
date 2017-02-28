@@ -12,37 +12,77 @@ namespace map2agb
 
     class Program
     {
-
-        static void PrintUsage()
+       
+        /// <summary>
+        /// Parsing method for map input
+        /// </summary>
+        /// <param name="opts"></param>
+        /// <returns></returns>
+        public static int ParseMap(Options opts)
         {
-            Console.WriteLine("Usage: " + Environment.NewLine +
-                "map2agb.exe <project path>");
-        }
+            String outPath = opts.OutputPath;
+            List<string> inputFiles = opts.InputFiles;
+            MapHeader mapHeaderBuilder = new MapHeader();
 
-        static int Main(string[] args)
-        {
-            if (args.Length != 2)
-            {
-                PrintUsage();
-                return 1;
-            }
-
-            string projectPath = args[1];
-            RomData data = null;
-            try
-            {
-                data = RomData.ImportFromDirectory(projectPath);
+            try {
+                List<MapHeader> maps = (List<MapHeader>)inputFiles.Select(path => mapHeaderBuilder.ImportFromFile(path)).ToList();
+                Console.WriteLine("Total of " + maps.Count.ToString() + " were loaded");
+                Console.ReadKey();
+                return 0;
             }
             catch(Exception ex)
             {
-                Console.WriteLine("Error opening project: " + ex.Message);
+                Console.Error.WriteLine(ex.Message);
                 return 1;
             }
-            Console.WriteLine("Opened project");
+        }
 
-            //Do work with data
-
+        /// <summary>
+        /// Parsing method for tileset input
+        /// </summary>
+        /// <param name="opts"></param>
+        /// <returns></returns>
+        public static int ParseTileset(Options opts)
+        {
             return 0;
+        }
+
+        /// <summary>
+        /// Parsing method for meta input
+        /// </summary>
+        /// <param name="opts"></param>
+        /// <returns></returns>
+        public static int ParseMeta(Options opts)
+        {
+            return 0;
+        }
+
+
+        
+        static int Main(string[] args)
+        {
+            var opts = new Options();
+            if(CommandLine.Parser.Default.ParseArguments(args, opts))
+            {
+
+                switch (opts.Mode.ToLower())
+                {
+                    case "map":
+                        //Compile a map
+                        return ParseMap(opts);
+                    case "tileset":
+                    case "tiles":
+                        //Compile a tileset
+                        return ParseTileset(opts);
+                    case "meta":
+                        //Parse a metadata table
+                        return ParseMeta(opts);
+                    default:
+                        Console.Error.WriteLine("Unkown mode "+opts.Mode);
+                        return 1;
+                }
+            }
+            return 1;
         }
 
     }
