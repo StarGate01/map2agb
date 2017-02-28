@@ -20,6 +20,7 @@ namespace map2agblib.Data
         #endregion
 
         #region Fields
+
         private string[] _names;
         [DataMember]
         public string[] Names
@@ -42,6 +43,7 @@ namespace map2agblib.Data
         /// </summary>
         /// <param name="index">Index of the Name</param>
         /// <returns></returns>
+        [IgnoreDataMember]
         public string this[int index]
         {
             get

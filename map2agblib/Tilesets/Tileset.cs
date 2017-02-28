@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Linq;
-using System.Xml.Serialization;
 using map2agblib.Imaging;
+using System.Runtime.Serialization;
+using map2agblib.Data;
 
 namespace map2agblib.Tilesets
 {
     /// <summary>
     /// Represents a tileset that is referenced by a map
     /// </summary>
-    public class Tileset
+    [DataContract]
+    public class Tileset : XMLImportExport<Tileset>
     {
+
         const int MAX_SECOND_TILESET_SIZE = 0x180;
         const int MAX_FIRST_TILESET_SIZE = 0x280;
         const int MAX_PALETTES = 6;
@@ -19,46 +22,50 @@ namespace map2agblib.Tilesets
         /// <summary>
         /// Is the tileset lz77 compressed
         /// </summary>
+        [DataMember]
         public bool Compressed { get; set; }
 
         /// <summary>
         /// Is the tileset primary (Pal 0-5 used) or secondary (Pal 6-11 used)
         /// </summary>
+        [DataMember]
         public bool Secondary { get; set; }
 
         /// <summary>
         /// Filler
         /// </summary>
+        [DataMember]
         public byte Field2 { get; set; }
 
         /// <summary>
         /// Filler
         /// </summary>
+        [DataMember]
         public byte Field3 { get; set; }
 
         /// <summary>
         /// Reference to a compiled (and maybe compressed) .png 4 4bpp tileset graphic
         /// </summary>
+        [DataMember]
         public string Graphic { get; set; }
 
         /// <summary>
         /// Reference to an array of 6 Palettes (with 16 colors each)
         /// </summary>
+        [DataMember]
         public Palette[] Palettes { get; set; }
 
         /// <summary>
         /// Reference to a list of blocks (tilemaps as well as behaviors)
         /// </summary>
+        [DataMember]
         public TilesetEntry[] Blocks { get; set; }
-
-        
 
         /// <summary>
         /// Refers to a label or offset of the animation init function
         /// </summary>
+        [DataMember]
         public string AnimationInitFunction { set; get; }
-
-
 
         #endregion
 
@@ -85,6 +92,7 @@ namespace map2agblib.Tilesets
         {
 
         }
+
         #endregion
 
     }

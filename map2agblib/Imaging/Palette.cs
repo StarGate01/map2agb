@@ -1,43 +1,56 @@
 ﻿using System;
 using System.Drawing;
+using System.Runtime.Serialization;
+
 namespace map2agblib.Imaging
 {
+
+    [DataContract]
     public class Palette
     {
-        private Color[] _colors;
 
-        #region Properties
+        #region Fields
+
+        [DataMember]
+        public Color[] Colors { get; set; }
+
+        #endregion
+
+        #region Indexed properties
 
         /// <summary>
         /// Represents the Array of Colors that are stored 
         /// </summary>
+        [IgnoreDataMember]
         public Color this[int index]
         {
             get
             {
                 if (index >= 16)
                     throw new IndexOutOfRangeException();
-                return _colors[index];
+                return Colors[index];
             }
             set
             {
                 if (index >= 16)
                     throw new IndexOutOfRangeException();
-                _colors[index] = value;
+                Colors[index] = value;
             }
         }
-
 
         #endregion
 
         #region Constructor
+
         /// <summary>
         /// Represents a 16 color array
         /// </summary>
         public Palette()
         {
-            _colors = new Color[16];
+            Colors = new Color[16];
         }
+
         #endregion
     }
+
 }

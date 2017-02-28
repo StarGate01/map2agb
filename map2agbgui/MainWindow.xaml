@@ -114,13 +114,13 @@
                         </MenuItem.Icon>
                     </MenuItem>
                 </MenuItem>
-                <MenuItem Header="_Invoke">
+                <!-- <MenuItem Header="_Invoke">
                     <MenuItem Header="_Compiler" >
                         <MenuItem.Icon>
                             <Image Source="Assets/BuildSolution_16x.png"/>
                         </MenuItem.Icon>
                     </MenuItem>
-                </MenuItem>
+                </MenuItem> -->
                 <MenuItem Header="_Help">
                     <MenuItem x:Name="AboutMenuButton" Header="_About" Command="Help" InputGestureText="F1">
                         <MenuItem.Icon>
@@ -132,7 +132,7 @@
         </DockPanel>
         <DockPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3">
             <Menu DockPanel.Dock="Top" Padding="3">
-                <MenuItem ToolTip="Add map" x:Name="AddMapButton" Click="AddMapButton_Click">
+                <MenuItem ToolTip="Add map" x:Name="AddMapButton" Click="AddMapButton_Click" IsEnabled="{Binding ElementName=MapTreeView, Path=SelectedItem, Converter={StaticResource treeViewSelectedItemToBooleanConverter}}">
                     <MenuItem.Header>
                         <Image Width="32" Height="32" Source="Assets/Create_32x.png" Margin="3" />
                     </MenuItem.Header>

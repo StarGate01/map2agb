@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using map2agblib.IO;
 using map2agblib.Data;
 
 namespace map2agb
@@ -17,7 +16,7 @@ namespace map2agb
         static void PrintUsage()
         {
             Console.WriteLine("Usage: " + Environment.NewLine +
-                "map2agb.exe <project_file_path.map2agb>");
+                "map2agb.exe <project path>");
         }
 
         static int Main(string[] args)
@@ -32,14 +31,14 @@ namespace map2agb
             RomData data = null;
             try
             {
-                data = ImportExport.ImportFromFile(projectPath);
+                data = RomData.ImportFromDirectory(projectPath);
             }
             catch(Exception ex)
             {
-                Console.WriteLine("Error opening project file: " + ex.Message);
+                Console.WriteLine("Error opening project: " + ex.Message);
                 return 1;
             }
-            Console.WriteLine("Opened project file");
+            Console.WriteLine("Opened project");
 
             //Do work with data
 

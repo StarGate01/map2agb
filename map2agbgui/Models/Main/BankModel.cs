@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Windows;
 using map2agblib.Map;
 using System.Collections.ObjectModel;
+using map2agblib.Data;
 
 namespace map2agbgui.Models.Main
 {
@@ -42,20 +43,20 @@ namespace map2agbgui.Models.Main
 
         #region Constructor
 
-        public BankModel(List<MapHeader> headers, MainModel mainModel)
+        public BankModel(List<LazyReference<MapHeader>> headers, MainModel mainModel)
         {
             _maps = new BindingList<NumericDisplayTuple<IMapModel>>(headers.Select((p, pi) => 
-                new NumericDisplayTuple<IMapModel>(pi, (p == null) ? (IMapModel)(new NullpointerMapModel(this)) : new MapModel(this, p, mainModel))).ToList());
+                new NumericDisplayTuple<IMapModel>(pi, (p == null) ? (IMapModel)(new NullpointerMapModel(this)) : new MapModel(this, p.Data, mainModel))).ToList());
         }
 
         #endregion
 
         #region Methods
 
-        public List<MapHeader> ToRomData()
+        public List<LazyReference<MapHeader>> ToRomData()
         {
-            List<MapHeader> headers = new List<MapHeader>();
-            headers = Maps.Select(p => (p.Value.EntryMode == MapEntryType.Nullpointer) ? null : ((MapModel)p.Value).ToRomData()).ToList();
+            List<LazyReference<MapHeader>> headers = new List<LazyReference<MapHeader>>();
+            headers = Maps.Select(p => (p.Value.EntryMode == MapEntryType.Nullpointer) ? null : new LazyReference<MapHeader>(((MapModel)p.Value).ToRomData())).ToList();
             return headers;
         }
 
