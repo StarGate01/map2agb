@@ -48,9 +48,16 @@ namespace map2agblib.Data
         {
         }
 
-        public LazyReference(string absolutePath, T data) : this(data)
+        public LazyReference(string absolutePath)
         {
             AbsolutePath = absolutePath;
+        }
+
+        public LazyReference(string absolutePath, T data)
+        {
+            AbsolutePath = absolutePath;
+            _data = data;
+            dataLoaded = true;
         }
 
         public LazyReference(T data)

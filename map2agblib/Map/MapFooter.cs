@@ -1,4 +1,5 @@
-﻿using map2agblib.Tilesets;
+﻿using map2agblib.Data;
+using map2agblib.Tilesets;
 using System.Linq;
 using System.Runtime.Serialization;
 
@@ -43,13 +44,13 @@ namespace map2agblib.Map
         /// The Main Tileset for this Map
         /// </summary>
         [DataMember]
-        public Tileset FirstTileset { get; set; }
+        public int FirstTilesetID { get; set; }
 
         /// <summary>
         /// The Secondary Tileset for this Map
         /// </summary>
         [DataMember]
-        public Tileset SecondTileset { get; set; }
+        public int SecondTilesetID { get; set; }
 
         //TODO: Create resize methode to resize MapBlock and BorderBlock
 
@@ -87,6 +88,12 @@ namespace map2agblib.Map
             BorderBlock = Enumerable.Repeat(new ushort[BorderHeight], BorderWidth).ToArray();
             MapBlock = Enumerable.Repeat(new ushort[Height], (int)Width).ToArray();
         }
+
+        public MapFooter()
+        {
+
+        }
+
         #endregion
     }
 }

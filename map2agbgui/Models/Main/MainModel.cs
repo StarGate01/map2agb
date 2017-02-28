@@ -9,7 +9,9 @@ using System.Windows;
 using map2agblib.Data;
 using map2agblib.Map;
 using map2agbgui.Models.NSEditor;
+using map2agbgui.Models.Main.Maps;
 using System.Collections.ObjectModel;
+using map2agblib.Tilesets;
 
 namespace map2agbgui.Models.Main
 {
@@ -45,6 +47,19 @@ namespace map2agbgui.Models.Main
             }
         }
 
+        private ObservableCollection<TilesetModel> _tilesets;
+        public ObservableCollection<TilesetModel> Tilesets
+        {
+            get
+            {
+                return _tilesets;
+            }
+            set
+            {
+                _tilesets = value;
+            }
+        }
+
         private string _status;
         public string Status
         {
@@ -76,7 +91,8 @@ namespace map2agbgui.Models.Main
             _NSEditorDataModel = new NSEditorModel(romData.NameTable.Names);
             _NSEditorDataModel.Names.ListChanged += NSEditor_Names_ListChanged;
             _banks = new ObservableCollection<NumericDisplayTuple<IBankModel>>(romData.Banks.Select((p, pi) =>
-                new NumericDisplayTuple<IBankModel>(pi, (p == null)? (IBankModel)new NullpointerBankModel() : new BankModel(p, this))).ToList());
+                new NumericDisplayTuple<IBankModel>(pi, (p == null)? (IBankModel)new NullpointerBankModel() : new BankModel(p, this))));
+            _tilesets = new ObservableCollection<TilesetModel>(romData.Tilesets.Select(p => new TilesetModel(p, this)));
         }
 
         #endregion
@@ -100,6 +116,7 @@ namespace map2agbgui.Models.Main
             RomData romData = new RomData();
             romData.NameTable.Names = NSEditorViewModel.ToRomData();
             romData.Banks = Banks.Select(p => (p.Value.EntryMode == BankEntryType.Bank)? ((BankModel)p.Value).ToRomData() : null).ToList();
+            romData.Tilesets = Tilesets.Select(p => new LazyReference<Tileset>(p.ToRomData())).ToList();
             return romData;
         }
 

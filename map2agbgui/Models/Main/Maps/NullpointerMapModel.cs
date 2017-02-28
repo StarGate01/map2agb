@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
 
-namespace map2agbgui.Models.Main
+namespace map2agbgui.Models.Main.Maps
 {
     public class NullpointerMapModel : IMapModel, INotifyPropertyChanged
     {

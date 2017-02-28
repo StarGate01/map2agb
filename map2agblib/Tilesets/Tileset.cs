@@ -3,6 +3,7 @@ using System.Linq;
 using map2agblib.Imaging;
 using System.Runtime.Serialization;
 using map2agblib.Data;
+using System.Drawing;
 
 namespace map2agblib.Tilesets
 {
