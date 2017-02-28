@@ -33,7 +33,8 @@ namespace map2agbgui
                     new LazyReference<MapHeader>(new MapHeader() { Name = 2 }),
                     new LazyReference<MapHeader>(new MapHeader() { Name = 0 }),
                     null
-                }
+                },
+                null
             };
             return romData;
         }

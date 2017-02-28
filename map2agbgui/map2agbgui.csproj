@@ -110,11 +110,13 @@
   <ItemGroup>
     <Compile Include="MockData.cs" />
     <Compile Include="Models\Main\BankModel.cs" />
+    <Compile Include="Models\Main\IBankModel.cs" />
     <Compile Include="Models\Main\ITupleFormattable.cs" />
     <Compile Include="Models\Main\IMapModel.cs" />
     <Compile Include="Models\Main\MainModel.cs" />
-    <Compile Include="Models\Main\MapEntryTypeToFontStyleConverter.cs" />
+    <Compile Include="Models\Main\EntryTypeToFontStyleConverter.cs" />
     <Compile Include="Models\Main\MapModel.cs" />
+    <Compile Include="Models\Main\NullpointerBankModel.cs" />
     <Compile Include="Models\Main\TreeViewConverters.cs" />
     <Compile Include="Models\NSEditor\NameEntryModel.cs" />
     <Compile Include="Models\NSEditor\NSEditorModel.cs" />
@@ -215,6 +217,33 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\BuildSolution_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\FolderOffline_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\StatusOffline_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Create_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\DocumentTemplate_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Edit_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\arrow_Up_16xLG.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\arrow_Down_16xLG.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\NewSolutionFolder_32x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\HiddenFolder_16x.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

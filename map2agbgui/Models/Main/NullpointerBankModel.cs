@@ -7,21 +7,13 @@ using System.ComponentModel;
 
 namespace map2agbgui.Models.Main
 {
-    public class NullpointerMapModel : IMapModel, INotifyPropertyChanged
+
+    public class NullpointerBankModel : IBankModel, INotifyPropertyChanged
     {
 
         #region Properties
 
         public bool IsSelected { get; set; }
-
-        private BankModel _bank;
-        public BankModel Bank
-        {
-            get
-            {
-                return _bank;
-            }
-        }
 
         public string FormatString
         {
@@ -31,11 +23,11 @@ namespace map2agbgui.Models.Main
             }
         }
 
-        public MapEntryType EntryMode
+        public BankEntryType EntryMode
         {
             get
             {
-                return MapEntryType.Nullpointer;
+                return BankEntryType.Nullpointer;
             }
         }
 
@@ -43,9 +35,8 @@ namespace map2agbgui.Models.Main
 
         #region Constructors
 
-        public NullpointerMapModel(BankModel bank)
+        public NullpointerBankModel()
         {
-            _bank = bank;
         }
 
         #endregion
@@ -54,7 +45,7 @@ namespace map2agbgui.Models.Main
 
         public override string ToString()
         {
-            return "Map space";
+            return "Bank space";
         }
 
         #endregion
@@ -66,9 +57,9 @@ namespace map2agbgui.Models.Main
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        public NullpointerMapModel GetCopy()
+        public NullpointerBankModel GetCopy()
         {
-            NullpointerMapModel copy = (NullpointerMapModel)this.MemberwiseClone();
+            NullpointerBankModel copy = (NullpointerBankModel)this.MemberwiseClone();
             return copy;
         }
 

@@ -16,6 +16,7 @@ using map2agbgui.Models.Main;
 using map2agblib.Data;
 using System.IO;
 using System.Windows.Interop;
+using map2agblib.Map;
 
 using Win32Forms = System.Windows.Forms;
 
@@ -48,6 +49,8 @@ namespace map2agbgui
         }
 
         #endregion
+
+        #region Eventhandler
 
         #region Eventhandler Window
 
@@ -99,33 +102,9 @@ namespace map2agbgui
 
         #region Eventhandler Secondary menubar
 
-        private void AddMapButton_Click(object sender, RoutedEventArgs e)
+        private void AddBankButton_Click(object sender, RoutedEventArgs e)
         {
-
-        }
-
-        private void RemoveMapButton_Click(object sender, RoutedEventArgs e)
-        {
-            NumericDisplayTuple<IMapModel> selected = (NumericDisplayTuple<IMapModel>)MapTreeView.SelectedItem;
-            MessageBoxResult result = MessageBoxResult.Cancel;
-            if (selected.Value.EntryMode == MapEntryType.Map) result = MessageBox.Show
-                     ("You are about to delete a map. Do you want to replace it with a placeholder?", "Delete map", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning, MessageBoxResult.Cancel);
-            else result = MessageBox.Show
-                    ("You are about to delete a map placeholder. Update indices?", "Delete map placeholder", MessageBoxButton.OKCancel, MessageBoxImage.Warning, MessageBoxResult.Cancel);
-            if(result != MessageBoxResult.Cancel)
-            {
-                if (result == MessageBoxResult.Yes)
-                {
-                    selected.Value = new NullpointerMapModel(selected.Value.Bank);
-                }
-                else if (result == MessageBoxResult.No || result == MessageBoxResult.OK)
-                { 
-                    var bank = selected.Value.Bank;
-                    bank.Maps.Remove(selected);
-                    for (int i = 0; i < bank.Maps.Count; i++) bank.Maps[i].Index = i;
-                    App.MainViewModel.RaisePropertyChanged("Banks");
-                }
-            }
+            App.MainViewModel.Banks.Add(new NumericDisplayTuple<IBankModel>(App.MainViewModel.Banks.Count, new BankModel(new List<LazyReference<MapHeader>>(), App.MainViewModel)));
         }
 
         private void NamespaceeditorButton_Click(object sender, RoutedEventArgs e)
@@ -138,6 +117,168 @@ namespace map2agbgui
         private void BlockeditorButton_Click(object sender, RoutedEventArgs e)
         {
             
+        }
+
+        #endregion
+
+        #region Eventhandler Treeview contextmenu
+
+        #region Maps
+
+        private void MoveMapUpContextEntry_Click(object sender, RoutedEventArgs e)
+        {
+            NumericDisplayTuple<IMapModel> selected = (NumericDisplayTuple<IMapModel>)MapTreeView.SelectedItem;
+            if (selected == null) return;
+            BankModel currentBank = selected.Value.Bank;
+            int index = currentBank.Maps.IndexOf(selected);
+            if (index > 0)
+            {
+                NumericDisplayTuple<IMapModel> target = selected.Value.Bank.Maps[index - 1];
+                target.Index += 1;
+                selected.Index -= 1;
+                currentBank.Maps[index - 1] = selected.Value.Bank.Maps[index];
+                currentBank.Maps[index] = target;
+            }
+        }
+
+        private void MoveMapDownContextEntry_Click(object sender, RoutedEventArgs e)
+        {
+            NumericDisplayTuple<IMapModel> selected = (NumericDisplayTuple<IMapModel>)MapTreeView.SelectedItem;
+            if (selected == null) return;
+            BankModel currentBank = selected.Value.Bank;
+            int index = currentBank.Maps.IndexOf(selected);
+            if(index < selected.Value.Bank.Maps.Count - 1)
+            {
+                NumericDisplayTuple<IMapModel> target = selected.Value.Bank.Maps[index + 1];
+                target.Index -= 1;
+                selected.Index += 1;
+                currentBank.Maps[index + 1] = selected.Value.Bank.Maps[index];
+                currentBank.Maps[index] = target;
+            }
+        }
+
+        private void ReplaceMapContextEntry_Click(object sender, RoutedEventArgs e)
+        {
+            NumericDisplayTuple<IMapModel> selected = (NumericDisplayTuple<IMapModel>)MapTreeView.SelectedItem;
+            if (selected == null) return;
+            MessageBoxResult result = MessageBoxResult.Cancel;
+            result = MessageBox.Show("Replace this map with a new one?", "Replace map", MessageBoxButton.OKCancel, MessageBoxImage.Warning, MessageBoxResult.Cancel);
+            if(result == MessageBoxResult.OK) selected.Value = new MapModel(selected.Value.Bank, new MapHeader(), App.MainViewModel);
+        }
+
+        private void RemoveMapContextEntry_Click(object sender, RoutedEventArgs e)
+        {
+            NumericDisplayTuple<IMapModel> selected = (NumericDisplayTuple<IMapModel>)MapTreeView.SelectedItem;
+            if (selected == null) return;
+            MessageBoxResult result = MessageBoxResult.Cancel;
+            if (selected.Value.EntryMode == MapEntryType.Map) result = MessageBox.Show
+                     ("You are about to delete a map. Do you want to replace it with a placeholder?", "Delete map", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning, MessageBoxResult.Cancel);
+            else result = MessageBox.Show
+                    ("You are about to delete a map placeholder. Update indices?", "Delete map placeholder", MessageBoxButton.OKCancel, MessageBoxImage.Warning, MessageBoxResult.Cancel);
+            if (result != MessageBoxResult.Cancel)
+            {
+                if (result == MessageBoxResult.Yes) selected.Value = new NullpointerMapModel(selected.Value.Bank);
+                else if (result == MessageBoxResult.No || result == MessageBoxResult.OK)
+                {
+                    var bank = selected.Value.Bank;
+                    bank.Maps.Remove(selected);
+                    for (int i = 0; i < bank.Maps.Count; i++) bank.Maps[i].Index = i;
+                }
+            }
+        }
+
+        #endregion
+
+        #region Banks
+
+        private void MoveBankUpContextEntry_Click(object sender, RoutedEventArgs e)
+        {
+            NumericDisplayTuple<IBankModel> selected = (NumericDisplayTuple<IBankModel>)MapTreeView.SelectedItem;
+            if (selected == null) return;
+            int index = App.MainViewModel.Banks.IndexOf(selected);
+            if (index > 0)
+            {
+                NumericDisplayTuple<IBankModel> target = App.MainViewModel.Banks[index - 1];
+                target.Index += 1;
+                selected.Index -= 1;
+                App.MainViewModel.Banks[index - 1] = App.MainViewModel.Banks[index];
+                App.MainViewModel.Banks[index] = target;
+            }
+        }
+
+        private void MoveBankDownContextEntry_Click(object sender, RoutedEventArgs e)
+        {
+            NumericDisplayTuple<IBankModel> selected = (NumericDisplayTuple<IBankModel>)MapTreeView.SelectedItem;
+            if (selected == null) return;
+            int index = App.MainViewModel.Banks.IndexOf(selected);
+            if (index < App.MainViewModel.Banks.Count - 1)
+            {
+                NumericDisplayTuple<IBankModel> target = App.MainViewModel.Banks[index + 1];
+                target.Index -= 1;
+                selected.Index += 1;
+                App.MainViewModel.Banks[index + 1] = App.MainViewModel.Banks[index];
+                App.MainViewModel.Banks[index] = target;
+            }
+        }
+
+        private void AddMapContextEntry_Click(object sender, RoutedEventArgs e)
+        {
+            NumericDisplayTuple<IBankModel> selected = (NumericDisplayTuple<IBankModel>)MapTreeView.SelectedItem;
+            if (selected == null || selected.Value.EntryMode == BankEntryType.Nullpointer) return;
+            ((BankModel)selected.Value).Maps.Add(new NumericDisplayTuple<IMapModel>(((BankModel)selected.Value).Maps.Count, new MapModel(((BankModel)selected.Value), new MapHeader(), App.MainViewModel)));
+        }
+
+        private void RemoveBankContextEntry_Click(object sender, RoutedEventArgs e)
+        {
+            NumericDisplayTuple<IBankModel> selected = (NumericDisplayTuple<IBankModel>)MapTreeView.SelectedItem;
+            if (selected == null) return;
+            MessageBoxResult result = MessageBoxResult.Cancel;
+            if (selected.Value.EntryMode == BankEntryType.Bank) result = MessageBox.Show
+                     ("You are about to delete a bank. Do you want to replace it with a placeholder?", "Delete bank", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning, MessageBoxResult.Cancel);
+            else result = MessageBox.Show
+                    ("You are about to delete a bank placeholder. Update indices?", "Delete bank placeholder", MessageBoxButton.OKCancel, MessageBoxImage.Warning, MessageBoxResult.Cancel);
+            if (result != MessageBoxResult.Cancel)
+            {
+                if (result == MessageBoxResult.Yes) selected.Value = new NullpointerBankModel();
+                else if (result == MessageBoxResult.No || result == MessageBoxResult.OK)
+                {
+                    App.MainViewModel.Banks.Remove(selected);
+                    for (int i = 0; i < App.MainViewModel.Banks.Count; i++) App.MainViewModel.Banks[i].Index = i;
+                }
+            }
+        }
+
+        private void ReplaceEmptyMapContextEntry_Click(object sender, RoutedEventArgs e)
+        {
+            NumericDisplayTuple<IBankModel> selected = (NumericDisplayTuple<IBankModel>)MapTreeView.SelectedItem;
+            if (selected == null || selected.Value.EntryMode == BankEntryType.Bank) return;
+            MessageBoxResult result = MessageBoxResult.Cancel;
+            result = MessageBox.Show("Replace this bank placeholder with a real one?", "Replace map", MessageBoxButton.OKCancel, MessageBoxImage.Warning, MessageBoxResult.Cancel);
+            if (result == MessageBoxResult.OK) selected.Value = new BankModel(new List<LazyReference<MapHeader>>(), App.MainViewModel);
+        }
+
+        #endregion
+
+        #endregion
+
+        #endregion
+
+        #region TreeView extensions
+
+        private void MapTreeView_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            TreeViewItem treeViewItem = VisualUpwardSearch(e.OriginalSource as DependencyObject);
+            if (treeViewItem != null)
+            {
+                treeViewItem.Focus();
+                e.Handled = true;
+            }
+        }
+
+        static TreeViewItem VisualUpwardSearch(DependencyObject source)
+        {
+            while (source != null && !(source is TreeViewItem)) source = VisualTreeHelper.GetParent(source);
+            return source as TreeViewItem;
         }
 
         #endregion
@@ -196,8 +337,9 @@ namespace map2agbgui
             return true;
         }
 
+
         #endregion
 
-
+       
     }
 }

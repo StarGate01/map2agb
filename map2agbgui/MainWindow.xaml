@@ -14,6 +14,7 @@
         <model:TreeViewSelectedItemToBooleanConverter x:Key="treeViewSelectedItemToBooleanConverter" />
         <model:TreeViewSelectedItemToMapConverter x:Key="treeViewSelectedItemToMapConverter" />
         <model:MapEntryTypeToFontStyleConverter x:Key="mapEntryTypeToFontStyleConverter" />
+        <model:BankEntryTypeToFontStyleConverter x:Key="bankEntryTypeToFontStyleConverter" />
         <c:ValueConverterGroup x:Key="treeViewSelectedItemToVisibilityConverter">
             <model:TreeViewSelectedItemToMapConverter/>
             <c:NullToBooleanConverter />
@@ -25,6 +26,7 @@
             <c:InverseBooleanConverter />
             <BooleanToVisibilityConverter/>
         </c:ValueConverterGroup>
+        
         <Style TargetType="{x:Type MenuItem}">
             <Style.Triggers>
                 <Trigger Property="IsEnabled" Value="False">
@@ -32,15 +34,83 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+        <ContextMenu x:Key="MapItemContextmenu">
+            <MenuItem x:Name="MoveMapUpContextEntry" Header="Move map up" Click="MoveMapUpContextEntry_Click">
+                <MenuItem.Icon>
+                    <Image Source="Assets/arrow_Up_16xLG.png"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem x:Name="MoveMapDownContextEntry" Header="Move map down" Click="MoveMapDownContextEntry_Click">
+                <MenuItem.Icon>
+                    <Image Source="Assets/arrow_Down_16xLG.png"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem x:Name="ReplaceMapContextEntry" Header="Replace map" Click="ReplaceMapContextEntry_Click">
+                <MenuItem.Icon>
+                    <Image Source="Assets/Edit_16x.png"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem x:Name="RemoveMapContextEntry" Header="Remove map" Click="RemoveMapContextEntry_Click">
+                <MenuItem.Icon>
+                    <Image Source="Assets/StatusOffline_16x.png"/>
+                </MenuItem.Icon>
+            </MenuItem>
+        </ContextMenu>
+        <ContextMenu x:Key="BankItemContextMenu">
+            <MenuItem x:Name="MoveBankUpContextEntry" Header="Move bank up" Click="MoveBankUpContextEntry_Click">
+                <MenuItem.Icon>
+                    <Image Source="Assets/arrow_Up_16xLG.png"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem x:Name="MoveBankDownContextEntry" Header="Move bank down" Click="MoveBankDownContextEntry_Click">
+                <MenuItem.Icon>
+                    <Image Source="Assets/arrow_Down_16xLG.png"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem x:Name="AddMapContextEntry" Header="Add map" Click="AddMapContextEntry_Click">
+                <MenuItem.Icon>
+                    <Image Source="Assets/Create_16x.png"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem x:Name="RemoveBankContextEntry" Header="Remove bank" Click="RemoveBankContextEntry_Click">
+                <MenuItem.Icon>
+                    <Image Source="Assets/FolderOffline_16x.png"/>
+                </MenuItem.Icon>
+            </MenuItem>
+        </ContextMenu>
+        <ContextMenu x:Key="EmptyBankItemContextMenu">
+            <MenuItem x:Name="MoveEmptyBankUpContextEntry" Header="Move bank up" Click="MoveBankUpContextEntry_Click">
+                <MenuItem.Icon>
+                    <Image Source="Assets/arrow_Up_16xLG.png"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem x:Name="MoveEmptyBankDownContextEntry" Header="Move bank down" Click="MoveBankDownContextEntry_Click">
+                <MenuItem.Icon>
+                    <Image Source="Assets/arrow_Down_16xLG.png"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem x:Name="ReplaceEmptyMapContextEntry" Header="Replace bank" Click="ReplaceEmptyMapContextEntry_Click">
+                <MenuItem.Icon>
+                    <Image Source="Assets/Edit_16x.png"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem x:Name="RemoveEmptyBankContextEntry" Header="Remove bank" Click="RemoveBankContextEntry_Click">
+                <MenuItem.Icon>
+                    <Image Source="Assets/FolderOffline_16x.png"/>
+                </MenuItem.Icon>
+            </MenuItem>
+        </ContextMenu>
         <Style TargetType="TreeViewItem" x:Key="BankStyle">
-            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="Focusable" Value="True"/>
             <Setter Property="IsExpanded" Value="True"/>
+            <Setter Property="IsSelected" Value="{Binding Value.IsSelected, Mode=TwoWay}" />
         </Style>
         <Style TargetType="TreeViewItem" x:Key="MapStyle">
             <Setter Property="Focusable" Value="True"/>
             <Setter Property="IsSelected" Value="{Binding Value.IsSelected, Mode=TwoWay}" />
-            <!--<EventSetter Event="MouseDoubleClick" Handler="MapTreeViewElement_DoubleClick" />-->
+            <Setter Property="ContextMenu" Value="{StaticResource MapItemContextmenu}" />
         </Style>
+        
         <HierarchicalDataTemplate x:Key="MapTemplate">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -48,9 +118,17 @@
                     <ColumnDefinition Width="3" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Image Height="Auto" Width="Auto" Source="{Binding Value.IconPath}" Grid.Column="0" />
+                <Image x:Name="displayIcon" Height="Auto" Width="Auto" Grid.Column="0" />
                 <TextBlock Grid.Column="2" Text="{Binding DisplayValue}" FontStyle="{Binding Value.EntryMode, Converter={StaticResource mapEntryTypeToFontStyleConverter}}" />
             </Grid>
+            <HierarchicalDataTemplate.Triggers>
+                <DataTrigger Binding="{Binding Value.EntryMode}" Value="Map">
+                    <Setter TargetName="displayIcon" Property="Source" Value="/Assets/Document_16x.png" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Value.EntryMode}" Value="Nullpointer">
+                    <Setter TargetName="displayIcon" Property="Source" Value="/Assets/DocumentTemplate_16x.png" />
+                </DataTrigger>
+            </HierarchicalDataTemplate.Triggers>
         </HierarchicalDataTemplate>
         <HierarchicalDataTemplate x:Key="BankTemplate" ItemsSource="{Binding Value.Maps}" ItemTemplate="{StaticResource MapTemplate}" ItemContainerStyle="{StaticResource MapStyle}">
             <Grid>
@@ -59,9 +137,19 @@
                     <ColumnDefinition Width="3" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Image Height="Auto" Width="Auto" Source="Assets/Folder_16x.png" Grid.Column="0" />
-                <TextBlock Grid.Column="2" Text="{Binding DisplayValue}" />
+                <Image x:Name="displayIcon" Height="Auto" Width="Auto" Grid.Column="0" />
+                <TextBlock Grid.Column="2" Text="{Binding DisplayValue}" FontStyle="{Binding Value.EntryMode, Converter={StaticResource bankEntryTypeToFontStyleConverter}}" />
             </Grid>
+            <HierarchicalDataTemplate.Triggers>
+                <DataTrigger Binding="{Binding Value.EntryMode}" Value="Bank">
+                    <Setter Property="ContextMenu" Value="{StaticResource BankItemContextMenu}" />
+                    <Setter TargetName="displayIcon" Property="Source" Value="/Assets/Folder_16x.png" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Value.EntryMode}" Value="Nullpointer">
+                    <Setter Property="ContextMenu" Value="{StaticResource EmptyBankItemContextMenu}" />
+                    <Setter TargetName="displayIcon" Property="Source" Value="/Assets/HiddenFolder_16x.png" />
+                </DataTrigger>
+            </HierarchicalDataTemplate.Triggers>
         </HierarchicalDataTemplate>
     </Window.Resources>
 
@@ -132,14 +220,9 @@
         </DockPanel>
         <DockPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3">
             <Menu DockPanel.Dock="Top" Padding="3">
-                <MenuItem ToolTip="Add map" x:Name="AddMapButton" Click="AddMapButton_Click" IsEnabled="{Binding ElementName=MapTreeView, Path=SelectedItem, Converter={StaticResource treeViewSelectedItemToBooleanConverter}}">
+                <MenuItem ToolTip="Add bank" x:Name="AddBankButton" Click="AddBankButton_Click">
                     <MenuItem.Header>
-                        <Image Width="32" Height="32" Source="Assets/Create_32x.png" Margin="3" />
-                    </MenuItem.Header>
-                </MenuItem>
-                <MenuItem ToolTip="Remove map" x:Name="RemoveMapButton" Click="RemoveMapButton_Click" IsEnabled="{Binding ElementName=MapTreeView, Path=SelectedItem, Converter={StaticResource treeViewSelectedItemToBooleanConverter}}">
-                    <MenuItem.Header>
-                        <Image Width="32" Height="32" Source="Assets/CloseDocument_32x.png" Margin="3" />
+                        <Image Width="32" Height="32" Source="Assets/NewSolutionFolder_32x.png" Margin="3" />
                     </MenuItem.Header>
                 </MenuItem>
                 <Border Width="1" Height="32" Background="Gray" />
@@ -160,7 +243,7 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <TreeView x:Name="MapTreeView" Grid.Row="0" ItemsSource="{Binding Banks}" ItemTemplate="{StaticResource BankTemplate}" ItemContainerStyle="{StaticResource BankStyle}" />
+            <TreeView PreviewMouseRightButtonDown="MapTreeView_PreviewMouseRightButtonDown" x:Name="MapTreeView" Grid.Row="0" ItemsSource="{Binding Banks}" ItemTemplate="{StaticResource BankTemplate}" ItemContainerStyle="{StaticResource BankStyle}" />
             <StackPanel Grid.Row="1">
                 <Label Content="Name" />
             </StackPanel>

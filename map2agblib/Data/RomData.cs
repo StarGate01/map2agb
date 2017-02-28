@@ -85,11 +85,15 @@ namespace map2agblib.Data
             string projFileName = Path.Combine(tempDir, "project.map2agb");
             Directory.CreateDirectory(Path.Combine(tempDir, "maps"));
             Directory.CreateDirectory(Path.Combine(tempDir, "tilesets"));
-            for (int i = 0; i < data.Banks.Count; i++) for (int j = 0; j < data.Banks[i].Count; j++)
+            for (int i = 0; i < data.Banks.Count; i++)
             {
-                if (data.Banks[i][j] == null) continue;
-                data.Banks[i][j].AbsolutePath = Path.Combine((Path.Combine(dirName, "maps")), i + "_" + j + ".map");
-                data.Banks[i][j].ExportToFile(Path.Combine((Path.Combine(tempDir, "maps")), i + "_" + j + ".map"));
+                if (data.Banks[i] == null) continue;
+                for (int j = 0; j < data.Banks[i].Count; j++)
+                {
+                    if (data.Banks[i][j] == null) continue;
+                    data.Banks[i][j].AbsolutePath = Path.Combine((Path.Combine(dirName, "maps")), i + "_" + j + ".map");
+                    data.Banks[i][j].ExportToFile(Path.Combine((Path.Combine(tempDir, "maps")), i + "_" + j + ".map"));
+                }
             }
             for (int i = 0; i < data.Tilesets.Count; i++)
             {

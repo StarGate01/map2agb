@@ -38,14 +38,6 @@ namespace map2agbgui.Models.Main
             }
         }
 
-        public Uri IconPath
-        {
-            get
-            {
-                return new Uri(@"/Assets/Document_16x.png", UriKind.Relative);
-            }
-        }
-
         public string FormatString
         {
             get

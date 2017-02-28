@@ -12,13 +12,15 @@ using map2agblib.Data;
 namespace map2agbgui.Models.Main
 {
 
-    public class BankModel : INotifyPropertyChanged, ITupleFormattable
+    public class BankModel : INotifyPropertyChanged, IBankModel
     {
 
         #region Properties
 
-        private BindingList<NumericDisplayTuple<IMapModel>> _maps;
-        public BindingList<NumericDisplayTuple<IMapModel>> Maps
+        public bool IsSelected { get; set; } = false;
+
+        private ObservableCollection<NumericDisplayTuple<IMapModel>> _maps;
+        public ObservableCollection<NumericDisplayTuple<IMapModel>> Maps
         {
             get
             {
@@ -35,7 +37,15 @@ namespace map2agbgui.Models.Main
         {
             get
             {
-                return "Bank {0}";
+                return "{0} {1}";
+            }
+        }
+
+        public BankEntryType EntryMode
+        {
+            get
+            {
+                return BankEntryType.Bank;
             }
         }
 
@@ -45,13 +55,18 @@ namespace map2agbgui.Models.Main
 
         public BankModel(List<LazyReference<MapHeader>> headers, MainModel mainModel)
         {
-            _maps = new BindingList<NumericDisplayTuple<IMapModel>>(headers.Select((p, pi) => 
+            _maps = new ObservableCollection<NumericDisplayTuple<IMapModel>>(headers.Select((p, pi) => 
                 new NumericDisplayTuple<IMapModel>(pi, (p == null) ? (IMapModel)(new NullpointerMapModel(this)) : new MapModel(this, p.Data, mainModel))).ToList());
         }
 
         #endregion
 
         #region Methods
+
+        public override string ToString()
+        {
+            return "Bank";
+        }
 
         public List<LazyReference<MapHeader>> ToRomData()
         {

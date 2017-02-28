@@ -32,8 +32,8 @@ namespace map2agbgui.Models.Main
             }
         }
 
-        private BindingList<NumericDisplayTuple<BankModel>> _banks;
-        public BindingList<NumericDisplayTuple<BankModel>> Banks
+        private ObservableCollection<NumericDisplayTuple<IBankModel>> _banks;
+        public ObservableCollection<NumericDisplayTuple<IBankModel>> Banks
         {
             get
             {
@@ -67,14 +67,16 @@ namespace map2agbgui.Models.Main
         {
             if (!(bool)(DesignerProperties.IsInDesignModeProperty.GetMetadata(typeof(DependencyObject)).DefaultValue))
                 throw new InvalidOperationException("MainModel can only be constructed without parameters by the designer");
-            Banks.First().Value.Maps.First().Value.IsSelected = true;
+            ((BankModel)Banks.First().Value).Maps.First().Value.IsSelected = true;
+            Status = "Designer Mode";
         }
 
         public MainModel(RomData romData)
         {
             _NSEditorDataModel = new NSEditorModel(romData.NameTable.Names);
             _NSEditorDataModel.Names.ListChanged += NSEditor_Names_ListChanged;
-            _banks = new BindingList<NumericDisplayTuple<BankModel>>(romData.Banks.Select((p, pi) => new NumericDisplayTuple<BankModel>(pi, new BankModel(p, this))).ToList());
+            _banks = new ObservableCollection<NumericDisplayTuple<IBankModel>>(romData.Banks.Select((p, pi) =>
+                new NumericDisplayTuple<IBankModel>(pi, (p == null)? (IBankModel)new NullpointerBankModel() : new BankModel(p, this))).ToList());
         }
 
         #endregion
@@ -83,9 +85,10 @@ namespace map2agbgui.Models.Main
 
         private void NSEditor_Names_ListChanged(object sender, ListChangedEventArgs e)
         {
-            foreach(NumericDisplayTuple<BankModel> bank in _banks)
-                foreach(NumericDisplayTuple<IMapModel> map in bank.Value.Maps)
-                    if(map.Value.EntryMode == MapEntryType.Map) map.RaisePropertyChanged("DisplayValue");
+            foreach(NumericDisplayTuple<IBankModel> bank in _banks)
+                if (bank.Value.EntryMode == BankEntryType.Bank)
+                    foreach(NumericDisplayTuple<IMapModel> map in ((BankModel)bank.Value).Maps)
+                        if(map.Value.EntryMode == MapEntryType.Map) map.RaisePropertyChanged("DisplayValue");
         }
 
         #endregion
@@ -96,7 +99,7 @@ namespace map2agbgui.Models.Main
         {
             RomData romData = new RomData();
             romData.NameTable.Names = NSEditorViewModel.ToRomData();
-            romData.Banks = Banks.Select(p => p.Value.ToRomData()).ToList();
+            romData.Banks = Banks.Select(p => (p.Value.EntryMode == BankEntryType.Bank)? ((BankModel)p.Value).ToRomData() : null).ToList();
             return romData;
         }
 
