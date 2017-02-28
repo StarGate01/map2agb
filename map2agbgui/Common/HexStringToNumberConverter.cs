@@ -21,7 +21,20 @@ namespace map2agbgui.Common
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            try { return byte.Parse(value.ToString(), NumberStyles.HexNumber); }
+            try
+            {
+                string strval = value.ToString();
+                int intval = 0;
+                if (strval.ToLower().StartsWith("0x"))
+                {
+                    strval = strval.Substring(2);
+                    intval = int.Parse(strval, NumberStyles.HexNumber);
+                }
+                else intval = int.Parse(strval, NumberStyles.Integer);
+                if (intval < byte.MinValue) intval = byte.MinValue;
+                if (intval > byte.MaxValue) intval = byte.MaxValue;
+                return (byte)intval;
+            }
             catch (Exception) { return 0; }
         }
 
@@ -39,7 +52,20 @@ namespace map2agbgui.Common
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            try { return ushort.Parse(value.ToString(), NumberStyles.HexNumber); }
+            try
+            {
+                string strval = value.ToString();
+                int intval = 0;
+                if (strval.ToLower().StartsWith("0x"))
+                {
+                    strval = strval.Substring(2);
+                    intval = int.Parse(strval, NumberStyles.HexNumber);
+                }
+                else intval = int.Parse(strval, NumberStyles.Integer);
+                if (intval < ushort.MinValue) intval = ushort.MinValue;
+                if (intval > ushort.MaxValue) intval = ushort.MaxValue;
+                return (ushort)intval;
+            }
             catch (Exception) { return 0; }
         }
 
