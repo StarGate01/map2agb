@@ -25,8 +25,14 @@ namespace map2agb
             MapHeader mapHeaderBuilder = new MapHeader();
 
             try {
-                List<MapHeader> maps = (List<MapHeader>)inputFiles.Select(path => mapHeaderBuilder.ImportFromFile(path)).ToList();
-                Console.WriteLine("Total of " + maps.Count.ToString() + " were loaded");
+                List<Tuple<MapHeader, string>> maps = (List<Tuple<MapHeader, string>>)inputFiles.Select(path => {
+                    //Map to a tuple of MapHeader, FileName (is used as symbol name)
+                    return new Tuple<MapHeader, string>(mapHeaderBuilder.ImportFromFile(path), Path.GetFileNameWithoutExtension(path));
+                    }
+                ).ToList();
+                
+
+
                 Console.ReadKey();
                 return 0;
             }

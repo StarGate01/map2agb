@@ -44,6 +44,11 @@ namespace map2agblib.Map.Event
         public short Y { get; set; }
 
         /// <summary>
+        /// Gets or sets the facing of the NPC (That is the initial facing direction)
+        /// </summary>
+        public short Facing { get; set; }
+
+        /// <summary>
         /// Gets or sets the Height of the NPC (That is, the "Level", used for collision detection)
         /// </summary>
         public byte Height { get; set; }
@@ -67,6 +72,11 @@ namespace map2agblib.Map.Event
         /// Gets or sets FieldD, which's purpose is unknown
         /// </summary>
         public byte FieldD { get; set; }
+
+        /// <summary>
+        /// Gets or sets FieldB, which's purpose is unknown
+        /// </summary>
+        public byte FieldB { get; set; }
 
         /// <summary>
         /// Gets or sets the AlertRadius, only used when IsTrainer equals true
