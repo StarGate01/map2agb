@@ -102,7 +102,7 @@ namespace map2agblib.Data
             }
             using (FileStream output = File.Open(projFileName, FileMode.Create, FileAccess.Write))
             {
-                using (XmlWriter writer = XmlWriter.Create(output))
+                using (XmlWriter writer = XmlWriter.Create(output, new XmlWriterSettings() { Indent = true }))
                 {
                     serializer.WriteObject(writer, data);
                     writer.Flush();

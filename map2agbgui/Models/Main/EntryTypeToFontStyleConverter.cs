@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows;
+using map2agbgui.Models.Main.Maps;
 
 namespace map2agbgui.Models.Main
 {

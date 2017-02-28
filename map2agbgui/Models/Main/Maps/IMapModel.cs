@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace map2agbgui.Models.Main
+namespace map2agbgui.Models.Main.Maps
 {
 
     public enum MapEntryType { Map, Nullpointer }

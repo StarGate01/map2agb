@@ -82,9 +82,9 @@ namespace map2agbgui.Models.Main
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        public MapModel GetCopy()
+        public NumericDisplayTuple<T> GetCopy()
         {
-            MapModel copy = (MapModel)this.MemberwiseClone();
+            NumericDisplayTuple<T> copy = (NumericDisplayTuple<T>)this.MemberwiseClone();
             return copy;
         }
 

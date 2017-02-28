@@ -4,15 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0DCB2103-4515-436C-8CCA-A37267F1ED09}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{02BD409D-C1EF-4A92-BA20-D8E4D82E0E51}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>map2agblib</RootNamespace>
-    <AssemblyName>map2agblib</AssemblyName>
+    <RootNamespace>map2agbimport</RootNamespace>
+    <AssemblyName>map2agbimport</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -30,10 +33,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CommandLine, Version=1.9.71.2, Culture=neutral, PublicKeyToken=de6f01bd326f8c32, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommandLineParser.1.9.71\lib\net45\CommandLine.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -42,32 +47,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\IImportExport.cs" />
-    <Compile Include="Data\ImageContainer.cs" />
-    <Compile Include="Data\LazyReference.cs" />
-    <Compile Include="Data\XMLImportExport.cs" />
-    <Compile Include="Imaging\Palette.cs" />
-    <Compile Include="Data\MapNameTable.cs" />
-    <Compile Include="Data\RomData.cs" />
-    <Compile Include="Map\Connection\Connection.cs" />
-    <Compile Include="Map\Connection\ConnectionHeader.cs" />
-    <Compile Include="Map\EventHeader.cs" />
-    <Compile Include="Map\Event\EventEntitySign.cs" />
-    <Compile Include="Map\Event\EventEntityTrigger.cs" />
-    <Compile Include="Map\Event\IEventEntity.cs" />
-    <Compile Include="Map\Event\EventEntityPerson.cs" />
-    <Compile Include="Map\Event\EventEntityWarp.cs" />
-    <Compile Include="Map\MapFooter.cs" />
-    <Compile Include="Map\MapHeader.cs" />
-    <Compile Include="Map\LevelScript\MapScript.cs" />
-    <Compile Include="Map\LevelScript\MapScriptHeader.cs" />
+    <Compile Include="Options.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tilesets\BlockTilemap.cs" />
-    <Compile Include="Tilesets\BlockBehaviour.cs" />
-    <Compile Include="Tilesets\Tileset.cs" />
-    <Compile Include="Tilesets\TilesetEntry.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

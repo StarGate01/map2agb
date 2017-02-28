@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using map2agblib.Data;
 using map2agblib.Map;
+using map2agblib.Tilesets;
 
 namespace map2agbgui
 {
@@ -35,6 +36,11 @@ namespace map2agbgui
                     null
                 },
                 null
+            };
+            romData.Tilesets = new List<LazyReference<Tileset>>()
+            {
+                new LazyReference<Tileset>(new Tileset() { Graphic = @"C:\Users\Christoph\Desktop\Tileset0.bmp" }),
+                new LazyReference<Tileset>(new Tileset() { Graphic = @"C:\Users\Christoph\Desktop\Tileset245157.bmp" })
             };
             return romData;
         }

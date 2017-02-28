@@ -12,12 +12,14 @@ using System.Globalization;
 using System.Windows.Data;
 using System.Collections.ObjectModel;
 
-namespace map2agbgui.Models.Main
+namespace map2agbgui.Models.Main.Maps
 {
-    public class MapModel : IMapModel, INotifyPropertyChanged
+    public class MapHeaderModel : IMapModel, INotifyPropertyChanged
     {
 
         #region Properties
+
+        #region Meta properties
 
         public bool IsSelected { get; set; } = false;
 
@@ -46,6 +48,19 @@ namespace map2agbgui.Models.Main
             }
         }
 
+        private MainModel _mainModel;
+        public MainModel MainModel
+        {
+            get
+            {
+                return _mainModel;
+            }
+        }
+
+        #endregion
+
+        #region Data properties
+
         public string Name
         {
             get
@@ -69,27 +84,35 @@ namespace map2agbgui.Models.Main
             }
         }
 
-        private MainModel _mainModel;
-        public MainModel MainModel
+        private MapFooterModel _footer;
+        public MapFooterModel Footer
         {
             get
             {
-                return _mainModel;
+                return _footer;
+            }
+            set
+            {
+                _footer = value;
+                RaisePropertyChanged("Footer");
             }
         }
 
         #endregion
 
+        #endregion
+
         #region Constructor
 
-        public MapModel(BankModel bank, MapHeader header, MainModel mainModel)
+        public MapHeaderModel(BankModel bank, MapHeader header, MainModel mainModel)
         {
             _bank = bank;
             _nameID = header.Name;
+            _footer = new MapFooterModel(header.Footer, mainModel);
             _mainModel = mainModel;
         }
 
-        public MapModel() : this(null, new MapHeader() { Name = 0 }, new MainModel(MockData.MockRomData()))
+        public MapHeaderModel() : this(null, new MapHeader() { Name = 0 }, new MainModel(MockData.MockRomData()))
         {
             if (!(bool)(DesignerProperties.IsInDesignModeProperty.GetMetadata(typeof(DependencyObject)).DefaultValue))
                 throw new InvalidOperationException("MapModel can only be constructed without parameters by the designer");
@@ -108,6 +131,7 @@ namespace map2agbgui.Models.Main
         {
             MapHeader header = new MapHeader();
             header.Name = (byte)NameID;
+            header.Footer = Footer.ToRomData();
             return header;
         }
 
@@ -120,9 +144,9 @@ namespace map2agbgui.Models.Main
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        public MapModel GetCopy()
+        public MapHeaderModel GetCopy()
         {
-            MapModel copy = (MapModel)this.MemberwiseClone();
+            MapHeaderModel copy = (MapHeaderModel)this.MemberwiseClone();
             return copy;
         }
 

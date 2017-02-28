@@ -29,7 +29,7 @@ namespace map2agblib.Data
         {
             using (FileStream output = File.Open(filePath, FileMode.Create, FileAccess.Write))
             {
-                using (XmlWriter writer = XmlWriter.Create(output))
+                using (XmlWriter writer = XmlWriter.Create(output, new XmlWriterSettings() { Indent = true }))
                 {
                     serializer.WriteObject(writer, data);
                     writer.Flush();

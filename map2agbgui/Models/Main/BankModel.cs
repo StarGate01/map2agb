@@ -8,6 +8,7 @@ using System.Windows;
 using map2agblib.Map;
 using System.Collections.ObjectModel;
 using map2agblib.Data;
+using map2agbgui.Models.Main.Maps;
 
 namespace map2agbgui.Models.Main
 {
@@ -56,7 +57,7 @@ namespace map2agbgui.Models.Main
         public BankModel(List<LazyReference<MapHeader>> headers, MainModel mainModel)
         {
             _maps = new ObservableCollection<NumericDisplayTuple<IMapModel>>(headers.Select((p, pi) => 
-                new NumericDisplayTuple<IMapModel>(pi, (p == null) ? (IMapModel)(new NullpointerMapModel(this)) : new MapModel(this, p.Data, mainModel))).ToList());
+                new NumericDisplayTuple<IMapModel>(pi, (p == null) ? (IMapModel)(new NullpointerMapModel(this)) : new MapHeaderModel(this, p.Data, mainModel))));
         }
 
         #endregion
@@ -71,7 +72,7 @@ namespace map2agbgui.Models.Main
         public List<LazyReference<MapHeader>> ToRomData()
         {
             List<LazyReference<MapHeader>> headers = new List<LazyReference<MapHeader>>();
-            headers = Maps.Select(p => (p.Value.EntryMode == MapEntryType.Nullpointer) ? null : new LazyReference<MapHeader>(((MapModel)p.Value).ToRomData())).ToList();
+            headers = Maps.Select(p => (p.Value.EntryMode == MapEntryType.Nullpointer) ? null : new LazyReference<MapHeader>(((MapHeaderModel)p.Value).ToRomData())).ToList();
             return headers;
         }
 

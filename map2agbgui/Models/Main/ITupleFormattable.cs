@@ -11,7 +11,7 @@ namespace map2agbgui.Models.Main
     public interface ITupleFormattable : INotifyPropertyChanged
     {
         string FormatString { get; }
-    
+
     }
 
 }

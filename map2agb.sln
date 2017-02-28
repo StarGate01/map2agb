@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "map2agb", "map2agb\map2agb.csproj", "{EF6D066F-A983-405A-AE77-6DD856A7FA32}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "map2agblib", "map2agblib\map2agblib.csproj", "{0DCB2103-4515-436C-8CCA-A37267F1ED09}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "map2agbtest", "map2agbtest\map2agbtest.csproj", "{EC1845CF-7879-4E7E-920F-23FA8D455DC1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "map2agbimport", "map2agbimport\map2agbimport.csproj", "{02BD409D-C1EF-4A92-BA20-D8E4D82E0E51}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{EC1845CF-7879-4E7E-920F-23FA8D455DC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC1845CF-7879-4E7E-920F-23FA8D455DC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EC1845CF-7879-4E7E-920F-23FA8D455DC1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02BD409D-C1EF-4A92-BA20-D8E4D82E0E51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02BD409D-C1EF-4A92-BA20-D8E4D82E0E51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02BD409D-C1EF-4A92-BA20-D8E4D82E0E51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02BD409D-C1EF-4A92-BA20-D8E4D82E0E51}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

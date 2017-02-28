@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Globalization;
 using System.Windows.Data;
+using map2agbgui.Models.Main.Maps;
 
 namespace map2agbgui.Models.Main
 {
@@ -25,7 +26,7 @@ namespace map2agbgui.Models.Main
 
     }
 
-    [ValueConversion(typeof(NumericDisplayTuple<ITupleFormattable>), typeof(MapModel))]
+    [ValueConversion(typeof(NumericDisplayTuple<ITupleFormattable>), typeof(MapHeaderModel))]
     public class TreeViewSelectedItemToMapConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -34,7 +35,7 @@ namespace map2agbgui.Models.Main
             else if (value.GetType() == typeof(NumericDisplayTuple<IMapModel>))
             {
                 IMapModel model = ((NumericDisplayTuple<IMapModel>)value).Value;
-                if (model.EntryMode == MapEntryType.Map) return (MapModel)model;
+                if (model.EntryMode == MapEntryType.Map) return (MapHeaderModel)model;
                 else return null;
             }
             else return null;
