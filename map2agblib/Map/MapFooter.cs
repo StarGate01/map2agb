@@ -1,6 +1,4 @@
-﻿using System;
-using map2agblib.Tilesets;
-using System.Xml.Serialization;
+﻿using map2agblib.Tilesets;
 using System.Linq;
 using System.Runtime.Serialization;
 
@@ -83,17 +81,11 @@ namespace map2agblib.Map
         {
             Width = width;
             Height = height;
+            BorderWidth = borderWidth;
+            BorderHeight = borderHeight;
+
             BorderBlock = Enumerable.Repeat(new ushort[BorderHeight], BorderWidth).ToArray();
             MapBlock = Enumerable.Repeat(new ushort[Height], (int)Width).ToArray();
-        }
-
-        /// <summary>
-        /// Creates a new empty MapFooter object
-        /// </summary>
-        [Obsolete]
-        public MapFooter()
-        {
-
         }
         #endregion
     }
