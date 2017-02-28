@@ -12,7 +12,7 @@ namespace map2agblib.Imaging
         #region Fields
 
         [DataMember]
-        public Color[] Colors { get; set; }
+        public ShortColor[] Colors { get; set; }
 
         #endregion
 
@@ -22,7 +22,7 @@ namespace map2agblib.Imaging
         /// Represents the Array of Colors that are stored 
         /// </summary>
         [IgnoreDataMember]
-        public Color this[int index]
+        public ShortColor this[int index]
         {
             get
             {
@@ -47,7 +47,7 @@ namespace map2agblib.Imaging
         /// </summary>
         public Palette()
         {
-            Colors = new Color[16];
+            Colors = new ShortColor[16];
         }
 
         #endregion

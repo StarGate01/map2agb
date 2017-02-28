@@ -49,6 +49,8 @@
     <Compile Include="Imaging\Palette.cs" />
     <Compile Include="Data\MapNameTable.cs" />
     <Compile Include="Data\RomData.cs" />
+    <Compile Include="Imaging\JASCPAL\JASCPALImport.cs" />
+    <Compile Include="Imaging\ShortColor.cs" />
     <Compile Include="Map\Connection\Connection.cs" />
     <Compile Include="Map\Connection\ConnectionHeader.cs" />
     <Compile Include="Map\EventHeader.cs" />
