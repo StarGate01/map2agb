@@ -10,7 +10,7 @@ using map2agblib.Tilesets;
 namespace map2agbgui.Models.BlockEditor
 {
 
-    public class TilesetEntryModel : INotifyPropertyChanged
+    public class TilesetEntryModel : IRomSerializable<TilesetEntryModel, TilesetEntry>, INotifyPropertyChanged
     {
 
         #region Properties
@@ -47,7 +47,7 @@ namespace map2agbgui.Models.BlockEditor
 
         #region Constructor
 
-        public TilesetEntryModel(TilesetEntry entry)
+        public TilesetEntryModel(TilesetEntry entry) : base(entry)
         {
             _behaviour = new BlockBehaviourModel(entry.Behaviour);
             _tilemap = new BlockTilemapModel(entry.TilemapEntry);
@@ -57,7 +57,7 @@ namespace map2agbgui.Models.BlockEditor
 
         #region Methods
 
-        public TilesetEntry ToRomData()
+        public override TilesetEntry ToRomData()
         {
             TilesetEntry data = new TilesetEntry();
             data.Behaviour = _behaviour.ToRomData();
@@ -73,11 +73,6 @@ namespace map2agbgui.Models.BlockEditor
         public void RaisePropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        public TilesetEntryModel GetCopy()
-        {
-            TilesetEntryModel copy = (TilesetEntryModel)this.MemberwiseClone();
-            return copy;
         }
 
         #endregion

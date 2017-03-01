@@ -9,7 +9,7 @@ using map2agblib.Tilesets;
 namespace map2agbgui.Models.BlockEditor
 {
 
-    public class BlockBehaviourModel : INotifyPropertyChanged
+    public class BlockBehaviourModel : IRomSerializable<BlockBehaviourModel, BlockBehaviour>, INotifyPropertyChanged
     {
 
         #region Properties
@@ -104,7 +104,7 @@ namespace map2agbgui.Models.BlockEditor
 
         #region Constructor
 
-        public BlockBehaviourModel(BlockBehaviour entry)
+        public BlockBehaviourModel(BlockBehaviour entry) : base(entry)
         {
             _behaviour = entry.Behavior;
             _hmUsage = entry.HmUsage;
@@ -119,7 +119,7 @@ namespace map2agbgui.Models.BlockEditor
 
         #region Methods
 
-        public BlockBehaviour ToRomData()
+        public override BlockBehaviour ToRomData()
         {
             BlockBehaviour data = new BlockBehaviour();
             data.Behavior = _behaviour;
@@ -140,11 +140,6 @@ namespace map2agbgui.Models.BlockEditor
         public void RaisePropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        public BlockBehaviourModel GetCopy()
-        {
-            BlockBehaviourModel copy = (BlockBehaviourModel)this.MemberwiseClone();
-            return copy;
         }
 
         #endregion

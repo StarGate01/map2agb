@@ -12,7 +12,7 @@ using System.Windows;
 namespace map2agbgui.Models.BlockEditor
 {
 
-    public class PaletteModel : INotifyPropertyChanged, ITupleFormattable
+    public class PaletteModel : IRomSerializable<PaletteModel, Palette>, INotifyPropertyChanged, ITupleFormattable
     {
 
         #region Properties
@@ -42,7 +42,7 @@ namespace map2agbgui.Models.BlockEditor
 
         #region Constructor
 
-        public PaletteModel(Palette palette)
+        public PaletteModel(Palette palette) : base(palette)
         {
             _colors = new ObservableCollection<ShortColorModel>(palette.Colors.Select(p => new ShortColorModel(p)));
         }
@@ -62,7 +62,7 @@ namespace map2agbgui.Models.BlockEditor
             return "Palette";
         }
 
-        public Palette ToRomData()
+        public override Palette ToRomData()
         {
             return new Palette(_colors.Select(p => p.ToRomData()).ToArray());
         }
@@ -75,11 +75,6 @@ namespace map2agbgui.Models.BlockEditor
         public void RaisePropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        public PaletteModel GetCopy()
-        {
-            PaletteModel copy = (PaletteModel)this.MemberwiseClone();
-            return copy;
         }
 
         #endregion

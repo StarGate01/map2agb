@@ -10,7 +10,7 @@ using System.Windows.Media;
 namespace map2agbgui.Models.BlockEditor
 {
 
-    public class ShortColorModel: INotifyPropertyChanged
+    public class ShortColorModel: IRomSerializable<ShortColorModel, ShortColor>, INotifyPropertyChanged
     {
 
         #region Properties
@@ -68,7 +68,7 @@ namespace map2agbgui.Models.BlockEditor
 
         #region Constructor
 
-        public ShortColorModel(ShortColor color)
+        public ShortColorModel(ShortColor color) : base(color)
         {
             _red = color.Red;
             _green = color.Green;
@@ -79,9 +79,9 @@ namespace map2agbgui.Models.BlockEditor
 
         #region Methods
 
-        public ShortColor ToRomData()
+        public override ShortColor ToRomData()
         {
-            return new ShortColor(_red, _blue, _green);
+            return new ShortColor(_red, _green, _blue);
         }
 
         #endregion
@@ -92,11 +92,6 @@ namespace map2agbgui.Models.BlockEditor
         public void RaisePropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        public ShortColorModel GetCopy()
-        {
-            ShortColorModel copy = (ShortColorModel)this.MemberwiseClone();
-            return copy;
         }
 
         #endregion

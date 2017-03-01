@@ -14,7 +14,7 @@ using System.Collections.ObjectModel;
 
 namespace map2agbgui.Models.Main.Maps
 {
-    public class MapHeaderModel : IMapModel, INotifyPropertyChanged
+    public class MapHeaderModel : IRomSerializable<MapHeaderModel, MapHeader>, IMapModel, INotifyPropertyChanged
     {
 
         #region Properties
@@ -203,7 +203,7 @@ namespace map2agbgui.Models.Main.Maps
 
         #region Constructor
 
-        public MapHeaderModel(BankModel bank, MapHeader header, MainModel mainModel)
+        public MapHeaderModel(MapHeader header, BankModel bank, MainModel mainModel) : base(header)
         {
             _bank = bank;
             _nameID = header.Name;
@@ -219,8 +219,8 @@ namespace map2agbgui.Models.Main.Maps
             _mainModel = mainModel;
         }
 
-        public MapHeaderModel() : this(null, 
-            new MapHeader() { Name = 0, Footer = new MapFooter() { FirstTilesetID = "TSE0", SecondTilesetID = "TSE245157" } }, 
+        public MapHeaderModel() : this(new MapHeader() { Name = 0, Footer = new MapFooter() { FirstTilesetID = "TSE0", SecondTilesetID = "TSE245157" } },
+            null,
             new MainModel(MockData.MockRomData()))
         {
             if (!(bool)(DesignerProperties.IsInDesignModeProperty.GetMetadata(typeof(DependencyObject)).DefaultValue))
@@ -236,7 +236,7 @@ namespace map2agbgui.Models.Main.Maps
             return Name;
         }
 
-        public MapHeader ToRomData()
+        public override MapHeader ToRomData()
         {
             MapHeader header = new MapHeader();
             header.Name = _nameID;
@@ -260,11 +260,6 @@ namespace map2agbgui.Models.Main.Maps
         public void RaisePropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        public MapHeaderModel GetCopy()
-        {
-            MapHeaderModel copy = (MapHeaderModel)this.MemberwiseClone();
-            return copy;
         }
 
         #endregion

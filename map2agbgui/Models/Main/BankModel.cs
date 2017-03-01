@@ -13,7 +13,7 @@ using map2agbgui.Models.Main.Maps;
 namespace map2agbgui.Models.Main
 {
 
-    public class BankModel : INotifyPropertyChanged, IBankModel
+    public class BankModel : IRomSerializable<BankModel, List<LazyReference<MapHeader>>>, INotifyPropertyChanged, IBankModel
     {
 
         #region Properties
@@ -54,10 +54,10 @@ namespace map2agbgui.Models.Main
 
         #region Constructor
 
-        public BankModel(List<LazyReference<MapHeader>> headers, MainModel mainModel)
+        public BankModel(List<LazyReference<MapHeader>> headers, MainModel mainModel) : base(headers)
         {
             _maps = new ObservableCollection<DisplayTuple<int, IMapModel>>(headers.Select((p, pi) => 
-                new DisplayTuple<int, IMapModel>(pi, (p == null) ? (IMapModel)(new NullpointerMapModel(this)) : new MapHeaderModel(this, p.Data, mainModel))));
+                new DisplayTuple<int, IMapModel>(pi, (p == null) ? (IMapModel)(new NullpointerMapModel(this)) : new MapHeaderModel(p.Data, this, mainModel))));
         }
 
         #endregion
@@ -69,7 +69,7 @@ namespace map2agbgui.Models.Main
             return "Bank";
         }
 
-        public List<LazyReference<MapHeader>> ToRomData()
+        public override List<LazyReference<MapHeader>> ToRomData()
         {
             List<LazyReference<MapHeader>> headers = new List<LazyReference<MapHeader>>();
             headers = Maps.Select(p => (p.Value.EntryMode == MapEntryType.Nullpointer) ? null : new LazyReference<MapHeader>(((MapHeaderModel)p.Value).ToRomData())).ToList();
@@ -84,11 +84,6 @@ namespace map2agbgui.Models.Main
         public void RaisePropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        public BankModel GetCopy()
-        {
-            BankModel copy = (BankModel)this.MemberwiseClone();
-            return copy;
         }
 
         #endregion

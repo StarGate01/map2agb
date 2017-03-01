@@ -15,7 +15,7 @@ using map2agblib.Imaging;
 namespace map2agbgui.Models.BlockEditor
 {
 
-    public class TilesetModel : ITupleFormattable, INotifyPropertyChanged
+    public class TilesetModel : IRomSerializable<TilesetModel, LazyReference<Tileset>>, ITupleFormattable, INotifyPropertyChanged
     {
 
         #region Properties
@@ -142,7 +142,7 @@ namespace map2agbgui.Models.BlockEditor
 
         #region Constructor
 
-        public TilesetModel(LazyReference<Tileset> tileset)
+        public TilesetModel(LazyReference<Tileset> tileset) : base(tileset)
         {
             _graphic = new LazyReference<ImageContainer>(tileset.Data.Graphic);
             _compressed = tileset.Data.Compressed;
@@ -157,7 +157,7 @@ namespace map2agbgui.Models.BlockEditor
 
         #region Methods
 
-        public Tileset ToRomData()
+        public override LazyReference<Tileset> ToRomData()
         {
             Tileset tileset = new Tileset();
             tileset.Graphic = _graphic.AbsolutePath;
@@ -167,7 +167,7 @@ namespace map2agbgui.Models.BlockEditor
             tileset.Field3 = _field3;
             tileset.Palettes = _palettes.Select(p => p.Value.ToRomData()).ToArray();
             tileset.Blocks = _blocks.Select(p => p.ToRomData()).ToArray();
-            return tileset;
+            return new LazyReference<Tileset>(tileset);
         }
 
         #endregion
@@ -178,11 +178,6 @@ namespace map2agbgui.Models.BlockEditor
         public void RaisePropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        public TilesetModel GetCopy()
-        {
-            TilesetModel copy = (TilesetModel)this.MemberwiseClone();
-            return copy;
         }
 
         #endregion

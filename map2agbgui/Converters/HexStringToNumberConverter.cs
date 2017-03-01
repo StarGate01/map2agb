@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Globalization;
 using System.Windows.Data;
 
-namespace map2agbgui.Common
+namespace map2agbgui.Converters
 {
 
     [ValueConversion(typeof(string), typeof(byte))]

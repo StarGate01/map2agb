@@ -10,7 +10,8 @@ using System.Collections.ObjectModel;
 
 namespace map2agbgui.Models.NSEditor
 {
-    public class NSEditorModel : INotifyPropertyChanged
+
+    public class NSEditorModel : IRomSerializable<NSEditorModel, string[]>, INotifyPropertyChanged
     {
 
         #region Properties
@@ -33,7 +34,7 @@ namespace map2agbgui.Models.NSEditor
 
         #region Constructors
 
-        public NSEditorModel(string[] names)
+        public NSEditorModel(string[] names) : base(names)
         {
             _names = new BindingList<NameEntryModel>(names.Select((p, pi) => new NameEntryModel((byte)pi, p)).ToList());
         }
@@ -48,7 +49,7 @@ namespace map2agbgui.Models.NSEditor
 
         #region Methods
 
-        public string[] ToRomData()
+        public override string[] ToRomData()
         {
            return Names.Select(p => p.Name).ToArray();
         }
@@ -62,13 +63,9 @@ namespace map2agbgui.Models.NSEditor
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        public NSEditorModel GetCopy()
-        {
-            NSEditorModel copy = (NSEditorModel)this.MemberwiseClone();
-            return copy;
-        }
 
         #endregion
 
     }
+
 }

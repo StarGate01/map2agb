@@ -14,7 +14,7 @@ using map2agbgui.Models.BlockEditor;
 namespace map2agbgui.Models.Main.Maps
 {
 
-    public class MapFooterModel
+    public class MapFooterModel : IRomSerializable<MapFooterModel, MapFooter>, INotifyPropertyChanged
     {
 
         #region Properties
@@ -175,7 +175,7 @@ namespace map2agbgui.Models.Main.Maps
 
         #region Constructor
 
-        public MapFooterModel(MapFooter footer, MainModel mainModel)
+        public MapFooterModel(MapFooter footer, MainModel mainModel) : base(footer)
         {
             _firstTilesetID = footer.FirstTilesetID;
             _secondTilesetID = footer.SecondTilesetID;
@@ -199,7 +199,7 @@ namespace map2agbgui.Models.Main.Maps
 
         #region Methods
 
-        public MapFooter ToRomData()
+        public override MapFooter ToRomData()
         {
             MapFooter footer = new MapFooter();
             footer.FirstTilesetID = _firstTilesetID;
@@ -222,11 +222,6 @@ namespace map2agbgui.Models.Main.Maps
         public void RaisePropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        public MapFooterModel GetCopy()
-        {
-            MapFooterModel copy = (MapFooterModel)this.MemberwiseClone();
-            return copy;
         }
 
         #endregion

@@ -7,10 +7,11 @@ using map2agblib.Data;
 using map2agblib.Map;
 using map2agblib.Tilesets;
 using map2agblib.Imaging;
-using map2agblib.Imaging.JASCPAL;
+using map2agblib.Imaging.IO;
 
-namespace map2agbgui
+namespace map2agbgui.Models
 {
+
     public class MockData
     {
 
@@ -42,21 +43,15 @@ namespace map2agbgui
             romData.Tilesets = new Dictionary<string, LazyReference<Tileset>>
             {
                 { "TSE0",  new LazyReference<Tileset>(new Tileset() {
-                    Graphic = @"C:\Users\Christoph\Desktop\Tileset0.bmp",
-                    Palettes = new Palette[] {
-                        JASCPALImport.Import(@"C:\Users\Christoph\Desktop\deko-iv.pal"),
-                        JASCPALImport.Import(@"C:\Users\Christoph\Desktop\deko-iv.pal")
-                    } }) },
+                    Graphic = @"C:\Users\Christoph\Desktop\Tileset0.bmp" }) },
                 { "TSE245157", new LazyReference<Tileset>(new Tileset() {
-                    Graphic = @"C:\Users\Christoph\Desktop\Tileset245157.bmp",
-                    Palettes = new Palette []
-                    {
-                        JASCPALImport.Import(@"C:\Users\Christoph\Desktop\deko-iv.pal"),
-                    }
-                }) }
+                    Graphic = @"C:\Users\Christoph\Desktop\Tileset245157.bmp" }) }
             };
+            romData.Tilesets["TSE0"].Data.Palettes[0] = JASCPAL.Import(@"C:\Users\Christoph\Desktop\deko-iv.pal");
+            romData.Tilesets["TSE0"].Data.Palettes[1] = JASCPAL.Import(@"C:\Users\Christoph\Desktop\deko-iv.pal");
             return romData;
         }
 
     }
+
 }

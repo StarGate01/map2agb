@@ -16,7 +16,7 @@ using map2agbgui.Models.BlockEditor;
 
 namespace map2agbgui.Models.Main
 {
-    public class MainModel : INotifyPropertyChanged
+    public class MainModel : IRomSerializable<MainModel, RomData>, INotifyPropertyChanged
     {
 
         #region Properties
@@ -88,7 +88,7 @@ namespace map2agbgui.Models.Main
             Status = "Designer Mode";
         }
 
-        public MainModel(RomData romData)
+        public MainModel(RomData romData) : base(romData)
         {
             _NSEditorDataModel = new NSEditorModel(romData.NameTable.Names);
             _NSEditorDataModel.Names.ListChanged += NSEditor_Names_ListChanged;
@@ -113,7 +113,7 @@ namespace map2agbgui.Models.Main
 
         #region Methods
 
-        public RomData ToRomData()
+        public override RomData ToRomData()
         {
             RomData romData = new RomData();
             romData.NameTable.Names = NSEditorViewModel.ToRomData();
@@ -130,11 +130,6 @@ namespace map2agbgui.Models.Main
         public void RaisePropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        public MainModel GetCopy()
-        {
-            MainModel copy = (MainModel)this.MemberwiseClone();
-            return copy;
         }
 
         #endregion

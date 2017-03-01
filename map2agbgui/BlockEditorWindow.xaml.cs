@@ -17,7 +17,6 @@ using map2agbgui.Models.Main;
 using map2agblib.Imaging;
 using map2agblib.Data;
 using map2agblib.Tilesets;
-using map2agblib.Imaging.JASCPAL;
 
 namespace map2agbgui
 {
@@ -26,7 +25,6 @@ namespace map2agbgui
     {
 
         BlockEditorModel dataModel;
-        System.Windows.Forms.OpenFileDialog loadPalDialog;
 
         #region Constructor
 
@@ -35,13 +33,6 @@ namespace map2agbgui
             InitializeComponent();
             dataModel = model;
             DataContext = dataModel;
-            loadPalDialog = new System.Windows.Forms.OpenFileDialog();
-            loadPalDialog.CheckFileExists = true;
-            loadPalDialog.DefaultExt = "pal";
-            loadPalDialog.Filter = "Palette files|*.pal";
-            loadPalDialog.Multiselect = false;
-            loadPalDialog.ShowHelp = false;
-            loadPalDialog.Title = "Import palette";
         }
 
         #endregion
@@ -59,49 +50,13 @@ namespace map2agbgui
 
         #region Palettes Eventhandler
 
-        private void EditPaletteContextEntry_Click(object sender, RoutedEventArgs e)
+        private void PaletteListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             DisplayTuple<int, PaletteModel> selected = (DisplayTuple<int, PaletteModel>)PaletteListBox.SelectedItem;
             if (selected == null) return;
-            PaletteEditorWindow paletteEditorWindow = new PaletteEditorWindow(selected.Value);
+            PaletteEditorWindow paletteEditorWindow = new PaletteEditorWindow(selected.Value, selected.Index);
             paletteEditorWindow.Owner = this;
             paletteEditorWindow.ShowDialog();
-        }
-
-        private void RemovePaletteContextEntry_Click(object sender, RoutedEventArgs e)
-        {
-            DisplayTuple<int, PaletteModel> selected = (DisplayTuple<int, PaletteModel>)PaletteListBox.SelectedItem;
-            if (selected == null) return;
-            MessageBoxResult result = MessageBox.Show("Delete this palette?", "Delete palette", MessageBoxButton.OKCancel, MessageBoxImage.Warning, MessageBoxResult.Cancel);
-            if (result == MessageBoxResult.Cancel) return;
-            DisplayTuple<string, TilesetModel> currentTileset = (DisplayTuple<string, TilesetModel>)TilesetListBox.SelectedItem;
-            currentTileset.Value.Palettes.Remove(selected);
-            for (int i = 0; i < currentTileset.Value.Palettes.Count; i++) currentTileset.Value.Palettes[i].Index = i;
-        }
-
-        private void AddPaletteButton_Click(object sender, RoutedEventArgs e)
-        {
-            DisplayTuple<string, TilesetModel> currentTileset = (DisplayTuple<string, TilesetModel>)TilesetListBox.SelectedItem;
-            if (currentTileset == null) return;
-            currentTileset.Value.Palettes.Add(new DisplayTuple<int, PaletteModel>(currentTileset.Value.Palettes.Count, new PaletteModel(new Palette())));
-        }
-
-        private void ImportPaletteButton_Click(object sender, RoutedEventArgs e)
-        {
-            DisplayTuple<string, TilesetModel> currentTileset = (DisplayTuple<string, TilesetModel>)TilesetListBox.SelectedItem;
-            if (currentTileset == null) return;
-            loadPalDialog.FileName = "";
-            System.Windows.Forms.DialogResult result = loadPalDialog.ShowDialog();
-            if (result == System.Windows.Forms.DialogResult.Abort || result == System.Windows.Forms.DialogResult.Cancel) return;
-            try
-            {
-                Palette pal = JASCPALImport.Import(loadPalDialog.FileName);
-                currentTileset.Value.Palettes.Add(new DisplayTuple<int, PaletteModel>(currentTileset.Value.Palettes.Count, new PaletteModel(pal)));
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show("Error: " + ex.Message, "Import error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
         }
 
         #endregion

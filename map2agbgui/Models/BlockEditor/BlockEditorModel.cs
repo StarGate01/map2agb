@@ -14,7 +14,7 @@ using map2agblib.Data;
 namespace map2agbgui.Models.BlockEditor
 {
 
-    public class BlockEditorModel : INotifyPropertyChanged
+    public class BlockEditorModel : IRomSerializable<BlockEditorModel, Dictionary<string, LazyReference<Tileset>>>, INotifyPropertyChanged
     {
 
         #region Properties
@@ -37,7 +37,7 @@ namespace map2agbgui.Models.BlockEditor
 
         #region Constructor
 
-        public BlockEditorModel(Dictionary<string, LazyReference<Tileset>> tilesets)
+        public BlockEditorModel(Dictionary<string, LazyReference<Tileset>> tilesets) : base(tilesets)
         {
             _tilesets = new ObservableCollection<DisplayTuple<string, TilesetModel>>(tilesets.Select(p => new DisplayTuple<string, TilesetModel>(p.Key, new TilesetModel(p.Value))));
         }
@@ -52,9 +52,9 @@ namespace map2agbgui.Models.BlockEditor
 
         #region Methods
 
-        public Dictionary<string, LazyReference<Tileset>> ToRomData()
+        public override Dictionary<string, LazyReference<Tileset>> ToRomData()
         {
-           return _tilesets.ToDictionary(k => k.Index, p => new LazyReference<Tileset>(p.Value.ToRomData()));
+           return _tilesets.ToDictionary(k => k.Index, p => p.Value.ToRomData());
         }
 
         #endregion
@@ -65,11 +65,6 @@ namespace map2agbgui.Models.BlockEditor
         public void RaisePropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        public BlockEditorModel GetCopy()
-        {
-            BlockEditorModel copy = (BlockEditorModel)this.MemberwiseClone();
-            return copy;
         }
 
         #endregion

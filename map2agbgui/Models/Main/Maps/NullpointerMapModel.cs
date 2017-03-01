@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
+using map2agblib.Map;
 
 namespace map2agbgui.Models.Main.Maps
 {
-    public class NullpointerMapModel : IMapModel, INotifyPropertyChanged
+    public class NullpointerMapModel : IRomSerializable<MapHeaderModel, MapHeader>, IMapModel, INotifyPropertyChanged
     {
 
         #region Properties
@@ -43,7 +44,7 @@ namespace map2agbgui.Models.Main.Maps
 
         #region Constructors
 
-        public NullpointerMapModel(BankModel bank)
+        public NullpointerMapModel(BankModel bank) : base(null)
         {
             _bank = bank;
         }
@@ -57,6 +58,11 @@ namespace map2agbgui.Models.Main.Maps
             return "Map space";
         }
 
+        public override MapHeader ToRomData()
+        {
+            return null;
+        }
+
         #endregion
 
         #region INotifyPropertyChanged
@@ -65,11 +71,6 @@ namespace map2agbgui.Models.Main.Maps
         public void RaisePropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        public NullpointerMapModel GetCopy()
-        {
-            NullpointerMapModel copy = (NullpointerMapModel)this.MemberwiseClone();
-            return copy;
         }
 
         #endregion

@@ -101,11 +101,11 @@
     <Compile Include="BlockEditorWindow.xaml.cs">
       <DependentUpon>BlockEditorWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Common\ColorSingleChannelFilterConverter.cs" />
-    <Compile Include="Common\HexStringToNumberConverter.cs" />
-    <Compile Include="Common\InverseBooleanConverter.cs" />
-    <Compile Include="Common\NullToBooleanConverter.cs" />
-    <Compile Include="Common\ValueConverterGroup.cs" />
+    <Compile Include="Converters\ColorSingleChannelFilterConverter.cs" />
+    <Compile Include="Converters\HexStringToNumberConverter.cs" />
+    <Compile Include="Converters\InverseBooleanConverter.cs" />
+    <Compile Include="Converters\NullToBooleanConverter.cs" />
+    <Compile Include="Converters\ValueConverterGroup.cs" />
     <Compile Include="Controls\MapTabControl.xaml.cs">
       <DependentUpon>MapTabControl.xaml</DependentUpon>
     </Compile>
@@ -123,7 +123,8 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MockData.cs" />
+    <Compile Include="Models\IRomSerializable.cs" />
+    <Compile Include="Models\MockData.cs" />
     <Compile Include="Models\BlockEditor\BlockBehaviourModel.cs" />
     <Compile Include="Models\BlockEditor\BlockEditorModel.cs" />
     <Compile Include="Models\BlockEditor\BlockTilemapModel.cs" />
@@ -271,6 +272,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\HiddenFolder_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Undo_16x.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

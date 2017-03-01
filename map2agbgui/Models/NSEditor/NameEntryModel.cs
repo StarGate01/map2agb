@@ -65,11 +65,6 @@ namespace map2agbgui.Models.NSEditor
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        public NSEditorModel GetCopy()
-        {
-            NSEditorModel copy = (NSEditorModel)this.MemberwiseClone();
-            return copy;
-        }
 
         #endregion
 

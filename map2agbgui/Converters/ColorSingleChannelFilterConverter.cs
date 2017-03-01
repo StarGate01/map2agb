@@ -7,11 +7,11 @@ using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace map2agbgui.Common
+namespace map2agbgui.Converters
 {
 
     [ValueConversion(typeof(SolidColorBrush), typeof(SolidColorBrush))]
-    class ColorSingleChannelFilterConverter : IValueConverter
+    public class ColorSingleChannelFilterConverter : IValueConverter
     {
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

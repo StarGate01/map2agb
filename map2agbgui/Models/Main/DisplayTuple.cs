@@ -82,11 +82,6 @@ namespace map2agbgui.Models.Main
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        public DisplayTuple<K, T> GetCopy()
-        {
-            DisplayTuple<K, T> copy = (DisplayTuple<K, T>)this.MemberwiseClone();
-            return copy;
-        }
 
         #endregion
 

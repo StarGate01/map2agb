@@ -17,6 +17,7 @@ using map2agblib.Data;
 using System.IO;
 using System.Windows.Interop;
 using map2agblib.Map;
+using map2agbgui.Models;
 using map2agbgui.Models.Main.Maps;
 
 using Win32Forms = System.Windows.Forms;
@@ -166,7 +167,7 @@ namespace map2agbgui
             if (selected == null) return;
             MessageBoxResult result = MessageBoxResult.Cancel;
             result = MessageBox.Show("Replace this map with a new one?", "Replace map", MessageBoxButton.OKCancel, MessageBoxImage.Warning, MessageBoxResult.Cancel);
-            if(result == MessageBoxResult.OK) selected.Value = new MapHeaderModel(selected.Value.Bank, new MapHeader(), App.MainViewModel);
+            if(result == MessageBoxResult.OK) selected.Value = new MapHeaderModel(new MapHeader(), selected.Value.Bank, App.MainViewModel);
         }
 
         private void RemoveMapContextEntry_Click(object sender, RoutedEventArgs e)
@@ -228,7 +229,7 @@ namespace map2agbgui
         {
             DisplayTuple<int, IBankModel> selected = (DisplayTuple<int, IBankModel>)MapTreeView.SelectedItem;
             if (selected == null || selected.Value.EntryMode == BankEntryType.Nullpointer) return;
-            ((BankModel)selected.Value).Maps.Add(new DisplayTuple<int, IMapModel>(((BankModel)selected.Value).Maps.Count, new MapHeaderModel(((BankModel)selected.Value), new MapHeader(), App.MainViewModel)));
+            ((BankModel)selected.Value).Maps.Add(new DisplayTuple<int, IMapModel>(((BankModel)selected.Value).Maps.Count, new MapHeaderModel(new MapHeader(), ((BankModel)selected.Value), App.MainViewModel)));
         }
 
         private void RemoveBankContextEntry_Click(object sender, RoutedEventArgs e)

@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:map2agbgui.Controls"
              mc:Ignorable="d" 
              xmlns:model="clr-namespace:map2agbgui.Models.Main.Maps"
-             xmlns:c="clr-namespace:map2agbgui.Common"
+             xmlns:c="clr-namespace:map2agbgui.Converters"
              d:DesignHeight="400" d:DesignWidth="555">
 
     <UserControl.Resources>

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:map2agbgui"
         mc:Ignorable="d"
         xmlns:model="clr-namespace:map2agbgui.Models.BlockEditor"
-        xmlns:c="clr-namespace:map2agbgui.Common"
+        xmlns:c="clr-namespace:map2agbgui.Converters"
         Title="Palette Editor" Width="441" WindowStartupLocation="CenterOwner" SourceInitialized="Window_SourceInitialized" ResizeMode="NoResize" SizeToContent="Height">
 
     <Window.Resources>
@@ -17,9 +17,30 @@
     <Grid d:DataContext="{d:DesignInstance Type=model:PaletteModel, IsDesignTimeCreatable=True}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <GroupBox Margin="5">
+        <Menu Grid.Row="0" DockPanel.Dock="Top" Padding="3">
+            <MenuItem Header="_Palette">
+                <MenuItem x:Name="ImportPaletteButton" Header="_Import"  Click="ImportPaletteButton_Click">
+                    <MenuItem.Icon>
+                        <Image Source="Assets/Open_16x.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem x:Name="ExportPaletteButton" Header="_Export" Click="ExportPaletteButton_Click">
+                    <MenuItem.Icon>
+                        <Image Source="Assets/Save_16x.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator HorizontalAlignment="Left" Width="120"/>
+                <MenuItem x:Name="ResetPaletteButton" Header="_Reset" Click="ResetPaletteButton_Click">
+                    <MenuItem.Icon>
+                        <Image Source="Assets/Undo_16x.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+        </Menu>
+        <GroupBox Grid.Row="1" Margin="5">
             <GroupBox.Header>
                 <TextBlock Text="Colors" FontWeight="Bold" />
             </GroupBox.Header>
@@ -36,7 +57,7 @@
                 </ListBox.ItemTemplate>
             </ListBox>
         </GroupBox>
-        <Grid DataContext="{Binding ElementName=ColorListBox, Path=SelectedItem}" Margin="5" Grid.Row="1">
+        <Grid DataContext="{Binding ElementName=ColorListBox, Path=SelectedItem}" Margin="5" Grid.Row="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />

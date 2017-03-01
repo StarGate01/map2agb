@@ -6,21 +6,20 @@ using System.Threading.Tasks;
 using System.Globalization;
 using System.Windows.Data;
 
-namespace map2agbgui.Common
+namespace map2agbgui.Converters
 {
 
-    [ValueConversion(typeof(object), typeof(bool))]
-    public class NullToBooleanConverter : IValueConverter
+    public class ValueConverterGroup : List<IValueConverter>, IValueConverter
     {
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value != null;
+            return this.Aggregate(value, (current, converter) => converter.Convert(current, targetType, parameter, culture));
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotSupportedException();
+            throw new NotImplementedException();
         }
 
     }

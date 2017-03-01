@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
+using map2agblib.Data;
+using map2agblib.Map;
 
 namespace map2agbgui.Models.Main
 {
 
-    public class NullpointerBankModel : IBankModel, INotifyPropertyChanged
+    public class NullpointerBankModel : IRomSerializable<BankModel, List<LazyReference<MapHeader>>>, INotifyPropertyChanged, IBankModel
     {
 
         #region Properties
@@ -35,7 +37,7 @@ namespace map2agbgui.Models.Main
 
         #region Constructors
 
-        public NullpointerBankModel()
+        public NullpointerBankModel() :base(null)
         {
         }
 
@@ -48,6 +50,11 @@ namespace map2agbgui.Models.Main
             return "Bank space";
         }
 
+        public override List<LazyReference<MapHeader>> ToRomData()
+        {
+            return null;
+        }
+
         #endregion
 
         #region INotifyPropertyChanged
@@ -56,11 +63,6 @@ namespace map2agbgui.Models.Main
         public void RaisePropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        public NullpointerBankModel GetCopy()
-        {
-            NullpointerBankModel copy = (NullpointerBankModel)this.MemberwiseClone();
-            return copy;
         }
 
         #endregion
