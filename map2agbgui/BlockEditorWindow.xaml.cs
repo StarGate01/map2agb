@@ -38,7 +38,7 @@ namespace map2agbgui
             loadPalDialog = new System.Windows.Forms.OpenFileDialog();
             loadPalDialog.CheckFileExists = true;
             loadPalDialog.DefaultExt = "pal";
-            loadPalDialog.Filter = "Pallete files|*.pal";
+            loadPalDialog.Filter = "Palette files|*.pal";
             loadPalDialog.Multiselect = false;
             loadPalDialog.ShowHelp = false;
             loadPalDialog.Title = "Import palette";

@@ -22,15 +22,6 @@ namespace map2agblib.Imaging
         [DataMember]
         public byte Green { get; set; }
 
-        [IgnoreDataMember]
-        public Color Color
-        {
-            get
-            {
-                return Color.FromArgb(Red << 3, Green << 3, Blue << 3);
-            }
-        }
-
         public ShortColor()
         {
         }
