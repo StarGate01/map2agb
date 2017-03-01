@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
 using System.Runtime.Serialization;
 
 namespace map2agblib.Imaging
@@ -47,7 +48,12 @@ namespace map2agblib.Imaging
         /// </summary>
         public Palette()
         {
-            Colors = new ShortColor[16];
+            Colors = Enumerable.Repeat(new ShortColor(0, 0, 0), 16).ToArray();
+        }
+
+        public Palette(ShortColor[] colors)
+        {
+            Colors = colors;
         }
 
         #endregion

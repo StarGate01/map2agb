@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:map2agbgui"
         mc:Ignorable="d"
         xmlns:model="clr-namespace:map2agbgui.Models.NSEditor"
+        xmlns:c="clr-namespace:map2agbgui.Common"
         Title="Namespace Editor" Height="400" Width="300" WindowStartupLocation="CenterOwner" MinWidth="300" MinHeight="400" MaxWidth="300" SourceInitialized="Window_SourceInitialized">
     <Grid d:DataContext="{d:DesignInstance Type=model:NSEditorModel, IsDesignTimeCreatable=True}">
         

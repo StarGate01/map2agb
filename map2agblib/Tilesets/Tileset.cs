@@ -91,7 +91,8 @@ namespace map2agblib.Tilesets
 
         public Tileset()
         {
-
+            Blocks = new TilesetEntry[0];
+            Palettes = new Palette[0];
         }
 
         #endregion

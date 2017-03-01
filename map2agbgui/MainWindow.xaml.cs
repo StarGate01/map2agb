@@ -117,7 +117,9 @@ namespace map2agbgui
 
         private void BlockeditorButton_Click(object sender, RoutedEventArgs e)
         {
-            
+            BlockEditorWindow blockEditorWindow = new BlockEditorWindow(App.MainViewModel.BlockEditorViewModel);
+            blockEditorWindow.Owner = this;
+            blockEditorWindow.ShowDialog();
         }
 
         #endregion
@@ -322,7 +324,7 @@ namespace map2agbgui
                 saveName = projectBrowseDialog.SelectedPath;
                 if (saveName == "" || result == Win32Forms.DialogResult.Abort || result == Win32Forms.DialogResult.Cancel) return false;
             }
-            RomData romData = App.MainViewModel.SaveToRomData();
+            RomData romData = App.MainViewModel.ToRomData();
             try
             {
                 RomData.ExportToDirectory(romData, saveName);

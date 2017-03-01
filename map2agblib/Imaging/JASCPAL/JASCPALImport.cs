@@ -17,12 +17,12 @@ namespace map2agblib.Imaging.JASCPAL
         /// </summary>
         /// <param name="filePath">The source file path</param>
         /// <returns>The palette</returns>
-        public static Color[] Import(string filePath)
+        public static Palette Import(string filePath)
         {
             string[] fileContent = File.ReadAllLines(filePath);
             if (fileContent[0] != "JASC-PAL") throw new InvalidDataException("No JASC-PAL file");
             int numColors = Convert.ToInt32(fileContent[2]);
-            return fileContent.Skip(3).Take(numColors).Select(p => p.Split(' ').Select(k => Convert.ToByte(k)).ToArray()).Select(p => Color.FromArgb(p[0], p[1], p[2])).ToArray();
+            return new Palette(fileContent.Skip(3).Take(numColors).Select(p => p.Split(' ').Select(k => Convert.ToByte(k)).ToArray()).Select(p => new ShortColor((byte)(p[0] >> 3), (byte)(p[1] >> 3), (byte)(p[2] >> 3))).ToArray());
         }
 
     }

@@ -5,12 +5,14 @@ namespace map2agblib.Tilesets
     public class BlockBehaviour
     {
         #region Fields
+
         private byte _hmUsage;
         private byte _field2;
         private byte _field3;
         private byte _field4;
         private byte _field5;
         private byte _field6;
+
         #endregion
 
         #region Properties

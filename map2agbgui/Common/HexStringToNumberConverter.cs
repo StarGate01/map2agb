@@ -33,6 +33,7 @@ namespace map2agbgui.Common
                 else intval = int.Parse(strval, NumberStyles.Integer);
                 if (intval < byte.MinValue) intval = byte.MinValue;
                 if (intval > byte.MaxValue) intval = byte.MaxValue;
+                if (parameter != null && intval > (int)parameter) intval = (byte)parameter;
                 return (byte)intval;
             }
             catch (Exception) { return 0; }

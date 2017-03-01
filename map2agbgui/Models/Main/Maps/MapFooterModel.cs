@@ -9,6 +9,7 @@ using map2agblib.Map;
 using map2agblib.Tilesets;
 using map2agblib.Data;
 using System.Collections.ObjectModel;
+using map2agbgui.Models.BlockEditor;
 
 namespace map2agbgui.Models.Main.Maps
 {
@@ -65,14 +66,14 @@ namespace map2agbgui.Models.Main.Maps
         {
             get
             {
-                return MainModel.Tilesets.First(p => p.Index == _firstTilesetID).Value;
+                return MainModel.BlockEditorViewModel.Tilesets.First(p => p.Index == _firstTilesetID).Value;
             }
         }
         public TilesetModel SecondTileset
         {
             get
             {
-                return MainModel.Tilesets.First(p => p.Index == _secondTilesetID).Value;
+                return MainModel.BlockEditorViewModel.Tilesets.First(p => p.Index == _secondTilesetID).Value;
             }
         }
 

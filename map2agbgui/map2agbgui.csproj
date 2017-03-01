@@ -79,6 +79,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="BlockEditorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\MapTabControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -94,6 +98,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="BlockEditorWindow.xaml.cs">
+      <DependentUpon>BlockEditorWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Common\ColorSingleChannelFilterConverter.cs" />
     <Compile Include="Common\HexStringToNumberConverter.cs" />
     <Compile Include="Common\InverseBooleanConverter.cs" />
     <Compile Include="Common\NullToBooleanConverter.cs" />
@@ -109,9 +117,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="PaletteEditorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MockData.cs" />
+    <Compile Include="Models\BlockEditor\BlockBehaviourModel.cs" />
+    <Compile Include="Models\BlockEditor\BlockEditorModel.cs" />
+    <Compile Include="Models\BlockEditor\BlockTilemapModel.cs" />
+    <Compile Include="Models\BlockEditor\PaletteModel.cs" />
+    <Compile Include="Models\BlockEditor\ShortColorModel.cs" />
+    <Compile Include="Models\BlockEditor\TilesetEntryModel.cs" />
     <Compile Include="Models\Main\BankModel.cs" />
     <Compile Include="Models\Main\IBankModel.cs" />
     <Compile Include="Models\Main\ITupleFormattable.cs" />
@@ -120,7 +138,7 @@
     <Compile Include="Models\Main\EntryTypeToFontStyleConverter.cs" />
     <Compile Include="Models\Main\Maps\MapFooterModel.cs" />
     <Compile Include="Models\Main\Maps\MapHeaderModel.cs" />
-    <Compile Include="Models\Main\Maps\TilesetModel.cs" />
+    <Compile Include="Models\BlockEditor\TilesetModel.cs" />
     <Compile Include="Models\Main\NullpointerBankModel.cs" />
     <Compile Include="Models\Main\TreeViewConverters.cs" />
     <Compile Include="Models\NSEditor\NameEntryModel.cs" />
@@ -130,6 +148,9 @@
     <Compile Include="Native\WindowMods.cs" />
     <Compile Include="NSEditorWindow.xaml.cs">
       <DependentUpon>NSEditorWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PaletteEditorWindow.xaml.cs">
+      <DependentUpon>PaletteEditorWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

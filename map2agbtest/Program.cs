@@ -15,9 +15,9 @@ namespace map2agbtest
         static void Main(string[] args)
         {
 
-            Color[] palette = JASCPALImport.Import(@"C:\Users\Christoph\Desktop\deko-iv.pal");
+            //Color[] palette = JASCPALImport.Import(@"C:\Users\Christoph\Desktop\deko-iv.pal");
 
-            Console.ReadKey();
+            //Console.ReadKey();
 
         }
 

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using map2agbgui.Models.BlockEditor;
+using map2agbgui.Native;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,16 +13,14 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using map2agbgui.Models.NSEditor;
-using map2agbgui.Native;
 
 namespace map2agbgui
 {
 
-    public partial class NSEditorWindow : Window
+    public partial class PaletteEditorWindow : Window
     {
 
-        public NSEditorWindow(NSEditorModel model)
+        public PaletteEditorWindow(PaletteModel model)
         {
             InitializeComponent();
             DataContext = model;

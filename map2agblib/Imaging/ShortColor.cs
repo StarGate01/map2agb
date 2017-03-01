@@ -27,8 +27,19 @@ namespace map2agblib.Imaging
         {
             get
             {
-                return Color.FromArgb(Red * 8, Green * 8, Blue * 8);
+                return Color.FromArgb(Red << 3, Green << 3, Blue << 3);
             }
+        }
+
+        public ShortColor()
+        {
+        }
+
+        public ShortColor(byte r, byte g, byte b)
+        {
+            Red = r;
+            Green = g;
+            Blue = b;
         }
 
     }
