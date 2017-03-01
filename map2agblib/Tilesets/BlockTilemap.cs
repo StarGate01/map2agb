@@ -6,15 +6,11 @@ using System.Threading.Tasks;
 
 namespace map2agblib.Tilesets
 {
-
     public class BlockTilemap
     {
-
         #region Fields
-
         private ushort _tileId;
         private byte _palIndex;
-
         #endregion
 
         #region Properties
@@ -64,7 +60,6 @@ namespace map2agblib.Tilesets
         /// Gets or sets the VFlip bit, used to mirror the tile on rendering.
         /// </summary>
         public bool VFlip { get; set; }
-
         #endregion
 
         /// <summary>
@@ -74,7 +69,5 @@ namespace map2agblib.Tilesets
         {
 
         }
-
     }
-
 }
