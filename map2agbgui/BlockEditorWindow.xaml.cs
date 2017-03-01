@@ -41,7 +41,7 @@ namespace map2agbgui
             loadPalDialog.Filter = "Pallete files|*.pal";
             loadPalDialog.Multiselect = false;
             loadPalDialog.ShowHelp = false;
-            loadPalDialog.Title = "Import pallete";
+            loadPalDialog.Title = "Import palette";
         }
 
         #endregion
@@ -72,6 +72,8 @@ namespace map2agbgui
         {
             DisplayTuple<int, PaletteModel> selected = (DisplayTuple<int, PaletteModel>)PaletteListBox.SelectedItem;
             if (selected == null) return;
+            MessageBoxResult result = MessageBox.Show("Delete this palette?", "Delete palette", MessageBoxButton.OKCancel, MessageBoxImage.Warning, MessageBoxResult.Cancel);
+            if (result == MessageBoxResult.Cancel) return;
             DisplayTuple<string, TilesetModel> currentTileset = (DisplayTuple<string, TilesetModel>)TilesetListBox.SelectedItem;
             currentTileset.Value.Palettes.Remove(selected);
             for (int i = 0; i < currentTileset.Value.Palettes.Count; i++) currentTileset.Value.Palettes[i].Index = i;
@@ -122,6 +124,8 @@ namespace map2agbgui
         {
             DisplayTuple<string, TilesetModel> selected = (DisplayTuple<string, TilesetModel>)TilesetListBox.SelectedItem;
             if (selected == null) return;
+            MessageBoxResult result = MessageBox.Show("Delete this tileset?", "Delete tileset", MessageBoxButton.OKCancel, MessageBoxImage.Warning, MessageBoxResult.Cancel);
+            if (result == MessageBoxResult.Cancel) return;
             dataModel.Tilesets.Remove(selected);
         }
 
