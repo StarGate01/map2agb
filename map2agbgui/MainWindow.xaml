@@ -252,7 +252,7 @@
                         </MenuItem.Header>
                     </MenuItem>
                     <Border Width="1" Height="32" Background="Gray" />
-                    <MenuItem ToolTip="Block editor" x:Name="BlockeditorButton" Click="BlockeditorButton_Click">
+                    <MenuItem ToolTip="Tileset editor" x:Name="BlockeditorButton" Click="BlockeditorButton_Click">
                         <MenuItem.Header>
                             <Grid>
                                 <Image Width="32" Height="32" Source="Assets/ConfigureComputer_32x.png" Margin="3" />

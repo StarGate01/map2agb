@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         xmlns:model="clr-namespace:map2agbgui.Models.BlockEditor"
         xmlns:c="clr-namespace:map2agbgui.Converters"
-        Title="Block Editor" Height="400" Width="550" MinWidth="550" WindowStartupLocation="CenterOwner" SourceInitialized="Window_SourceInitialized" ResizeMode="NoResize">
+        Title="Tileset Editor" Height="400" Width="700" MinWidth="700" WindowStartupLocation="CenterOwner" SourceInitialized="Window_SourceInitialized" ResizeMode="NoResize">
 
     <Window.Resources>
         <ContextMenu x:Key="tilesetContextMenu">
@@ -23,6 +23,15 @@
             <c:InverseBooleanConverter />
             <BooleanToVisibilityConverter />
         </c:ValueConverterGroup>
+        <c:ValueConverterGroup x:Key="nullToVisibilityConverter" >
+            <c:NullToBooleanConverter />
+            <BooleanToVisibilityConverter />
+        </c:ValueConverterGroup>
+        <c:ValueConverterGroup x:Key="inverseNullToVisibilityConverter">
+            <c:NullToBooleanConverter />
+            <c:InverseBooleanConverter />
+            <BooleanToVisibilityConverter />
+        </c:ValueConverterGroup>
     </Window.Resources>
 
     <Grid d:DataContext="{d:DesignInstance Type=model:BlockEditorModel, IsDesignTimeCreatable=True}">
@@ -31,10 +40,9 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="251" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <GroupBox Margin="5" Grid.Column="0" Padding="2">
+        <GroupBox Margin="5" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Padding="2">
             <GroupBox.Header>
                 <TextBlock Text="Tilesets" FontWeight="Bold" />
             </GroupBox.Header>
@@ -45,7 +53,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Button x:Name="AddTilesetButton" Click="AddTilesetButton_Click" Padding="5,2" Grid.Row="0" HorizontalAlignment="Stretch" Margin="0,0,0,3" Content="Add tileset" />
-                <ListBox MinWidth="120" Grid.Row="1" x:Name="TilesetListBox" SelectedIndex="0" ItemsSource="{Binding FilteredTilesets}">
+                <ListBox MinWidth="130" Grid.Row="1" x:Name="TilesetListBox" SelectedIndex="0" ItemsSource="{Binding FilteredTilesets}">
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="ListBoxItem">
                             <Setter Property="ContextMenu" Value="{StaticResource tilesetContextMenu}" />
@@ -93,91 +101,116 @@
                 </TextBlock>
             </Grid>
         </GroupBox>
-        <Grid Margin="5" Grid.Column="1" DataContext="{Binding ElementName=TilesetListBox, Path=SelectedItem}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <GroupBox Grid.Column="0" Padding="2" Margin="0,0,5,0">
-                <GroupBox.Header>
-                    <TextBlock Text="Tileset Palettes" FontWeight="Bold" />
-                </GroupBox.Header>
-                <ListBox ScrollViewer.VerticalScrollBarVisibility="Hidden" x:Name="PaletteListBox" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" ItemsSource="{Binding Value.Palettes}" MouseDoubleClick="PaletteListBox_MouseDoubleClick">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <Grid Margin="0,0,0,3">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                <TextBlock Grid.Row="0" Text="{Binding DisplayValue}" />
-                                <ItemsControl Grid.Row="1" ItemsSource="{Binding Value.Colors}">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <StackPanel Orientation="Horizontal"/>
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Rectangle Fill="{Binding Brush}" Margin="0,1" Height="10" Width="7" />
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </Grid>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-            </GroupBox>
-            <GroupBox Grid.Column="1" Padding="2">
-                <GroupBox.Header>
-                    <TextBlock Text="Tileset General" FontWeight="Bold" />
-                </GroupBox.Header>
+        <TabControl Visibility="{Binding ElementName=TilesetListBox, Path=SelectedItem, Converter={StaticResource nullToVisibilityConverter}}" Margin="5" Grid.Column="1" DataContext="{Binding ElementName=TilesetListBox, Path=SelectedItem}">
+            <TabItem>
+                <TabItem.Header>
+                    <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Image Visibility="{Binding Value.Valid, Converter={StaticResource inverseBooleanToVisibilityConverter}}" Margin="0,0,4,0" Grid.Column="0" Source="/Assets/StatusWarning_16x.png" Width="14" Height="14" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="1" Text="Settings" VerticalAlignment="Center" />
+                    </Grid>
+                </TabItem.Header>
                 <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock Margin="3" Grid.Row="0" Grid.Column="0" Text="Key:" VerticalAlignment="Center" />
-                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Index, Mode=TwoWay}" VerticalAlignment="Center" Margin="3" />
-                    <TextBlock Margin="3" Grid.Row="1" Grid.Column="0" Text="Secondary:" VerticalAlignment="Center" />
-                    <CheckBox Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" IsChecked="{Binding Value.Secondary, Mode=TwoWay}" Margin="3" />
-                    <TextBlock Margin="3" Grid.Row="2" Grid.Column="0" Text="Compressed:" VerticalAlignment="Center" />
-                    <CheckBox Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" IsChecked="{Binding Value.Compressed, Mode=TwoWay}" Margin="3" />
-                    <TextBlock Margin="3" Grid.Row="3" Grid.Column="0" Text="Field 2:" VerticalAlignment="Center" />
-                    <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Value.Field2, Mode=TwoWay, Converter={StaticResource byteToHexStringConverter}}" VerticalAlignment="Center" Margin="3" />
-                    <TextBlock Margin="3" Grid.Row="4" Grid.Column="0" Text="Field 3:" VerticalAlignment="Center" />
-                    <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Value.Field3, Mode=TwoWay, Converter={StaticResource byteToHexStringConverter}}" VerticalAlignment="Center" Margin="3" />
-                    <TextBlock Margin="3" Grid.Row="5" Grid.Column="0" Text="Image:" VerticalAlignment="Center" />
-                    <Button Margin="3" Grid.Row="5" Grid.Column="1" Content="Change" x:Name="ChangeGraphicButton" Click="ChangeGraphicButton_Click" />
-                    <Border Height="50" BorderThickness="1" Margin="3" Grid.Row="6" Grid.Column="1" Visibility="{Binding Value.ValidImage, Converter={StaticResource inverseBooleanToVisibilityConverter}}" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}">
-                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" >
-                            <Image Source="/Assets/StatusWarning_16x.png" Height="16" Width="16" />
-                            <TextBlock Text="No image" Foreground="#FFD10000" FontSize="10" />
-                        </StackPanel>
-                    </Border>
-                    <Image Margin="3" Grid.Row="6" Grid.Column="1" Visibility="{Binding Value.ValidImage, Converter={StaticResource booleanToVisibilityConverter}}" Source="{Binding Value.Graphic}" RenderTransformOrigin="0.5,0.5" >
-                        <Image.LayoutTransform>
-                            <TransformGroup>
-                                <RotateTransform Angle="90"/>
-                            </TransformGroup>
-                        </Image.LayoutTransform>
-                    </Image>
+                    <GroupBox Grid.Column="0" Padding="2" Margin="0,0,5,0">
+                        <GroupBox.Header>
+                            <TextBlock Text="Palettes" FontWeight="Bold" />
+                        </GroupBox.Header>
+                        <ListBox ScrollViewer.VerticalScrollBarVisibility="Hidden" x:Name="PaletteListBox" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" ItemsSource="{Binding Value.Palettes}" MouseDoubleClick="PaletteListBox_MouseDoubleClick">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,0,0,3">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Grid.Row="0" Text="{Binding DisplayValue}" />
+                                        <ItemsControl Grid.Row="1" ItemsSource="{Binding Value.Colors}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel Orientation="Horizontal"/>
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Rectangle Fill="{Binding Brush}" Margin="0,1" Height="10" Width="7" />
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </GroupBox>
+                    <GroupBox Grid.Column="1" Padding="2">
+                        <GroupBox.Header>
+                            <TextBlock Text="General" FontWeight="Bold" />
+                        </GroupBox.Header>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Margin="3" Grid.Row="0" Grid.Column="0" Text="Key:" VerticalAlignment="Center" />
+                            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Index, Mode=TwoWay}" VerticalAlignment="Center" Margin="3" />
+                            <TextBlock Margin="3" Grid.Row="1" Grid.Column="0" Text="Secondary:" VerticalAlignment="Center" />
+                            <CheckBox Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" IsChecked="{Binding Value.Secondary, Mode=TwoWay}" Margin="3" />
+                            <TextBlock Margin="3" Grid.Row="2" Grid.Column="0" Text="Compressed:" VerticalAlignment="Center" />
+                            <CheckBox Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" IsChecked="{Binding Value.Compressed, Mode=TwoWay}" Margin="3" />
+                            <TextBlock Margin="3" Grid.Row="3" Grid.Column="0" Text="Field 2:" VerticalAlignment="Center" />
+                            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Value.Field2, Mode=TwoWay, Converter={StaticResource byteToHexStringConverter}}" VerticalAlignment="Center" Margin="3" />
+                            <TextBlock Margin="3" Grid.Row="4" Grid.Column="0" Text="Field 3:" VerticalAlignment="Center" />
+                            <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Value.Field3, Mode=TwoWay, Converter={StaticResource byteToHexStringConverter}}" VerticalAlignment="Center" Margin="3" />
+                            <TextBlock Margin="3" Grid.Row="5" Grid.Column="0" Text="Image:" VerticalAlignment="Center" />
+                            <Button Margin="3" Grid.Row="5" Grid.Column="1" Content="Change" x:Name="ChangeGraphicButton" Click="ChangeGraphicButton_Click" />
+                            <Border Height="50" BorderThickness="1" Margin="3" Grid.Row="6" Grid.Column="1" Visibility="{Binding Value.ValidImage, Converter={StaticResource inverseBooleanToVisibilityConverter}}" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}">
+                                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" >
+                                    <Image Source="/Assets/StatusWarning_16x.png" Height="16" Width="16" />
+                                    <TextBlock Text="No image" Foreground="#FFD10000" FontSize="10" />
+                                </StackPanel>
+                            </Border>
+                            <Image Margin="3" Grid.Row="6" Grid.Column="1" Visibility="{Binding Value.ValidImage, Converter={StaticResource booleanToVisibilityConverter}}" Source="{Binding Value.Graphic}" RenderTransformOrigin="0.5,0.5" >
+                                <Image.LayoutTransform>
+                                    <TransformGroup>
+                                        <RotateTransform Angle="90"/>
+                                    </TransformGroup>
+                                </Image.LayoutTransform>
+                            </Image>
+                        </Grid>
+                    </GroupBox>
                 </Grid>
-            </GroupBox>
+            </TabItem>
+            <TabItem>
+                <TabItem.Header>
+                    <TextBlock Text="Blocks" />
+                </TabItem.Header>
+                <Grid>
+                    
+                </Grid>
+            </TabItem>
+        </TabControl>
+        <Grid Visibility="{Binding ElementName=TilesetListBox, Path=SelectedItem, Converter={StaticResource inverseNullToVisibilityConverter}}" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="0" Grid.RowSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Image Grid.Row="0" Source="Assets/Document_256x.png" Width="64" Height="64" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
+            <TextBlock Grid.Row="1" Text="No tileset selected" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="16" />
         </Grid>
-        <GroupBox Margin="5,0,5,5" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" Padding="2">
-            <GroupBox.Header>
-                <TextBlock Text="Tileset Blocks" FontWeight="Bold" />
-            </GroupBox.Header>
-        </GroupBox>
     </Grid>
 </Window>
