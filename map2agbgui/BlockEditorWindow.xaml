@@ -122,7 +122,7 @@
                         <GroupBox.Header>
                             <TextBlock Text="Palettes" FontWeight="Bold" />
                         </GroupBox.Header>
-                        <ListBox ScrollViewer.VerticalScrollBarVisibility="Hidden" x:Name="PaletteListBox" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" ItemsSource="{Binding Value.Palettes}" MouseDoubleClick="PaletteListBox_MouseDoubleClick">
+                        <ListBox SelectedItem="{Binding Value.SelectedPalette, Mode=TwoWay}" ScrollViewer.VerticalScrollBarVisibility="Hidden" x:Name="PaletteListBox" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" ItemsSource="{Binding Value.Palettes}" MouseDoubleClick="PaletteListBox_MouseDoubleClick">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <Grid Margin="0,0,0,3">

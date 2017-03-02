@@ -26,6 +26,7 @@ namespace map2agbgui.Models.BlockEditor
             {
                 _red = value;
                 RaisePropertyChanged("Red");
+                RaisePropertyChanged("Color");
                 RaisePropertyChanged("Brush");
             }
         }
@@ -39,6 +40,7 @@ namespace map2agbgui.Models.BlockEditor
             {
                 _green = value;
                 RaisePropertyChanged("Green");
+                RaisePropertyChanged("Color");
                 RaisePropertyChanged("Brush");
             }
         }
@@ -52,15 +54,23 @@ namespace map2agbgui.Models.BlockEditor
             {
                 _blue = value;
                 RaisePropertyChanged("Blue");
+                RaisePropertyChanged("Color");
                 RaisePropertyChanged("Brush");
             }
         }
 
+        public Color Color
+        {
+            get
+            {
+                return Color.FromArgb(255, (byte)(_red << 3), (byte)(_green << 3), (byte)(_blue << 3));
+            }
+        }
         public SolidColorBrush Brush
         {
             get
             {
-                return new SolidColorBrush(Color.FromArgb(255, (byte)(_red << 3), (byte)(_green << 3), (byte)(_blue << 3)));
+                return new SolidColorBrush(Color);
             }
         }
 

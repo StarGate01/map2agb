@@ -62,11 +62,19 @@ namespace map2agbgui
 
         private void PaletteListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
+            DisplayTuple<string, TilesetModel> selectedTileset = (DisplayTuple<string, TilesetModel>)TilesetListBox.SelectedItem;
+            if (selectedTileset == null) return;
             DisplayTuple<int, PaletteModel> selected = (DisplayTuple<int, PaletteModel>)PaletteListBox.SelectedItem;
             if (selected == null) return;
             PaletteEditorWindow paletteEditorWindow = new PaletteEditorWindow(selected.Value, selected.Index);
             paletteEditorWindow.Owner = this;
-            paletteEditorWindow.ShowDialog();
+            bool result = (bool)paletteEditorWindow.ShowDialog();
+            if (result && paletteEditorWindow.DialogDataResult != null)
+            {
+                int selectedIndex = PaletteListBox.SelectedIndex;
+                selected.Value = paletteEditorWindow.DialogDataResult;
+                selectedTileset.Value.SelectedPalette = selectedTileset.Value.Palettes[selectedIndex];
+            }
         }
 
         #endregion
@@ -103,7 +111,16 @@ namespace map2agbgui
             loadGraphicDialog.FileName = "";
             System.Windows.Forms.DialogResult result = loadGraphicDialog.ShowDialog();
             if (result == System.Windows.Forms.DialogResult.Abort || result == System.Windows.Forms.DialogResult.Cancel) return;
-            selected.Value.GraphicPath = loadGraphicDialog.FileName;
+            try
+            {
+                BitmapImage img = new BitmapImage(new Uri(loadGraphicDialog.FileName, UriKind.Absolute));
+                if (img.Format != PixelFormats.Indexed4) throw new Exception("Image has not 4 indexed bit per pixel");
+                selected.Value.GraphicPath = loadGraphicDialog.FileName;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Import error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         #endregion

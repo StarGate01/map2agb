@@ -236,6 +236,7 @@ namespace map2agbgui.Models.Main.Maps
             _mainModel = mainModel;
         }
 
+#if DEBUG
         public MapHeaderModel() : this(new LazyReference<MapHeader>(new MapHeader() { Name = 0, Footer = new MapFooter() { FirstTilesetID = "TSE0", SecondTilesetID = "TSE245157" } }),
             null,
             new MainModel(MockData.MockRomData()))
@@ -243,10 +244,11 @@ namespace map2agbgui.Models.Main.Maps
             if (!(bool)(DesignerProperties.IsInDesignModeProperty.GetMetadata(typeof(DependencyObject)).DefaultValue))
                 throw new InvalidOperationException("MapModel can only be constructed without parameters by the designer");
         }
+#endif
 
-        #endregion
+    #endregion
 
-        #region Events
+    #region Events
 
         private void Footer_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -257,9 +259,9 @@ namespace map2agbgui.Models.Main.Maps
             }
         }
 
-        #endregion
+#endregion
 
-        #region Methods
+#region Methods
 
         public override string ToString()
         {
@@ -282,9 +284,9 @@ namespace map2agbgui.Models.Main.Maps
             return new LazyReference<MapHeader>(header);
         }
 
-        #endregion
+#endregion
 
-        #region INotifyPropertyChanged
+#region INotifyPropertyChanged
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void RaisePropertyChanged(string propertyName)
@@ -292,7 +294,7 @@ namespace map2agbgui.Models.Main.Maps
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        #endregion
+#endregion
 
     }
 

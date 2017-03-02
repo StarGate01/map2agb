@@ -202,30 +202,32 @@ namespace map2agbgui.Models.Main.Maps
             _mainModel = mainModel;
         }
 
+#if DEBUG
         public MapFooterModel() : this(new MapFooter(), new MainModel(MockData.MockRomData()))
         {
             if (!(bool)(DesignerProperties.IsInDesignModeProperty.GetMetadata(typeof(DependencyObject)).DefaultValue))
                 throw new InvalidOperationException("MapModel can only be constructed without parameters by the designer");
         }
+#endif
 
         #endregion
 
         #region Methods
 
-        public override MapFooter ToRomData()
-        {
-            MapFooter footer = new MapFooter();
-            footer.FirstTilesetID = _firstTilesetID;
-            footer.SecondTilesetID = _secondTilesetID;
-            footer.MapBlock = _mapBlock.Select(p => p.ToArray()).ToArray();
-            footer.BorderBlock = _borderBlock.Select(p => p.ToArray()).ToArray();
-            footer.Height = _height;
-            footer.Width = _width;
-            footer.BorderHeight = _borderHeight;
-            footer.BorderWidth = _borderWidth;
-            footer.Padding = _padding;
-            return footer;
-        }
+                public override MapFooter ToRomData()
+                {
+                    MapFooter footer = new MapFooter();
+                    footer.FirstTilesetID = _firstTilesetID;
+                    footer.SecondTilesetID = _secondTilesetID;
+                    footer.MapBlock = _mapBlock.Select(p => p.ToArray()).ToArray();
+                    footer.BorderBlock = _borderBlock.Select(p => p.ToArray()).ToArray();
+                    footer.Height = _height;
+                    footer.Width = _width;
+                    footer.BorderHeight = _borderHeight;
+                    footer.BorderWidth = _borderWidth;
+                    footer.Padding = _padding;
+                    return footer;
+                }
 
         #endregion
 

@@ -19,15 +19,21 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Menu Grid.Row="0" DockPanel.Dock="Top" Padding="3">
             <MenuItem Header="_Palette">
-                <MenuItem x:Name="ImportPaletteButton" Header="_Import"  Click="ImportPaletteButton_Click">
+                <MenuItem x:Name="ImportPaletteButton" Header="_Import from RIFF"  Click="ImportPaletteButton_Click">
                     <MenuItem.Icon>
                         <Image Source="Assets/Open_16x.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem x:Name="ExportPaletteButton" Header="_Export" Click="ExportPaletteButton_Click">
+                <MenuItem x:Name="ImportImagePaletteButton" Header="_Import from image" Click="ImportImagePaletteButton_Click">
+                    <MenuItem.Icon>
+                        <Image Source="Assets/Open_16x.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem x:Name="ExportPaletteButton" Header="_Export to RIFF" Click="ExportPaletteButton_Click">
                     <MenuItem.Icon>
                         <Image Source="Assets/Save_16x.png"/>
                     </MenuItem.Icon>
@@ -84,5 +90,16 @@
             <TextBox Margin="3" Text="{Binding Blue, Mode=TwoWay, Converter={StaticResource byteToHexStringConverter}, ConverterParameter=31}" Grid.Row="2" Grid.Column="3" />
             <TextBlock Margin="3" Text="{Binding Brush.Color.B}" Grid.Row="2" Grid.Column="4" />
         </Grid>
+        <Border BorderThickness="0 1 0 0" Grid.Row="3" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Button Click="OKButton_Click" MinWidth="90" Grid.Column="1" Margin="5" Padding="3" x:Name="OKButton" Content="Apply" IsDefault="True" />
+            <Button Click="CancelButton_Click" MinWidth="90" Grid.Column="2" Margin="5" Padding="3" x:Name="CancelButton" Content="Cancel" IsCancel="True" />
+            </Grid>
+        </Border>
     </Grid>
 </Window>

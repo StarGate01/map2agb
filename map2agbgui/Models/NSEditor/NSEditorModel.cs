@@ -44,15 +44,17 @@ namespace map2agbgui.Models.NSEditor
             _names.ItemPropertyChanged += Names_ItemPropertyChanged;
         }
 
+#if DEBUG
         public NSEditorModel() : this((MockData.MockRomData()).NameTable.Names)
         {
             if (!(bool)(DesignerProperties.IsInDesignModeProperty.GetMetadata(typeof(DependencyObject)).DefaultValue))
                 throw new InvalidOperationException("NSEditorModel can only be constructed without parameters by the designer");
         }
+#endif
 
-        #endregion
+#endregion
 
-        #region Events
+#region Events
 
         private void Names_ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -65,18 +67,18 @@ namespace map2agbgui.Models.NSEditor
             RaisePropertyChanged("Names");
         }
 
-        #endregion
+#endregion
 
-        #region Methods
+#region Methods
 
         public override string[] ToRomData()
         {
            return Names.Select(p => p.Name).ToArray();
         }
 
-        #endregion
+#endregion
 
-        #region INotifyPropertyChanged
+#region INotifyPropertyChanged
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void RaisePropertyChanged(string propertyName)
@@ -84,7 +86,7 @@ namespace map2agbgui.Models.NSEditor
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        #endregion
+#endregion
 
     }
 

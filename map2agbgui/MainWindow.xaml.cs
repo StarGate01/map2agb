@@ -41,19 +41,24 @@ namespace map2agbgui
         public MainWindow()
         {
             InitializeComponent();
-            RomData romData = MockData.MockRomData(); //For debugging
+#if DEBUG
+            RomData romData = MockData.MockRomData();
             App.MainViewModel = new MainModel(romData);
+#else
+            RomData romData = new RomData();
+            App.MainViewModel = new MainModel(romData);
+#endif
             DataContext = App.MainViewModel;
             projectBrowseDialog = new Win32Forms.FolderBrowserDialog();
             projectBrowseDialog.RootFolder = Environment.SpecialFolder.Desktop;
             projectBrowseDialog.ShowNewFolderButton = true;
         }
 
-        #endregion
+#endregion
 
-        #region Eventhandler
+#region Eventhandler
 
-        #region Eventhandler Window
+#region Eventhandler Window
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -68,9 +73,9 @@ namespace map2agbgui
             else if (result == MessageBoxResult.Cancel) e.Cancel = true;
         }
 
-        #endregion
+#endregion
 
-        #region Eventhandler Mainmenu
+#region Eventhandler Mainmenu
 
         private void HelpCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
@@ -99,9 +104,9 @@ namespace map2agbgui
             SaveProjectAs(null);
         }
 
-        #endregion
+#endregion
 
-        #region Eventhandler Secondary menubar
+#region Eventhandler Secondary menubar
 
         private void AddBankButton_Click(object sender, RoutedEventArgs e)
         {
@@ -122,11 +127,11 @@ namespace map2agbgui
             blockEditorWindow.ShowDialog();
         }
 
-        #endregion
+#endregion
 
-        #region Eventhandler Treeview contextmenu
+#region Eventhandler Treeview contextmenu
 
-        #region Maps
+#region Maps
 
         private void MoveMapUpContextEntry_Click(object sender, RoutedEventArgs e)
         {
@@ -190,9 +195,9 @@ namespace map2agbgui
             }
         }
 
-        #endregion
+#endregion
 
-        #region Banks
+#region Banks
 
         private void MoveBankUpContextEntry_Click(object sender, RoutedEventArgs e)
         {
@@ -260,13 +265,13 @@ namespace map2agbgui
             if (result == MessageBoxResult.OK) selected.Value = new BankModel(new List<LazyReference<MapHeader>>(), App.MainViewModel);
         }
 
-        #endregion
+#endregion
 
-        #endregion
+#endregion
 
-        #endregion
+#endregion
 
-        #region TreeView extensions
+#region TreeView extensions
 
         private void MapTreeView_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -284,9 +289,9 @@ namespace map2agbgui
             return source as TreeViewItem;
         }
 
-        #endregion
+#endregion
 
-        #region Methods
+#region Methods
 
         private bool LoadProject()
         {
@@ -344,7 +349,7 @@ namespace map2agbgui
         }
 
 
-        #endregion
+#endregion
 
        
     }

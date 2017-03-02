@@ -12,6 +12,8 @@ using map2agblib.Imaging.IO;
 namespace map2agbgui.Models
 {
 
+#if DEBUG
+
     public class MockData
     {
 
@@ -43,12 +45,12 @@ namespace map2agbgui.Models
             romData.Tilesets = new Dictionary<string, LazyReference<Tileset>>
             {
                 { "TSE0",  new LazyReference<Tileset>(new Tileset() {
-                    Graphic = @"C:\Users\Christoph\Desktop\Tileset0.bmp",
+                    Graphic = @"C:\Users\Christoph\Desktop\Tileset0_I.bmp",
                     Secondary = false }) },
                 { "TSE1",  new LazyReference<Tileset>(new Tileset() {
                     Secondary = false }) },
                 { "TSE245157", new LazyReference<Tileset>(new Tileset() {
-                    Graphic = @"C:\Users\Christoph\Desktop\Tileset245157.bmp",
+                    Graphic = @"C:\Users\Christoph\Desktop\Tileset245157_I.bmp",
                     Secondary = true }) }
             };
             romData.Tilesets["TSE0"].Data.Palettes[0] = JASCPAL.Import(@"C:\Users\Christoph\Desktop\deko-iv.pal");
@@ -59,5 +61,7 @@ namespace map2agbgui.Models
         }
 
     }
+
+#endif
 
 }

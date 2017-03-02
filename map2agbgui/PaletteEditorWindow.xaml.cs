@@ -23,10 +23,13 @@ namespace map2agbgui
     public partial class PaletteEditorWindow : Window
     {
 
-        PaletteModel dataModel;
-        PaletteModel backup;
-        System.Windows.Forms.OpenFileDialog loadPalDialog;
-        System.Windows.Forms.SaveFileDialog savePalDialog;
+        private PaletteModel dataModel;
+        private PaletteModel backup;
+        private System.Windows.Forms.OpenFileDialog loadPalDialog;
+        private System.Windows.Forms.OpenFileDialog loadImageDialog;
+        private System.Windows.Forms.SaveFileDialog savePalDialog;
+
+        public PaletteModel DialogDataResult = null;
 
         #region Constructor
 
@@ -34,16 +37,23 @@ namespace map2agbgui
         {
             InitializeComponent();
             dataModel = model;
-            DataContext = dataModel;
             backup = (PaletteModel)dataModel.Clone();
+            DataContext = backup;
             Title += " - Palette " + displayIndex;
             loadPalDialog = new System.Windows.Forms.OpenFileDialog();
             loadPalDialog.CheckFileExists = true;
             loadPalDialog.DefaultExt = "pal";
-            loadPalDialog.Filter = "Palette files|*.pal";
+            loadPalDialog.Filter = "JASC-PAL RIFF palette files|*.pal";
             loadPalDialog.Multiselect = false;
             loadPalDialog.ShowHelp = false;
-            loadPalDialog.Title = "Import palette";
+            loadPalDialog.Title = "Import palette from file";
+            loadImageDialog = new System.Windows.Forms.OpenFileDialog();
+            loadImageDialog.CheckFileExists = true;
+            loadImageDialog.DefaultExt = "png";
+            loadImageDialog.Filter = "Images|*.png;*.jpg;*.jpeg;*.bmp";
+            loadImageDialog.Multiselect = false;
+            loadImageDialog.ShowHelp = false;
+            loadImageDialog.Title = "Import palette from image";
             savePalDialog = new System.Windows.Forms.SaveFileDialog();
             savePalDialog.OverwritePrompt = true;
             savePalDialog.DefaultExt = "pal";
@@ -75,7 +85,26 @@ namespace map2agbgui
             try
             {
                 PaletteModel pal = new PaletteModel(JASCPAL.Import(loadPalDialog.FileName));
-                dataModel.Colors = pal.Colors;
+                backup.Colors = pal.Colors;
+                ColorListBox.SelectedIndex = 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Import error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void ImportImagePaletteButton_Click(object sender, RoutedEventArgs e)
+        {
+            loadImageDialog.FileName = "";
+            System.Windows.Forms.DialogResult result = loadImageDialog.ShowDialog();
+            if (result == System.Windows.Forms.DialogResult.Abort || result == System.Windows.Forms.DialogResult.Cancel) return;
+            try
+            {
+                BitmapImage image = new BitmapImage(new Uri(loadImageDialog.FileName, UriKind.Absolute));
+                if (image.Palette.Colors.Count != 16) throw new Exception("Image has not 16 indexed colors");
+                backup.Colors = new ObservableCollection<ShortColorModel>(image.Palette.Colors.Select(p => 
+                    new ShortColorModel(new ShortColor((byte)(p.R >> 3), (byte)(p.G >> 3), (byte)(p.B >> 3)))));
                 ColorListBox.SelectedIndex = 0;
             }
             catch (Exception ex)
@@ -103,8 +132,24 @@ namespace map2agbgui
         {
             MessageBoxResult result = MessageBox.Show("Discard changes and restore palette?", "Reset palette", MessageBoxButton.OKCancel, MessageBoxImage.Warning, MessageBoxResult.Cancel);
             if (result == MessageBoxResult.Cancel) return;
-            dataModel.Colors = backup.Colors;
+            backup.Colors = dataModel.Colors;
             ColorListBox.SelectedIndex = 0;
+        }
+
+        #endregion
+
+        #region Eventhandler Buttons
+
+        private void OKButton_Click(object sender, RoutedEventArgs e)
+        {
+            DialogDataResult = backup;
+            DialogResult = true;
+            Close();
+        }
+
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
         }
 
         #endregion

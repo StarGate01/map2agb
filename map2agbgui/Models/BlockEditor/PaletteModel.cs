@@ -8,6 +8,7 @@ using map2agblib.Imaging;
 using System.Collections.ObjectModel;
 using map2agbgui.Models.Main;
 using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace map2agbgui.Models.BlockEditor
 {
@@ -47,11 +48,13 @@ namespace map2agbgui.Models.BlockEditor
             _colors = new ObservableCollection<ShortColorModel>(palette.Colors.Select(p => new ShortColorModel(p)));
         }
 
+#if DEBUG
         public PaletteModel() : this((MockData.MockRomData()).Tilesets.First().Value.Data.Palettes.First())
         {
             if (!(bool)(DesignerProperties.IsInDesignModeProperty.GetMetadata(typeof(DependencyObject)).DefaultValue))
                 throw new InvalidOperationException("NSEditorModel can only be constructed without parameters by the designer");
         }
+#endif
 
         #endregion
 
@@ -67,9 +70,14 @@ namespace map2agbgui.Models.BlockEditor
             return new Palette(_colors.Select(p => p.ToRomData()).ToArray());
         }
 
-        #endregion
+        public BitmapPalette ToBitmapPalette()
+        {
+            return new BitmapPalette(_colors.Select(p => p.Color).ToList());
+        }
 
-        #region INotifyPropertyChanged
+#endregion
+
+#region INotifyPropertyChanged
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void RaisePropertyChanged(string propertyName)
@@ -77,7 +85,7 @@ namespace map2agbgui.Models.BlockEditor
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        #endregion
+#endregion
 
     }
 

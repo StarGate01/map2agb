@@ -94,13 +94,17 @@ namespace map2agbgui.Models.BlockEditor
             _tilesets = new ObservableCollectionEx<DisplayTuple<string, TilesetModel>>(tilesets.Select(p => new DisplayTuple<string, TilesetModel>(p.Key, new TilesetModel(p.Value))));
             _tilesets.CollectionChanged += Tilesets_CollectionChanged;
             _tilesets.ItemPropertyChanged += Tilesets_ItemPropertyChanged;
+            foreach(DisplayTuple<string, TilesetModel> element in _tilesets)
+                element.Value.SelectedPalette = element.Value.Palettes.First();
         }
 
+#if DEBUG
         public BlockEditorModel() : this((MockData.MockRomData()).Tilesets)
         {
             if (!(bool)(DesignerProperties.IsInDesignModeProperty.GetMetadata(typeof(DependencyObject)).DefaultValue))
                 throw new InvalidOperationException("NSEditorModel can only be constructed without parameters by the designer");
         }
+#endif
 
         #endregion
 
@@ -130,18 +134,18 @@ namespace map2agbgui.Models.BlockEditor
             RaisePropertyChanged("Valid");
         }
 
-        #endregion
+#endregion
 
-        #region Methods
+#region Methods
 
         public override Dictionary<string, LazyReference<Tileset>> ToRomData()
         {
            return _tilesets.ToDictionary(k => k.Index, p => p.Value.ToRomData());
         }
 
-        #endregion
+#endregion
 
-        #region INotifyPropertyChanged
+#region INotifyPropertyChanged
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void RaisePropertyChanged(string propertyName)
@@ -149,7 +153,7 @@ namespace map2agbgui.Models.BlockEditor
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        #endregion
+#endregion
 
     }
 

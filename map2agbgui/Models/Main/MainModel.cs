@@ -91,12 +91,14 @@ namespace map2agbgui.Models.Main
 
         #region Constructors
 
+#if DEBUG
         public MainModel() : this(MockData.MockRomData())
         {
             if (!(bool)(DesignerProperties.IsInDesignModeProperty.GetMetadata(typeof(DependencyObject)).DefaultValue))
                 throw new InvalidOperationException("MainModel can only be constructed without parameters by the designer");
             ((BankModel)Banks.First().Value).Maps.First().Value.IsSelected = true;
         }
+#endif
 
         public MainModel(RomData romData) : base(romData)
         {
@@ -158,9 +160,9 @@ namespace map2agbgui.Models.Main
             RaisePropertyChanged("Valid");
         }
 
-        #endregion
+#endregion
 
-        #region Methods
+#region Methods
 
         public override RomData ToRomData()
         {
@@ -171,9 +173,9 @@ namespace map2agbgui.Models.Main
             return romData;
         }
 
-        #endregion
+#endregion
 
-        #region INotifyPropertyChanged
+#region INotifyPropertyChanged
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void RaisePropertyChanged(string propertyName)
@@ -181,7 +183,7 @@ namespace map2agbgui.Models.Main
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        #endregion
+#endregion
 
     }
 
