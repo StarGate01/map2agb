@@ -315,6 +315,11 @@ namespace map2agbgui
 
         private bool SaveProjectAs(string saveName)
         {
+            if(!App.MainViewModel.Valid)
+            {
+                MessageBoxResult result = MessageBox.Show("The project has some errors. Save anyway?", "Errors in project", MessageBoxButton.OKCancel, MessageBoxImage.Warning, MessageBoxResult.Cancel);
+                if (result == MessageBoxResult.Cancel) return false;
+            }
             if(saveName == null)
             {
                 projectBrowseDialog.SelectedPath = "";
