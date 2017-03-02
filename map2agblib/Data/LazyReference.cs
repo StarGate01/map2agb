@@ -72,8 +72,7 @@ namespace map2agblib.Data
 
         public void ExportToFile(string otherDirName)
         {
-            if (AbsolutePath == null) throw new FileNotFoundException();
-            if (!dataLoaded) File.Copy(AbsolutePath, otherDirName);
+            if (!dataLoaded && AbsolutePath != null) File.Copy(AbsolutePath, otherDirName);
             else Data.ExportToFile(Data, otherDirName);
         }
 

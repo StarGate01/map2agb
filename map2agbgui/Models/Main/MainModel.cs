@@ -137,6 +137,9 @@ namespace map2agbgui.Models.Main
                             if (map.Value.EntryMode == MapEntryType.Map) ((MapHeaderModel)map.Value).Footer.RaisePropertyChanged("ValidTileSets");
                     RaisePropertyChanged("Valid");
                     break;
+                case "Valid":
+                    RaisePropertyChanged("Valid");
+                    break;
             }
         }
 
