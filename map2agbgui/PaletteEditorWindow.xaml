@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         xmlns:model="clr-namespace:map2agbgui.Models.BlockEditor"
         xmlns:c="clr-namespace:map2agbgui.Converters"
-        Title="Palette Editor" Width="441" WindowStartupLocation="CenterOwner" SourceInitialized="Window_SourceInitialized" ResizeMode="NoResize" SizeToContent="Height">
+        Title="Palette Editor" WindowStartupLocation="CenterOwner" SourceInitialized="Window_SourceInitialized" ResizeMode="NoResize" SizeToContent="WidthAndHeight">
 
     <Window.Resources>
         <c:ByteToHexStringConverter x:Key="byteToHexStringConverter" />
@@ -33,7 +33,7 @@
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator HorizontalAlignment="Left" Width="120"/>
-                <MenuItem x:Name="ResetPaletteButton" Header="_Reset" Click="ResetPaletteButton_Click">
+                <MenuItem x:Name="ResetPaletteButton" Header="_Restore" Click="ResetPaletteButton_Click">
                     <MenuItem.Icon>
                         <Image Source="Assets/Undo_16x.png"/>
                     </MenuItem.Icon>

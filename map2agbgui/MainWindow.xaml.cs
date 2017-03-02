@@ -44,7 +44,6 @@ namespace map2agbgui
             RomData romData = MockData.MockRomData(); //For debugging
             App.MainViewModel = new MainModel(romData);
             DataContext = App.MainViewModel;
-            App.MainViewModel.Status = "Data loaded while runtime";
             projectBrowseDialog = new Win32Forms.FolderBrowserDialog();
             projectBrowseDialog.RootFolder = Environment.SpecialFolder.Desktop;
             projectBrowseDialog.ShowNewFolderButton = true;
@@ -167,7 +166,7 @@ namespace map2agbgui
             if (selected == null) return;
             MessageBoxResult result = MessageBoxResult.Cancel;
             result = MessageBox.Show("Replace this map with a new one?", "Replace map", MessageBoxButton.OKCancel, MessageBoxImage.Warning, MessageBoxResult.Cancel);
-            if(result == MessageBoxResult.OK) selected.Value = new MapHeaderModel(new MapHeader(), selected.Value.Bank, App.MainViewModel);
+            if(result == MessageBoxResult.OK) selected.Value = new MapHeaderModel(new LazyReference<MapHeader>(new MapHeader()), selected.Value.Bank, App.MainViewModel);
         }
 
         private void RemoveMapContextEntry_Click(object sender, RoutedEventArgs e)
@@ -229,7 +228,7 @@ namespace map2agbgui
         {
             DisplayTuple<int, IBankModel> selected = (DisplayTuple<int, IBankModel>)MapTreeView.SelectedItem;
             if (selected == null || selected.Value.EntryMode == BankEntryType.Nullpointer) return;
-            ((BankModel)selected.Value).Maps.Add(new DisplayTuple<int, IMapModel>(((BankModel)selected.Value).Maps.Count, new MapHeaderModel(new MapHeader(), ((BankModel)selected.Value), App.MainViewModel)));
+            ((BankModel)selected.Value).Maps.Add(new DisplayTuple<int, IMapModel>(((BankModel)selected.Value).Maps.Count, new MapHeaderModel(new LazyReference<MapHeader>(new MapHeader()), ((BankModel)selected.Value), App.MainViewModel)));
         }
 
         private void RemoveBankContextEntry_Click(object sender, RoutedEventArgs e)
@@ -309,7 +308,6 @@ namespace map2agbgui
             }
             App.MainViewModel = new MainModel(romData);
             DataContext = App.MainViewModel;
-            App.MainViewModel.Status = "Project loaded";
             Title = "map2agb - " + dirPath;
             lastSaveLocation = dirPath;
             return true;
@@ -335,7 +333,6 @@ namespace map2agbgui
                 MessageBox.Show("Error: " + ex.Message, "Error saving project", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
-            App.MainViewModel.Status = "Project saved";
             Title = "map2agb - " + saveName;
             lastSaveLocation = saveName;
             return true;

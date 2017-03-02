@@ -44,7 +44,6 @@
   <ItemGroup>
     <Compile Include="Common\StringExtensions.cs" />
     <Compile Include="Data\IImportExport.cs" />
-    <Compile Include="Data\ImageContainer.cs" />
     <Compile Include="Data\LazyReference.cs" />
     <Compile Include="Data\XMLImportExport.cs" />
     <Compile Include="Imaging\Palette.cs" />

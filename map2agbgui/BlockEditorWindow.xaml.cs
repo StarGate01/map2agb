@@ -17,6 +17,7 @@ using map2agbgui.Models.Main;
 using map2agblib.Imaging;
 using map2agblib.Data;
 using map2agblib.Tilesets;
+using System.ComponentModel;
 
 namespace map2agbgui
 {
@@ -25,6 +26,7 @@ namespace map2agbgui
     {
 
         BlockEditorModel dataModel;
+        System.Windows.Forms.OpenFileDialog loadGraphicDialog;
 
         #region Constructor
 
@@ -33,6 +35,14 @@ namespace map2agbgui
             InitializeComponent();
             dataModel = model;
             DataContext = dataModel;
+            loadGraphicDialog = new System.Windows.Forms.OpenFileDialog();
+            loadGraphicDialog.CheckFileExists = true;
+            loadGraphicDialog.DefaultExt = "png";
+            loadGraphicDialog.Filter = "Images|*.png;*.jpg;*.jpeg;*.bmp";
+            loadGraphicDialog.Multiselect = false;
+            loadGraphicDialog.ShowHelp = false;
+            loadGraphicDialog.Title = "Select image";
+            TilesetListBox.Items.SortDescriptions.Add(new SortDescription("Index", ListSortDirection.Ascending));
         }
 
         #endregion
@@ -61,7 +71,7 @@ namespace map2agbgui
 
         #endregion
 
-        #region Tilests Eventhandler
+        #region Tilesets Eventhandler
 
         private void AddTilesetButton_Click(object sender, RoutedEventArgs e)
         {
@@ -72,7 +82,9 @@ namespace map2agbgui
                 if (!dataModel.Tilesets.ToList().Exists(p => p.Index == namePrefix + nameCounter)) break;
                 nameCounter++;
             }
-            dataModel.Tilesets.Add(new DisplayTuple<string, TilesetModel>(namePrefix + nameCounter, new TilesetModel(new LazyReference<Tileset>(new Tileset()))));
+            DisplayTuple<string, TilesetModel> newElement = new DisplayTuple<string, TilesetModel>(namePrefix + nameCounter, new TilesetModel(new LazyReference<Tileset>(new Tileset())));
+            dataModel.Tilesets.Add(newElement);
+            TilesetListBox.SelectedItem = newElement;
         }
 
         private void RemoveTilesetContextEntry_Click(object sender, RoutedEventArgs e)
@@ -82,6 +94,16 @@ namespace map2agbgui
             MessageBoxResult result = MessageBox.Show("Delete this tileset?", "Delete tileset", MessageBoxButton.OKCancel, MessageBoxImage.Warning, MessageBoxResult.Cancel);
             if (result == MessageBoxResult.Cancel) return;
             dataModel.Tilesets.Remove(selected);
+        }
+
+        private void ChangeGraphicButton_Click(object sender, RoutedEventArgs e)
+        {
+            DisplayTuple<string,TilesetModel> selected = (DisplayTuple<string, TilesetModel>)TilesetListBox.SelectedItem;
+            if (selected == null) return;
+            loadGraphicDialog.FileName = "";
+            System.Windows.Forms.DialogResult result = loadGraphicDialog.ShowDialog();
+            if (result == System.Windows.Forms.DialogResult.Abort || result == System.Windows.Forms.DialogResult.Cancel) return;
+            selected.Value.GraphicPath = loadGraphicDialog.FileName;
         }
 
         #endregion

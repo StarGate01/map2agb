@@ -5,10 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
 using map2agblib.Map;
+using map2agblib.Data;
 
 namespace map2agbgui.Models.Main.Maps
 {
-    public class NullpointerMapModel : IRomSerializable<MapHeaderModel, MapHeader>, IMapModel, INotifyPropertyChanged
+    public class NullpointerMapModel : IRomSerializable<MapHeaderModel, LazyReference<MapHeader>>, IMapModel, INotifyPropertyChanged
     {
 
         #region Properties
@@ -58,7 +59,7 @@ namespace map2agbgui.Models.Main.Maps
             return "Map space";
         }
 
-        public override MapHeader ToRomData()
+        public override LazyReference<MapHeader> ToRomData()
         {
             return null;
         }

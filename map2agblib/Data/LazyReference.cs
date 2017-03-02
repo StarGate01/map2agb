@@ -70,10 +70,11 @@ namespace map2agblib.Data
 
         #region Methods
 
-        public void ExportToFile(string otherDirName = null)
+        public void ExportToFile(string otherDirName)
         {
             if (AbsolutePath == null) throw new FileNotFoundException();
-            Data.ExportToFile(Data, (otherDirName == null)? AbsolutePath : otherDirName);
+            if (!dataLoaded) File.Copy(AbsolutePath, otherDirName);
+            else Data.ExportToFile(Data, otherDirName);
         }
 
         #endregion

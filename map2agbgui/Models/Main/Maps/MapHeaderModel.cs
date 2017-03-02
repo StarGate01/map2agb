@@ -14,7 +14,7 @@ using System.Collections.ObjectModel;
 
 namespace map2agbgui.Models.Main.Maps
 {
-    public class MapHeaderModel : IRomSerializable<MapHeaderModel, MapHeader>, IMapModel, INotifyPropertyChanged
+    public class MapHeaderModel : IRomSerializable<MapHeaderModel, LazyReference<MapHeader>>, IMapModel, INotifyPropertyChanged
     {
 
         #region Properties
@@ -57,6 +57,21 @@ namespace map2agbgui.Models.Main.Maps
             }
         }
 
+        public bool Valid
+        {
+            get
+            {
+                return SettingsValid;
+            }
+        }
+        public bool SettingsValid
+        {
+            get
+            {
+                return Footer.ValidTileSets;
+            }
+        }
+
         #endregion
 
         #region Data properties
@@ -93,6 +108,7 @@ namespace map2agbgui.Models.Main.Maps
             set
             {
                 _footer = value;
+                _footer.PropertyChanged += Footer_PropertyChanged;
                 RaisePropertyChanged("Footer");
             }
         }
@@ -203,28 +219,42 @@ namespace map2agbgui.Models.Main.Maps
 
         #region Constructor
 
-        public MapHeaderModel(MapHeader header, BankModel bank, MainModel mainModel) : base(header)
+        public MapHeaderModel(LazyReference<MapHeader> header, BankModel bank, MainModel mainModel) : base(header)
         {
             _bank = bank;
-            _nameID = header.Name;
-            _footer = new MapFooterModel(header.Footer, mainModel);
-            _music = header.Music;
-            _index = header.Index;
-            _unknown = header.Unknown;
-            _flash = header.Flash;
-            _weather = header.Weather;
-            _type = header.Type;
-            _showName = header.ShowName;
-            _battleStyle = header.BattleStyle;
+            _nameID = header.Data.Name;
+            _footer = new MapFooterModel(header.Data.Footer, mainModel);
+            _footer.PropertyChanged += Footer_PropertyChanged;
+            _music = header.Data.Music;
+            _index = header.Data.Index;
+            _unknown = header.Data.Unknown;
+            _flash = header.Data.Flash;
+            _weather = header.Data.Weather;
+            _type = header.Data.Type;
+            _showName = header.Data.ShowName;
+            _battleStyle = header.Data.BattleStyle;
             _mainModel = mainModel;
         }
 
-        public MapHeaderModel() : this(new MapHeader() { Name = 0, Footer = new MapFooter() { FirstTilesetID = "TSE0", SecondTilesetID = "TSE245157" } },
+        public MapHeaderModel() : this(new LazyReference<MapHeader>(new MapHeader() { Name = 0, Footer = new MapFooter() { FirstTilesetID = "TSE0", SecondTilesetID = "TSE245157" } }),
             null,
             new MainModel(MockData.MockRomData()))
         {
             if (!(bool)(DesignerProperties.IsInDesignModeProperty.GetMetadata(typeof(DependencyObject)).DefaultValue))
                 throw new InvalidOperationException("MapModel can only be constructed without parameters by the designer");
+        }
+
+        #endregion
+
+        #region Events
+
+        private void Footer_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "ValidTileSets")
+            {
+                RaisePropertyChanged("SettingsValid");
+                RaisePropertyChanged("Valid");
+            }
         }
 
         #endregion
@@ -236,7 +266,7 @@ namespace map2agbgui.Models.Main.Maps
             return Name;
         }
 
-        public override MapHeader ToRomData()
+        public override LazyReference<MapHeader> ToRomData()
         {
             MapHeader header = new MapHeader();
             header.Name = _nameID;
@@ -249,7 +279,7 @@ namespace map2agbgui.Models.Main.Maps
             header.Type = _type;
             header.ShowName = _showName;
             header.BattleStyle = _battleStyle;
-            return header;
+            return new LazyReference<MapHeader>(header);
         }
 
         #endregion

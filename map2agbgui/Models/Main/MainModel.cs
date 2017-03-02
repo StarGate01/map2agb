@@ -13,6 +13,8 @@ using map2agbgui.Models.Main.Maps;
 using System.Collections.ObjectModel;
 using map2agblib.Tilesets;
 using map2agbgui.Models.BlockEditor;
+using System.Collections.Specialized;
+using map2agbgui.Extensions;
 
 namespace map2agbgui.Models.Main
 {
@@ -45,12 +47,13 @@ namespace map2agbgui.Models.Main
             set
             {
                 _blockEditorModel = value;
+                _blockEditorModel.PropertyChanged += BlockEditorModel_PropertyChanged;
                 RaisePropertyChanged("BlockEditorViewModel");
             }
         }
 
-        private ObservableCollection<DisplayTuple<int, IBankModel>> _banks;
-        public ObservableCollection<DisplayTuple<int, IBankModel>> Banks
+        private ObservableCollectionEx<DisplayTuple<int, IBankModel>> _banks;
+        public ObservableCollectionEx<DisplayTuple<int, IBankModel>> Banks
         {
             get
             {
@@ -59,20 +62,28 @@ namespace map2agbgui.Models.Main
             set
             {
                 _banks = value;
+                _banks.ItemPropertyChanged += Banks_ItemPropertyChanged;
+                _banks.CollectionChanged += Banks_CollectionChanged;
+                RaisePropertyChanged("Banks");
             }
         }
 
-        private string _status;
-        public string Status
+        public bool MapsValid
         {
             get
             {
-                return _status;
+                foreach (DisplayTuple<int, IBankModel> bank in _banks) if (bank.Value.EntryMode == BankEntryType.Bank)
+                        foreach (DisplayTuple<int, IMapModel> map in ((BankModel)bank.Value).Maps)
+                            if (map.Value.EntryMode == MapEntryType.Map) if (!((MapHeaderModel)map.Value).Valid) return false;
+                return true;
             }
-            set
+        }
+
+        public bool Valid
+        {
+            get
             {
-                _status = value;
-                RaisePropertyChanged("Status");
+                return MapsValid && _blockEditorModel.Valid;
             }
         }
 
@@ -85,28 +96,63 @@ namespace map2agbgui.Models.Main
             if (!(bool)(DesignerProperties.IsInDesignModeProperty.GetMetadata(typeof(DependencyObject)).DefaultValue))
                 throw new InvalidOperationException("MainModel can only be constructed without parameters by the designer");
             ((BankModel)Banks.First().Value).Maps.First().Value.IsSelected = true;
-            Status = "Designer Mode";
         }
 
         public MainModel(RomData romData) : base(romData)
         {
             _NSEditorDataModel = new NSEditorModel(romData.NameTable.Names);
-            _NSEditorDataModel.Names.ListChanged += NSEditor_Names_ListChanged;
+            _NSEditorDataModel.PropertyChanged += NSEditorDataModel_PropertyChanged;
             _blockEditorModel = new BlockEditorModel(romData.Tilesets);
-            _banks = new ObservableCollection<DisplayTuple<int, IBankModel>>(romData.Banks.Select((p, pi) =>
+            _blockEditorModel.PropertyChanged += BlockEditorModel_PropertyChanged;
+            _banks = new ObservableCollectionEx<DisplayTuple<int, IBankModel>>(romData.Banks.Select((p, pi) =>
                 new DisplayTuple<int, IBankModel>(pi, (p == null)? (IBankModel)new NullpointerBankModel() : new BankModel(p, this))));
+            _banks.CollectionChanged += Banks_CollectionChanged;
+            _banks.ItemPropertyChanged += Banks_ItemPropertyChanged;
         }
 
         #endregion
 
         #region Events
 
-        private void NSEditor_Names_ListChanged(object sender, ListChangedEventArgs e)
+        private void NSEditorDataModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            foreach(DisplayTuple<int, IBankModel> bank in _banks)
-                if (bank.Value.EntryMode == BankEntryType.Bank)
-                    foreach(DisplayTuple<int, IMapModel> map in ((BankModel)bank.Value).Maps)
-                        if(map.Value.EntryMode == MapEntryType.Map) map.RaisePropertyChanged("DisplayValue");
+            switch (e.PropertyName)
+            {
+                case "Names":
+                    foreach (DisplayTuple<int, IBankModel> bank in _banks) if (bank.Value.EntryMode == BankEntryType.Bank)
+                            foreach (DisplayTuple<int, IMapModel> map in ((BankModel)bank.Value).Maps)
+                                if (map.Value.EntryMode == MapEntryType.Map) ((MapHeaderModel)map.Value).RaisePropertyChanged("Name");
+                    break;
+            }
+        }
+
+        private void BlockEditorModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case "PrimaryTilesets":
+                case "SecondaryTilesets":
+                    foreach (DisplayTuple<int, IBankModel> bank in _banks) if (bank.Value.EntryMode == BankEntryType.Bank)
+                        foreach (DisplayTuple<int, IMapModel> map in ((BankModel)bank.Value).Maps)
+                            if (map.Value.EntryMode == MapEntryType.Map) ((MapHeaderModel)map.Value).Footer.RaisePropertyChanged("ValidTileSets");
+                    RaisePropertyChanged("Valid");
+                    break;
+            }
+        }
+
+        private void Banks_ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "Value.Valid")
+            {
+                RaisePropertyChanged("MapsValid");
+                RaisePropertyChanged("Valid");
+            }
+        }
+
+        private void Banks_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            RaisePropertyChanged("MapsValid");
+            RaisePropertyChanged("Valid");
         }
 
         #endregion

@@ -26,7 +26,7 @@ namespace map2agbgui.Models
             {
                 new List<LazyReference<MapHeader>>()
                 {
-                    new LazyReference<MapHeader>(new MapHeader() { Name = 0, Footer = new MapFooter() { FirstTilesetID = "TSE0" } }),
+                    new LazyReference<MapHeader>(new MapHeader() { Name = 0, Footer = new MapFooter() { FirstTilesetID = "TSE0", SecondTilesetID = "TSE245157" } }),
                     new LazyReference<MapHeader>(new MapHeader() { Name = 2 }),
                     null,
                     new LazyReference<MapHeader>(new MapHeader() { Name = 1 }),
@@ -43,12 +43,18 @@ namespace map2agbgui.Models
             romData.Tilesets = new Dictionary<string, LazyReference<Tileset>>
             {
                 { "TSE0",  new LazyReference<Tileset>(new Tileset() {
-                    Graphic = @"C:\Users\Christoph\Desktop\Tileset0.bmp" }) },
+                    Graphic = @"C:\Users\Christoph\Desktop\Tileset0.bmp",
+                    Secondary = false }) },
+                { "TSE1",  new LazyReference<Tileset>(new Tileset() {
+                    Secondary = false }) },
                 { "TSE245157", new LazyReference<Tileset>(new Tileset() {
-                    Graphic = @"C:\Users\Christoph\Desktop\Tileset245157.bmp" }) }
+                    Graphic = @"C:\Users\Christoph\Desktop\Tileset245157.bmp",
+                    Secondary = true }) }
             };
             romData.Tilesets["TSE0"].Data.Palettes[0] = JASCPAL.Import(@"C:\Users\Christoph\Desktop\deko-iv.pal");
             romData.Tilesets["TSE0"].Data.Palettes[1] = JASCPAL.Import(@"C:\Users\Christoph\Desktop\deko-iv.pal");
+            romData.Tilesets["TSE1"].Data.Palettes[0] = JASCPAL.Import(@"C:\Users\Christoph\Desktop\deko-iv.pal");
+            romData.Tilesets["TSE245157"].Data.Palettes[0] = JASCPAL.Import(@"C:\Users\Christoph\Desktop\deko-iv.pal");
             return romData;
         }
 

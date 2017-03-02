@@ -46,6 +46,7 @@ namespace map2agbgui.Models.Main.Maps
                 _firstTilesetID = value;
                 RaisePropertyChanged("FirstTilesetID");
                 RaisePropertyChanged("FirstTileset");
+                RaisePropertyChanged("ValidTileSets");
             }
         }
         public string SecondTilesetID
@@ -59,6 +60,7 @@ namespace map2agbgui.Models.Main.Maps
                 _secondTilesetID = value;
                 RaisePropertyChanged("SecondTilesetID");
                 RaisePropertyChanged("SecondTileset");
+                RaisePropertyChanged("ValidTileSets");
             }
         }
 
@@ -74,6 +76,17 @@ namespace map2agbgui.Models.Main.Maps
             get
             {
                 return MainModel.BlockEditorViewModel.Tilesets.First(p => p.Index == _secondTilesetID).Value;
+            }
+        }
+        public bool ValidTileSets
+        {
+            get
+            {
+                if (_firstTilesetID == null || _firstTilesetID == "") return false;
+                if (_firstTilesetID == null || _firstTilesetID == "") return false;
+                if (!MainModel.BlockEditorViewModel.Tilesets.Any(p => !p.Value.Secondary && p.Index == _firstTilesetID)) return false;
+                if (!MainModel.BlockEditorViewModel.Tilesets.Any(p => p.Value.Secondary && p.Index == _secondTilesetID)) return false;
+                return true;
             }
         }
 

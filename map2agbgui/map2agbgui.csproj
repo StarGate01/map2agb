@@ -109,6 +109,7 @@
     <Compile Include="Controls\MapTabControl.xaml.cs">
       <DependentUpon>MapTabControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Extensions\ObservableCollectionEx.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -220,22 +221,10 @@
     <Resource Include="Assets\ConfigureComputer_32x.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Assets\Create_32x.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\None_16x.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\CloseDocument_32x.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Assets\Rename_32x.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\Document_256x.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\Document_64x.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\StatusInformation_16x.png" />
@@ -247,13 +236,7 @@
     <Resource Include="Assets\BuildSolution_16x.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Assets\FolderOffline_16x.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Assets\StatusOffline_16x.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\Create_16x.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\DocumentTemplate_16x.png" />
@@ -275,6 +258,24 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\Undo_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\StatusWarning_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\StatusWarning_overlay_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\FolderOffline_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Create_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\StatusWarning_overlay_16xMD.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\filter_16xLG.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

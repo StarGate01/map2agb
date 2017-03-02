@@ -11,6 +11,11 @@ using map2agblib.Data;
 using System.Collections.ObjectModel;
 using map2agbgui.Models.Main;
 using map2agblib.Imaging;
+using System.Diagnostics;
+using map2agbgui.Extensions;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.IO;
 
 namespace map2agbgui.Models.BlockEditor
 {
@@ -30,12 +35,20 @@ namespace map2agbgui.Models.BlockEditor
             }
         }
         
+        public bool Valid
+        {
+            get
+            {
+                return ValidImage;
+            }
+        }
+
         #endregion
 
         #region Data properties
 
-        private LazyReference<ImageContainer> _graphic;
-        public LazyReference<ImageContainer> GraphicReference
+        private string _graphic;
+        public string GraphicPath
         {
             get
             {
@@ -44,15 +57,25 @@ namespace map2agbgui.Models.BlockEditor
             set
             {
                 _graphic = value;
-                RaisePropertyChanged("GraphicReference");
+                RaisePropertyChanged("GraphicPath");
                 RaisePropertyChanged("Graphic");
+                RaisePropertyChanged("ValidImage");
+                RaisePropertyChanged("Valid");
             }
         }
-        public Image Graphic
+        public ImageSource Graphic
         {
             get
             {
-                return _graphic.Data.Image;
+                if(ValidImage) return new BitmapImage(new Uri(_graphic, UriKind.Absolute));
+                return null;
+            }
+        }
+        public bool ValidImage
+        {
+            get
+            {
+                return _graphic != null & File.Exists(_graphic);
             }
         }
 
@@ -144,7 +167,7 @@ namespace map2agbgui.Models.BlockEditor
 
         public TilesetModel(LazyReference<Tileset> tileset) : base(tileset)
         {
-            _graphic = new LazyReference<ImageContainer>(tileset.Data.Graphic);
+            _graphic = tileset.Data.Graphic;
             _compressed = tileset.Data.Compressed;
             _secondary = tileset.Data.Secondary;
             _field2 = tileset.Data.Field2;
@@ -160,9 +183,9 @@ namespace map2agbgui.Models.BlockEditor
         public override LazyReference<Tileset> ToRomData()
         {
             Tileset tileset = new Tileset();
-            tileset.Graphic = _graphic.AbsolutePath;
+            tileset.Graphic = _graphic;
             tileset.Compressed = _compressed;
-            tileset.Secondary = _secondary;
+            tileset.Secondary = false;
             tileset.Field2 = _field2;
             tileset.Field3 = _field3;
             tileset.Palettes = _palettes.Select(p => p.Value.ToRomData()).ToArray();

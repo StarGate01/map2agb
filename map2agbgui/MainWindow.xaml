@@ -26,7 +26,12 @@
             <c:InverseBooleanConverter />
             <BooleanToVisibilityConverter/>
         </c:ValueConverterGroup>
-        
+        <c:ValueConverterGroup x:Key="inverseBooleanToVisibilityConverter">
+            <c:InverseBooleanConverter />
+            <BooleanToVisibilityConverter />
+        </c:ValueConverterGroup>
+        <BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter" />
+
         <Style TargetType="{x:Type MenuItem}">
             <Style.Triggers>
                 <Trigger Property="IsEnabled" Value="False">
@@ -112,35 +117,55 @@
         </Style>
         
         <HierarchicalDataTemplate x:Key="MapTemplate">
-            <Grid>
+            <Grid Margin="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="3" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Image x:Name="displayIcon" Height="Auto" Width="Auto" Grid.Column="0" />
+                <Image Visibility="Hidden" x:Name="displayIconErrorOverlay" Source="/Assets/StatusWarning_overlay_16x.png" Height="Auto" Width="Auto" Grid.Column="0" />
                 <TextBlock Grid.Column="2" Text="{Binding DisplayValue}" FontStyle="{Binding Value.EntryMode, Converter={StaticResource mapEntryTypeToFontStyleConverter}}" />
             </Grid>
             <HierarchicalDataTemplate.Triggers>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding Value.EntryMode}" Value="Map" />
+                        <Condition Binding="{Binding Value.Valid}" Value="False" />
+                    </MultiDataTrigger.Conditions>
+                    <Setter TargetName="displayIconErrorOverlay" Property="Visibility" Value="Visible" />
+                    <Setter Property="ToolTip" Value="This map has some errors" />
+                </MultiDataTrigger>
                 <DataTrigger Binding="{Binding Value.EntryMode}" Value="Map">
                     <Setter TargetName="displayIcon" Property="Source" Value="/Assets/Document_16x.png" />
+                    <Setter TargetName="displayIcon" Property="Margin" Value="0,0,2,0" />
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Value.EntryMode}" Value="Nullpointer">
                     <Setter TargetName="displayIcon" Property="Source" Value="/Assets/DocumentTemplate_16x.png" />
+                    <Setter TargetName="displayIcon" Property="Margin" Value="0,0,2,0" />
                 </DataTrigger>
             </HierarchicalDataTemplate.Triggers>
         </HierarchicalDataTemplate>
         <HierarchicalDataTemplate x:Key="BankTemplate" ItemsSource="{Binding Value.Maps}" ItemTemplate="{StaticResource MapTemplate}" ItemContainerStyle="{StaticResource MapStyle}">
-            <Grid>
+            <Grid Margin="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="3" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Image x:Name="displayIcon" Height="Auto" Width="Auto" Grid.Column="0" />
+                <Image Visibility="Hidden" x:Name="displayIconErrorOverlay" Source="/Assets/StatusWarning_overlay_16x.png" Height="Auto" Width="Auto" Grid.Column="0" />
                 <TextBlock Grid.Column="2" Text="{Binding DisplayValue}" FontStyle="{Binding Value.EntryMode, Converter={StaticResource bankEntryTypeToFontStyleConverter}}" />
             </Grid>
             <HierarchicalDataTemplate.Triggers>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding Value.EntryMode}" Value="Bank" />
+                        <Condition Binding="{Binding Value.Valid}" Value="False" />
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="ToolTip" Value="This bank has some maps with errors" />
+                    <Setter TargetName="displayIconErrorOverlay" Property="Visibility" Value="Visible" />
+                </MultiDataTrigger>
                 <DataTrigger Binding="{Binding Value.EntryMode}" Value="Bank">
                     <Setter Property="ContextMenu" Value="{StaticResource BankItemContextMenu}" />
                     <Setter TargetName="displayIcon" Property="Source" Value="/Assets/Folder_16x.png" />
@@ -218,26 +243,31 @@
                 </MenuItem>
             </Menu>
         </DockPanel>
-        <DockPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3">
-            <Menu DockPanel.Dock="Top" Padding="3">
-                <MenuItem ToolTip="Add bank" x:Name="AddBankButton" Click="AddBankButton_Click">
-                    <MenuItem.Header>
-                        <Image Width="32" Height="32" Source="Assets/NewSolutionFolder_32x.png" Margin="3" />
-                    </MenuItem.Header>
-                </MenuItem>
-                <Border Width="1" Height="32" Background="Gray" />
-                <MenuItem ToolTip="Block editor" x:Name="BlockeditorButton" Click="BlockeditorButton_Click">
-                    <MenuItem.Header>
-                        <Image Width="32" Height="32" Source="Assets/ConfigureComputer_32x.png" Margin="3" />
-                    </MenuItem.Header>
-                </MenuItem>
-                <MenuItem ToolTip="Namespace editor" x:Name="NamespaceeditorButton" Click="NamespaceeditorButton_Click">
-                    <MenuItem.Header>
-                        <Image Width="32" Height="32" Source="Assets/Rename_32x.png" Margin="3" />
-                    </MenuItem.Header>
-                </MenuItem>
-            </Menu>
-        </DockPanel>
+        <Border BorderThickness="0 1 0 0" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}">
+            <DockPanel>
+                <Menu DockPanel.Dock="Top" Padding="3">
+                    <MenuItem ToolTip="Add bank" x:Name="AddBankButton" Click="AddBankButton_Click">
+                        <MenuItem.Header>
+                            <Image Width="32" Height="32" Source="Assets/NewSolutionFolder_32x.png" Margin="3" />
+                        </MenuItem.Header>
+                    </MenuItem>
+                    <Border Width="1" Height="32" Background="Gray" />
+                    <MenuItem ToolTip="Block editor" x:Name="BlockeditorButton" Click="BlockeditorButton_Click">
+                        <MenuItem.Header>
+                            <Grid>
+                                <Image Width="32" Height="32" Source="Assets/ConfigureComputer_32x.png" Margin="3" />
+                                <Image Visibility="{Binding BlockEditorViewModel.Valid, Converter={StaticResource inverseBooleanToVisibilityConverter}}" Width="16" Height="16" Source="Assets/StatusWarning_overlay_16xMD.png" Margin="3" HorizontalAlignment="Right" VerticalAlignment="Bottom" />
+                            </Grid>
+                        </MenuItem.Header>
+                    </MenuItem>
+                    <MenuItem ToolTip="Namespace editor" x:Name="NamespaceeditorButton" Click="NamespaceeditorButton_Click">
+                        <MenuItem.Header>
+                            <Image Width="32" Height="32" Source="Assets/Rename_32x.png" Margin="3" />
+                        </MenuItem.Header>
+                    </MenuItem>
+                </Menu>
+            </DockPanel>
+        </Border>
         <Grid Grid.Column="0" Grid.Row="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
@@ -259,11 +289,24 @@
             <Image Grid.Row="0" Source="Assets/Document_256x.png" Width="128" Height="128" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
             <TextBlock Grid.Row="1" Text="No map selected" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="20" />
         </Grid>
-        
-        <DockPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3">
-            <Menu DockPanel.Dock="Bottom">
-                <Label Content="{Binding Status}" />
-            </Menu>
-        </DockPanel>
+
+        <Border BorderThickness="0 1 0 0" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+            <WrapPanel Margin="0,4">
+                <WrapPanel Visibility="{Binding Valid, Converter={StaticResource inverseBooleanToVisibilityConverter}}"  Margin="4,0,0,0">
+                    <Image Source="/Assets/StatusWarning_16x.png" Width="16" Height="16" VerticalAlignment="Center" />
+                    <Border Grid.Column="1" Margin="4,0" Width="1" Height="16" Background="Gray" />
+                </WrapPanel>
+                <WrapPanel Visibility="{Binding ValidMaps, Converter={StaticResource inverseBooleanToVisibilityConverter}}">
+                    <TextBlock Text="Some maps have errors" VerticalAlignment="Center" Foreground="#FFD10000" />
+                    <Border Margin="4,0" Grid.Column="2" Width="1" Height="16" Background="Gray" />
+                </WrapPanel>
+                <WrapPanel Visibility="{Binding BlockEditorViewModel.Valid, Converter={StaticResource inverseBooleanToVisibilityConverter}}">
+                    <TextBlock Text="Some tilesets have errors" VerticalAlignment="Center" Foreground="#FFD10000" />
+                </WrapPanel>
+                <WrapPanel Visibility="{Binding Valid, Converter={StaticResource booleanToVisibilityConverter}}"  Margin="4,0,0,0">
+                    <TextBlock Text="No errors" VerticalAlignment="Center" />
+                </WrapPanel>
+            </WrapPanel>
+        </Border>
     </Grid>
 </Window>

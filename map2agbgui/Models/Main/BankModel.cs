@@ -9,6 +9,7 @@ using map2agblib.Map;
 using System.Collections.ObjectModel;
 using map2agblib.Data;
 using map2agbgui.Models.Main.Maps;
+using map2agbgui.Extensions;
 
 namespace map2agbgui.Models.Main
 {
@@ -20,8 +21,8 @@ namespace map2agbgui.Models.Main
 
         public bool IsSelected { get; set; } = false;
 
-        private ObservableCollection<DisplayTuple<int, IMapModel>> _maps;
-        public ObservableCollection<DisplayTuple<int, IMapModel>> Maps
+        private ObservableCollectionEx<DisplayTuple<int, IMapModel>> _maps;
+        public ObservableCollectionEx<DisplayTuple<int, IMapModel>> Maps
         {
             get
             {
@@ -30,6 +31,8 @@ namespace map2agbgui.Models.Main
             set
             {
                 _maps = value;
+                _maps.ItemPropertyChanged += Maps_ItemPropertyChanged;
+                _maps.CollectionChanged += Maps_CollectionChanged;
                 RaisePropertyChanged("Maps");
             }
         }
@@ -50,14 +53,38 @@ namespace map2agbgui.Models.Main
             }
         }
 
+        public bool Valid
+        {
+            get
+            {
+                return _maps.All(p => p.Value.EntryMode == MapEntryType.Nullpointer || ((MapHeaderModel)p.Value).Valid);
+            }
+        }
+
         #endregion
 
         #region Constructor
 
         public BankModel(List<LazyReference<MapHeader>> headers, MainModel mainModel) : base(headers)
         {
-            _maps = new ObservableCollection<DisplayTuple<int, IMapModel>>(headers.Select((p, pi) => 
-                new DisplayTuple<int, IMapModel>(pi, (p == null) ? (IMapModel)(new NullpointerMapModel(this)) : new MapHeaderModel(p.Data, this, mainModel))));
+            _maps = new ObservableCollectionEx<DisplayTuple<int, IMapModel>>(headers.Select((p, pi) => 
+                new DisplayTuple<int, IMapModel>(pi, (p == null) ? (IMapModel)(new NullpointerMapModel(this)) : new MapHeaderModel(p, this, mainModel))));
+            _maps.ItemPropertyChanged += Maps_ItemPropertyChanged;
+            _maps.CollectionChanged += Maps_CollectionChanged;
+        }
+
+        #endregion
+
+        #region Events
+
+        private void Maps_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            RaisePropertyChanged("Valid");
+        }
+
+        private void Maps_ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "Value.Valid") RaisePropertyChanged("Valid");
         }
 
         #endregion
@@ -72,7 +99,7 @@ namespace map2agbgui.Models.Main
         public override List<LazyReference<MapHeader>> ToRomData()
         {
             List<LazyReference<MapHeader>> headers = new List<LazyReference<MapHeader>>();
-            headers = Maps.Select(p => (p.Value.EntryMode == MapEntryType.Nullpointer) ? null : new LazyReference<MapHeader>(((MapHeaderModel)p.Value).ToRomData())).ToList();
+            headers = Maps.Select(p => (p.Value.EntryMode == MapEntryType.Nullpointer) ? null : ((MapHeaderModel)p.Value).ToRomData()).ToList();
             return headers;
         }
 

@@ -7,11 +7,15 @@
              mc:Ignorable="d" 
              xmlns:model="clr-namespace:map2agbgui.Models.Main.Maps"
              xmlns:c="clr-namespace:map2agbgui.Converters"
-             d:DesignHeight="400" d:DesignWidth="555">
+             d:DesignHeight="500" d:DesignWidth="600">
 
     <UserControl.Resources>
         <c:ByteToHexStringConverter x:Key="byteToHexStringConverter" />
         <c:UShortToHexStringConverter x:Key="uShortToHexStringConverter" />
+        <c:ValueConverterGroup x:Key="inverseBooleanToVisibilityConverter">
+            <c:InverseBooleanConverter />
+            <BooleanToVisibilityConverter />
+        </c:ValueConverterGroup>
     </UserControl.Resources>
     
     <Grid d:DataContext="{d:DesignInstance Type=model:MapHeaderModel, IsDesignTimeCreatable=True}">
@@ -42,13 +46,23 @@
                     </StackPanel>
                 </Grid>
             </TabItem>
-            <TabItem Header="Settings">
+            <TabItem>
+                <TabItem.Header>
+                    <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Image Visibility="{Binding SettingsValid, Converter={StaticResource inverseBooleanToVisibilityConverter}}" Margin="0,0,4,0" Grid.Column="0" Source="/Assets/StatusWarning_16x.png" Width="14" Height="14" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="1" Text="Settings" VerticalAlignment="Center" />
+                    </Grid>
+                </TabItem.Header>
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <GroupBox Grid.Row="0">
+                    <GroupBox Margin="4" Grid.Row="0">
                         <GroupBox.Header>
                             <TextBlock Text="Header" FontWeight="Bold" />
                         </GroupBox.Header>
@@ -114,12 +128,13 @@
                             <TextBlock Margin="3" Grid.Column="2" Grid.Row="8" Text="The battle animation style for this map" VerticalAlignment="Center" Foreground="{DynamicResource {x:Static SystemColors.ControlDarkDarkBrushKey}}" />
                         </Grid>
                     </GroupBox>
-                    <GroupBox Grid.Row="1">
+                    <GroupBox Margin="4" Grid.Row="1">
                         <GroupBox.Header>
                             <TextBlock Text="Footer" FontWeight="Bold" />
                         </GroupBox.Header>
                         <Grid>
                             <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
@@ -129,18 +144,27 @@
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
+                            
+                            <Grid Visibility="{Binding Footer.ValidTileSets, Converter={StaticResource inverseBooleanToVisibilityConverter}}" Margin="2" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Image Margin="0,0,4,0" Grid.Column="0" Source="/Assets/StatusWarning_16x.png" Width="16" Height="16" VerticalAlignment="Bottom" />
+                                <TextBlock Grid.Column="1"  Text="The selected tilesets are not valid." VerticalAlignment="Bottom" Foreground="#FFD10000" />
+                            </Grid>
 
-                            <TextBlock Margin="3" Grid.Column="0" Grid.Row="0" Text="First Tileset:" VerticalAlignment="Center" />
-                            <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding MainModel.BlockEditorViewModel.Tilesets}" DisplayMemberPath="Index" SelectedValuePath="Index" SelectedValue="{Binding Footer.FirstTilesetID, Mode=TwoWay}" Margin="3" VerticalAlignment="Center" />
-                            <TextBlock Margin="3" Grid.Column="2" Grid.Row="0" Text="The main tileset for this map" VerticalAlignment="Center" Foreground="{DynamicResource {x:Static SystemColors.ControlDarkDarkBrushKey}}" />
+                            <TextBlock Margin="3" Grid.Column="0" Grid.Row="1" Text="First Tileset:" VerticalAlignment="Center" />
+                            <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding MainModel.BlockEditorViewModel.PrimaryTilesets}" DisplayMemberPath="Index" SelectedValuePath="Index" SelectedValue="{Binding Footer.FirstTilesetID, Mode=TwoWay}" Margin="3" VerticalAlignment="Center" />
+                            <TextBlock Margin="3" Grid.Column="2" Grid.Row="1" Text="The main tileset for this map" VerticalAlignment="Center" Foreground="{DynamicResource {x:Static SystemColors.ControlDarkDarkBrushKey}}" />
 
-                            <TextBlock Margin="3" Grid.Column="0" Grid.Row="1" Text="Second Tileset:" VerticalAlignment="Center" />
-                            <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding MainModel.BlockEditorViewModel.Tilesets}" DisplayMemberPath="Index" SelectedValuePath="Index" SelectedValue="{Binding Footer.SecondTilesetID, Mode=TwoWay}" Margin="3" VerticalAlignment="Center" />
-                            <TextBlock Margin="3" Grid.Column="2" Grid.Row="1" Text="The secondary tileset for this map" VerticalAlignment="Center" Foreground="{DynamicResource {x:Static SystemColors.ControlDarkDarkBrushKey}}" />
+                            <TextBlock Margin="3" Grid.Column="0" Grid.Row="2" Text="Second Tileset:" VerticalAlignment="Center" />
+                            <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding MainModel.BlockEditorViewModel.SecondaryTilesets}" DisplayMemberPath="Index" SelectedValuePath="Index" SelectedValue="{Binding Footer.SecondTilesetID, Mode=TwoWay}" Margin="3" VerticalAlignment="Center" />
+                            <TextBlock Margin="3" Grid.Column="2" Grid.Row="2" Text="The secondary tileset for this map" VerticalAlignment="Center" Foreground="{DynamicResource {x:Static SystemColors.ControlDarkDarkBrushKey}}" />
 
-                            <TextBlock Margin="3" Grid.Column="0" Grid.Row="2" Text="Padding:" VerticalAlignment="Center" />
-                            <TextBox Text="{Binding Footer.Padding, Mode=TwoWay, Converter={StaticResource uShortToHexStringConverter}}" Margin="3" Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
-                            <TextBlock Margin="3" Grid.Column="2" Grid.Row="2" Text="Bytes used to assure alignment, probably unused otherwise" VerticalAlignment="Center" Foreground="{DynamicResource {x:Static SystemColors.ControlDarkDarkBrushKey}}" />
+                            <TextBlock Margin="3" Grid.Column="0" Grid.Row="3" Text="Padding:" VerticalAlignment="Center" />
+                            <TextBox Text="{Binding Footer.Padding, Mode=TwoWay, Converter={StaticResource uShortToHexStringConverter}}" Margin="3" Grid.Column="1" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
+                            <TextBlock Margin="3" Grid.Column="2" Grid.Row="3" Text="Bytes used to assure alignment, probably unused otherwise" VerticalAlignment="Center" Foreground="{DynamicResource {x:Static SystemColors.ControlDarkDarkBrushKey}}" />
                         </Grid>
                     </GroupBox>
                 </Grid>

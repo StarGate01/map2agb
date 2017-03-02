@@ -91,14 +91,14 @@ namespace map2agblib.Data
                 for (int j = 0; j < data.Banks[i].Count; j++)
                 {
                     if (data.Banks[i][j] == null) continue;
-                    data.Banks[i][j].AbsolutePath = Path.Combine((Path.Combine(dirName, "maps")), i + "_" + j + ".map");
                     data.Banks[i][j].ExportToFile(Path.Combine((Path.Combine(tempDir, "maps")), i + "_" + j + ".map"));
+                    data.Banks[i][j].AbsolutePath = Path.Combine((Path.Combine(dirName, "maps")), i + "_" + j + ".map");
                 }
             }
             foreach(KeyValuePair<string, LazyReference<Tileset>> entry in data.Tilesets)
             {
-                entry.Value.AbsolutePath = Path.Combine((Path.Combine(dirName, "tilesets")), entry.Key + ".tileset");
                 entry.Value.ExportToFile(Path.Combine((Path.Combine(tempDir, "tilesets")), entry.Key + ".tileset"));
+                entry.Value.AbsolutePath = Path.Combine((Path.Combine(dirName, "tilesets")), entry.Key + ".tileset");
             }
             using (FileStream output = File.Open(projFileName, FileMode.Create, FileAccess.Write))
             {
