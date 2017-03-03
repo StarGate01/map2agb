@@ -69,7 +69,7 @@ namespace map2agbgui.Models.Main
 
         private void Value_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            RaisePropertyChanged("Value." + e.PropertyName);
+            //RaisePropertyChanged("Value." + e.PropertyName);
             RaisePropertyChanged("DisplayValue");
         }
 
@@ -82,6 +82,10 @@ namespace map2agbgui.Models.Main
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+        //public void RaisePropertyChanged(object sender, string propertyName)
+        //{
+        //    PropertyChanged?.Invoke(sender, new PropertyChangedEventArgs(propertyName));
+        //}
 
         #endregion
 

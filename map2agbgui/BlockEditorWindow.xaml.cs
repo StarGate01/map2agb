@@ -87,10 +87,10 @@ namespace map2agbgui
             int nameCounter = 0;
             while(true)
             {
-                if (!dataModel.Tilesets.ToList().Exists(p => p.Index == namePrefix + nameCounter)) break;
+                if (!dataModel.Tilesets.Any(p => p.Index == namePrefix + nameCounter)) break;
                 nameCounter++;
             }
-            DisplayTuple<string, TilesetModel> newElement = new DisplayTuple<string, TilesetModel>(namePrefix + nameCounter, new TilesetModel(new LazyReference<Tileset>(new Tileset())));
+            DisplayTuple<string, TilesetModel> newElement = new DisplayTuple<string, TilesetModel>(namePrefix + nameCounter, new TilesetModel(new LazyReference<Tileset>(new Tileset()), dataModel));
             dataModel.Tilesets.Add(newElement);
             TilesetListBox.SelectedItem = newElement;
         }

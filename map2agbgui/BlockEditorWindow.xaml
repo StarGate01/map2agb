@@ -101,7 +101,7 @@
                 </TextBlock>
             </Grid>
         </GroupBox>
-        <TabControl Visibility="{Binding ElementName=TilesetListBox, Path=SelectedItem, Converter={StaticResource nullToVisibilityConverter}}" Margin="5" Grid.Column="1" DataContext="{Binding ElementName=TilesetListBox, Path=SelectedItem}">
+        <TabControl Visibility="{Binding ElementName=TilesetListBox, Path=SelectedItem, Converter={StaticResource nullToVisibilityConverter}}" Margin="5" Grid.Column="1">
             <TabItem>
                 <TabItem.Header>
                     <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
@@ -109,11 +109,11 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Image Visibility="{Binding Value.Valid, Converter={StaticResource inverseBooleanToVisibilityConverter}}" Margin="0,0,4,0" Grid.Column="0" Source="/Assets/StatusWarning_16x.png" Width="14" Height="14" VerticalAlignment="Center" />
+                        <Image Visibility="{Binding ElementName=TilesetListBox, Path=SelectedItem.Value.ValidSettings, Converter={StaticResource inverseBooleanToVisibilityConverter}}" Margin="0,0,4,0" Grid.Column="0" Source="/Assets/StatusWarning_16x.png" Width="14" Height="14" VerticalAlignment="Center" />
                         <TextBlock Grid.Column="1" Text="Settings" VerticalAlignment="Center" />
                     </Grid>
                 </TabItem.Header>
-                <Grid>
+                <Grid DataContext="{Binding ElementName=TilesetListBox, Path=SelectedItem}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
@@ -197,10 +197,38 @@
             </TabItem>
             <TabItem>
                 <TabItem.Header>
-                    <TextBlock Text="Blocks" />
+                    <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Image Visibility="{Binding ElementName=TilesetListBox, Path=SelectedItem.Value.ValidBlocks, Converter={StaticResource inverseBooleanToVisibilityConverter}}" Margin="0,0,4,0" Grid.Column="0" Source="/Assets/StatusWarning_16x.png" Width="14" Height="14" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="1" Text="Blocks" VerticalAlignment="Center" />
+                    </Grid>
                 </TabItem.Header>
                 <Grid>
-                    
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <GroupBox Grid.Row="0" >
+                        <GroupBox.Header>
+                            <TextBlock Text="Designer settings" FontWeight="Bold" />
+                        </GroupBox.Header>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Visibility="{Binding ElementName=TilesetListBox, Path=SelectedItem.Value.Secondary, Converter={StaticResource inverseBooleanToVisibilityConverter}}" Grid.Column="0" Text="Secondary tileset:" VerticalAlignment="Center" />
+                            <ComboBox Visibility="{Binding ElementName=TilesetListBox, Path=SelectedItem.Value.Secondary, Converter={StaticResource inverseBooleanToVisibilityConverter}}" Grid.Row="2" Grid.Column="1" ItemsSource="{Binding SecondaryTilesets}" DisplayMemberPath="Index" SelectedValuePath="Index" SelectedValue="{Binding ElementName=TilesetListBox, Path=SelectedItem.Value.AdditionalDesignerTileset, Mode=TwoWay}" Margin="3" VerticalAlignment="Center" />
+                            <TextBlock Visibility="{Binding ElementName=TilesetListBox, Path=SelectedItem.Value.Secondary, Converter={StaticResource booleanToVisibilityConverter}}" Grid.Column="0" Text="Primary tileset:" VerticalAlignment="Center" />
+                            <ComboBox Visibility="{Binding ElementName=TilesetListBox, Path=SelectedItem.Value.Secondary, Converter={StaticResource booleanToVisibilityConverter}}" Grid.Row="2" Grid.Column="1" ItemsSource="{Binding PrimaryTilesets}" DisplayMemberPath="Index" SelectedValuePath="Index" SelectedValue="{Binding ElementName=TilesetListBox, Path=SelectedItem.Value.AdditionalDesignerTileset, Mode=TwoWay}" Margin="3" VerticalAlignment="Center" />
+                        </Grid>
+                    </GroupBox>
+                    <Grid DataContext="{Binding ElementName=TilesetListBox, Path=SelectedItem}" >
+                        
+                    </Grid>
                 </Grid>
             </TabItem>
         </TabControl>

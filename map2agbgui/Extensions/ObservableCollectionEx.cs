@@ -44,7 +44,7 @@ namespace map2agbgui.Extensions
         public event PropertyChangedEventHandler ItemPropertyChanged;
         public void RaiseItemPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            ItemPropertyChanged?.Invoke(sender, e);
+            ItemPropertyChanged?.Invoke(this, e);
         }
 
     }

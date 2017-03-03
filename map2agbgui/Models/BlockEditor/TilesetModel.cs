@@ -35,6 +35,20 @@ namespace map2agbgui.Models.BlockEditor
 
         #region Meta properties
 
+        private BlockEditorModel _blockEditorViewModel;
+        public BlockEditorModel BlockEditorViewModel
+        {
+            get
+            {
+                return _blockEditorViewModel;
+            }
+            set
+            {
+                _blockEditorViewModel = value;
+                RaisePropertyChanged("BlockEditorViewModel");
+            }
+        }
+
         public string FormatString
         {
             get
@@ -42,12 +56,53 @@ namespace map2agbgui.Models.BlockEditor
                 return "{0}";
             }
         }
-        
+
         public bool Valid
         {
             get
             {
+                return ValidSettings && ValidBlocks;
+            }
+        }
+
+        public bool ValidSettings
+        {
+            get
+            {
                 return ValidImage;
+            }
+        }
+
+        public bool ValidAdditionalDesignerTileset
+        {
+            get
+            {
+                return _blockEditorViewModel.Tilesets.Any(p => p.Index == _additionalDesignerTileset && p.Value.Secondary != _secondary);
+            }
+        }
+
+        public bool ValidBlocks
+        {
+            get
+            {
+                return ValidAdditionalDesignerTileset;
+            }
+        }
+
+        private string _additionalDesignerTileset;
+        public string AdditionalDesignerTileset
+        {
+            get
+            {
+                return _additionalDesignerTileset;
+            }
+            set
+            {
+                _additionalDesignerTileset = value;
+                RaisePropertyChanged("AdditionalDesignerTileset");
+                RaisePropertyChanged("ValidAdditionalDesignerTileset");
+                RaisePropertyChanged("ValidBlocks");
+                RaisePropertyChanged("Valid");
             }
         }
 
@@ -71,6 +126,7 @@ namespace map2agbgui.Models.BlockEditor
                 RaisePropertyChanged("BaseGraphic");
                 RaisePropertyChanged("Graphic");
                 RaisePropertyChanged("ValidImage");
+                RaisePropertyChanged("ValidSettings");
                 RaisePropertyChanged("Valid");
             }
         }
@@ -198,7 +254,7 @@ namespace map2agbgui.Models.BlockEditor
 
         #region Constructor
 
-        public TilesetModel(LazyReference<Tileset> tileset) : base(tileset)
+        public TilesetModel(LazyReference<Tileset> tileset, BlockEditorModel parentEditorModel) : base(tileset)
         {
             _graphicPath = tileset.Data.Graphic;
             _compressed = tileset.Data.Compressed;
@@ -209,6 +265,7 @@ namespace map2agbgui.Models.BlockEditor
                 new DisplayTuple<int, PaletteModel>(pi, new PaletteModel(p))));
             _blocks = new ObservableCollection<TilesetEntryModel>(tileset.Data.Blocks.Select(p => new TilesetEntryModel(p)));
             _selectedPalette = _palettes[0];
+            _blockEditorViewModel = parentEditorModel;
         }
 
         #endregion
