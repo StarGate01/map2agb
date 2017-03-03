@@ -19,7 +19,7 @@ namespace map2agbgui.Models.NSEditor
 
         private ObservableCollectionEx<NameEntryModel> _names;
         [CollectionPropertyDependency("Names")]
-        [CollectionItemPropertyDependency((string[])null, "Names")]
+        [CollectionItemPropertyDependency("Name", "Names")]
         public ObservableCollectionEx<NameEntryModel> Names
         {
             get
