@@ -10,11 +10,12 @@ using map2agblib.Tilesets;
 using map2agblib.Data;
 using System.Collections.ObjectModel;
 using map2agbgui.Models.BlockEditor;
+using map2agbgui.Extensions;
 
 namespace map2agbgui.Models.Main.Maps
 {
 
-    public class MapFooterModel : IRomSerializable<MapFooterModel, MapFooter>, INotifyPropertyChanged
+    public class MapFooterModel : IRomSerializable<MapFooterModel, MapFooter>, IRaisePropertyChanged
     {
 
         #region Properties
@@ -35,6 +36,7 @@ namespace map2agbgui.Models.Main.Maps
         #region Data properties
 
         private string _firstTilesetID, _secondTilesetID;
+        [PropertyDependency(new string[] { "FirstTileset", "ValidTilesets" })]
         public string FirstTilesetID
         {
             get
@@ -45,10 +47,9 @@ namespace map2agbgui.Models.Main.Maps
             {
                 _firstTilesetID = value;
                 RaisePropertyChanged("FirstTilesetID");
-                RaisePropertyChanged("FirstTileset");
-                RaisePropertyChanged("ValidTileSets");
             }
         }
+        [PropertyDependency(new string[] { "SecondTileset", "ValidTilesets" })]
         public string SecondTilesetID
         {
             get
@@ -59,8 +60,6 @@ namespace map2agbgui.Models.Main.Maps
             {
                 _secondTilesetID = value;
                 RaisePropertyChanged("SecondTilesetID");
-                RaisePropertyChanged("SecondTileset");
-                RaisePropertyChanged("ValidTileSets");
             }
         }
 
@@ -78,7 +77,7 @@ namespace map2agbgui.Models.Main.Maps
                 return MainModel.BlockEditorViewModel.Tilesets.First(p => p.Index == _secondTilesetID).Value;
             }
         }
-        public bool ValidTileSets
+        public bool ValidTilesets
         {
             get
             {
@@ -188,6 +187,7 @@ namespace map2agbgui.Models.Main.Maps
 
         #region Constructor
 
+        private PropertyDependencyHandler _phHandler;
         public MapFooterModel(MapFooter footer, MainModel mainModel) : base(footer)
         {
             _firstTilesetID = footer.FirstTilesetID;
@@ -200,6 +200,7 @@ namespace map2agbgui.Models.Main.Maps
             _borderWidth = footer.BorderWidth;
             _padding = footer.Padding;
             _mainModel = mainModel;
+            _phHandler = new PropertyDependencyHandler(this);
         }
 
 #if DEBUG
@@ -214,20 +215,20 @@ namespace map2agbgui.Models.Main.Maps
 
         #region Methods
 
-                public override MapFooter ToRomData()
-                {
-                    MapFooter footer = new MapFooter();
-                    footer.FirstTilesetID = _firstTilesetID;
-                    footer.SecondTilesetID = _secondTilesetID;
-                    footer.MapBlock = _mapBlock.Select(p => p.ToArray()).ToArray();
-                    footer.BorderBlock = _borderBlock.Select(p => p.ToArray()).ToArray();
-                    footer.Height = _height;
-                    footer.Width = _width;
-                    footer.BorderHeight = _borderHeight;
-                    footer.BorderWidth = _borderWidth;
-                    footer.Padding = _padding;
-                    return footer;
-                }
+        public override MapFooter ToRomData()
+        {
+            MapFooter footer = new MapFooter();
+            footer.FirstTilesetID = _firstTilesetID;
+            footer.SecondTilesetID = _secondTilesetID;
+            footer.MapBlock = _mapBlock.Select(p => p.ToArray()).ToArray();
+            footer.BorderBlock = _borderBlock.Select(p => p.ToArray()).ToArray();
+            footer.Height = _height;
+            footer.Width = _width;
+            footer.BorderHeight = _borderHeight;
+            footer.BorderWidth = _borderWidth;
+            footer.Padding = _padding;
+            return footer;
+        }
 
         #endregion
 

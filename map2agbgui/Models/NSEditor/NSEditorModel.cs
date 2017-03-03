@@ -12,12 +12,14 @@ using map2agbgui.Extensions;
 namespace map2agbgui.Models.NSEditor
 {
 
-    public class NSEditorModel : IRomSerializable<NSEditorModel, string[]>, INotifyPropertyChanged
+    public class NSEditorModel : IRomSerializable<NSEditorModel, string[]>, IRaisePropertyChanged
     {
 
         #region Properties
 
         private ObservableCollectionEx<NameEntryModel> _names;
+        [CollectionPropertyDependency("Names")]
+        [CollectionItemPropertyDependency((string[])null, "Names")]
         public ObservableCollectionEx<NameEntryModel> Names
         {
             get
@@ -27,8 +29,6 @@ namespace map2agbgui.Models.NSEditor
             set
             {
                 _names = value;
-                _names.CollectionChanged += Names_CollectionChanged;
-                _names.ItemPropertyChanged += Names_ItemPropertyChanged;
                 RaisePropertyChanged("Names");
             }
         }
@@ -37,11 +37,11 @@ namespace map2agbgui.Models.NSEditor
 
         #region Constructors
 
+        private PropertyDependencyHandler _phHandler;
         public NSEditorModel(string[] names) : base(names)
         {
             _names = new ObservableCollectionEx<NameEntryModel>(names.Select((p, pi) => new NameEntryModel((byte)pi, p)).ToList());
-            _names.CollectionChanged += Names_CollectionChanged;
-            _names.ItemPropertyChanged += Names_ItemPropertyChanged;
+            _phHandler = new PropertyDependencyHandler(this);
         }
 
 #if DEBUG
@@ -52,33 +52,18 @@ namespace map2agbgui.Models.NSEditor
         }
 #endif
 
-#endregion
+        #endregion
 
-#region Events
-
-        private void Names_ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            RaisePropertyChanged("Names");
-        }
-
-
-        private void Names_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            RaisePropertyChanged("Names");
-        }
-
-#endregion
-
-#region Methods
+        #region Methods
 
         public override string[] ToRomData()
         {
            return Names.Select(p => p.Name).ToArray();
         }
 
-#endregion
+        #endregion
 
-#region INotifyPropertyChanged
+        #region INotifyPropertyChanged
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void RaisePropertyChanged(string propertyName)
@@ -86,7 +71,7 @@ namespace map2agbgui.Models.NSEditor
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-#endregion
+        #endregion
 
     }
 

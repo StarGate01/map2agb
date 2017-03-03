@@ -11,17 +11,31 @@ using map2agblib.Data;
 using System.Globalization;
 using System.Windows.Data;
 using System.Collections.ObjectModel;
+using map2agbgui.Extensions;
 
 namespace map2agbgui.Models.Main.Maps
 {
-    public class MapHeaderModel : IRomSerializable<MapHeaderModel, LazyReference<MapHeader>>, IMapModel, INotifyPropertyChanged
+
+    public class MapHeaderModel : IRomSerializable<MapHeaderModel, LazyReference<MapHeader>>, IMapModel, IRaisePropertyChanged
     {
 
         #region Properties
 
         #region Meta properties
 
-        public bool IsSelected { get; set; } = false;
+        private bool _isSelected;
+        public bool IsSelected
+        {
+            get
+            {
+                return _isSelected;
+            }
+            set
+            {
+                _isSelected = value;
+                RaisePropertyChanged("IsSelected");
+            }
+        }
 
         private BankModel _bank;
         public BankModel Bank
@@ -64,11 +78,12 @@ namespace map2agbgui.Models.Main.Maps
                 return SettingsValid;
             }
         }
+        [PropertyDependency("Valid")]
         public bool SettingsValid
         {
             get
             {
-                return Footer.ValidTileSets;
+                return Footer.ValidTilesets;
             }
         }
 
@@ -77,6 +92,7 @@ namespace map2agbgui.Models.Main.Maps
         #region Data properties
 
         private byte _nameID;
+        [PropertyDependency("Name")]
         public byte NameID
         {
             get
@@ -87,7 +103,6 @@ namespace map2agbgui.Models.Main.Maps
             {
                 _nameID = value;
                 RaisePropertyChanged("NameID");
-                RaisePropertyChanged("Name");
             }
         }
         public string Name
@@ -99,6 +114,7 @@ namespace map2agbgui.Models.Main.Maps
         }
 
         private MapFooterModel _footer;
+        [ChildPropertyDependency("ValidTilesets", "SettingsValid")]
         public MapFooterModel Footer
         {
             get
@@ -108,7 +124,6 @@ namespace map2agbgui.Models.Main.Maps
             set
             {
                 _footer = value;
-                _footer.PropertyChanged += Footer_PropertyChanged;
                 RaisePropertyChanged("Footer");
             }
         }
@@ -219,12 +234,12 @@ namespace map2agbgui.Models.Main.Maps
 
         #region Constructor
 
+        private PropertyDependencyHandler _phHandler;
         public MapHeaderModel(LazyReference<MapHeader> header, BankModel bank, MainModel mainModel) : base(header)
         {
             _bank = bank;
             _nameID = header.Data.Name;
             _footer = new MapFooterModel(header.Data.Footer, mainModel);
-            _footer.PropertyChanged += Footer_PropertyChanged;
             _music = header.Data.Music;
             _index = header.Data.Index;
             _unknown = header.Data.Unknown;
@@ -234,34 +249,21 @@ namespace map2agbgui.Models.Main.Maps
             _showName = header.Data.ShowName;
             _battleStyle = header.Data.BattleStyle;
             _mainModel = mainModel;
+            _phHandler = new PropertyDependencyHandler(this);
         }
 
 #if DEBUG
         public MapHeaderModel() : this(new LazyReference<MapHeader>(new MapHeader() { Name = 0, Footer = new MapFooter() { FirstTilesetID = "TSE0", SecondTilesetID = "TSE245157" } }),
-            null,
-            new MainModel(MockData.MockRomData()))
+            null, new MainModel(MockData.MockRomData()))
         {
             if (!(bool)(DesignerProperties.IsInDesignModeProperty.GetMetadata(typeof(DependencyObject)).DefaultValue))
                 throw new InvalidOperationException("MapModel can only be constructed without parameters by the designer");
         }
 #endif
 
-    #endregion
+        #endregion
 
-    #region Events
-
-        private void Footer_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == "ValidTileSets")
-            {
-                RaisePropertyChanged("SettingsValid");
-                RaisePropertyChanged("Valid");
-            }
-        }
-
-#endregion
-
-#region Methods
+        #region Methods
 
         public override string ToString()
         {
@@ -284,9 +286,9 @@ namespace map2agbgui.Models.Main.Maps
             return new LazyReference<MapHeader>(header);
         }
 
-#endregion
+        #endregion
 
-#region INotifyPropertyChanged
+        #region INotifyPropertyChanged
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void RaisePropertyChanged(string propertyName)
@@ -294,7 +296,7 @@ namespace map2agbgui.Models.Main.Maps
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-#endregion
+        #endregion
 
     }
 

@@ -9,13 +9,15 @@ using System.Threading.Tasks;
 namespace map2agbgui.Extensions
 {
 
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = true, Inherited = false)]
     public class PropertyDependency : Attribute
     {
 
         public string PropertyName { get; private set; }
         public string[] Dependency { get; private set; }
 
+        public PropertyDependency(string dependency, [CallerMemberName] string propertyName = null) 
+            : this(new string[] { dependency }, propertyName) { }
         public PropertyDependency(string[] dependency, [CallerMemberName] string propertyName = null)
         {
             PropertyName = propertyName;

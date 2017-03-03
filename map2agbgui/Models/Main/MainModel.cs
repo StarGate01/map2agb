@@ -18,7 +18,7 @@ using map2agbgui.Extensions;
 
 namespace map2agbgui.Models.Main
 {
-    public class MainModel : IRomSerializable<MainModel, RomData>, INotifyPropertyChanged
+    public class MainModel : IRomSerializable<MainModel, RomData>, IRaisePropertyChanged
     {
 
         #region Properties
@@ -38,6 +38,7 @@ namespace map2agbgui.Models.Main
         }
 
         private BlockEditorModel _blockEditorModel;
+        [ChildPropertyDependency(new string[] { "Valid", "PrimaryTilesets", "SecondaryTilesets" }, "Valid")]
         public BlockEditorModel BlockEditorViewModel
         {
             get
@@ -53,6 +54,8 @@ namespace map2agbgui.Models.Main
         }
 
         private ObservableCollectionEx<DisplayTuple<int, IBankModel>> _banks;
+        [CollectionPropertyDependency("MapsValid")]
+        [CollectionItemPropertyDependency("Value.Valid", "MapsValid")]
         public ObservableCollectionEx<DisplayTuple<int, IBankModel>> Banks
         {
             get
@@ -62,12 +65,11 @@ namespace map2agbgui.Models.Main
             set
             {
                 _banks = value;
-                _banks.ItemPropertyChanged += Banks_ItemPropertyChanged;
-                _banks.CollectionChanged += Banks_CollectionChanged;
                 RaisePropertyChanged("Banks");
             }
         }
 
+        [PropertyDependency("Valid")]
         public bool MapsValid
         {
             get
@@ -91,15 +93,7 @@ namespace map2agbgui.Models.Main
 
         #region Constructors
 
-#if DEBUG
-        public MainModel() : this(MockData.MockRomData())
-        {
-            if (!(bool)(DesignerProperties.IsInDesignModeProperty.GetMetadata(typeof(DependencyObject)).DefaultValue))
-                throw new InvalidOperationException("MainModel can only be constructed without parameters by the designer");
-            ((BankModel)Banks.First().Value).Maps.First().Value.IsSelected = true;
-        }
-#endif
-
+        private PropertyDependencyHandler _phHandler;
         public MainModel(RomData romData) : base(romData)
         {
             _NSEditorDataModel = new NSEditorModel(romData.NameTable.Names);
@@ -107,10 +101,18 @@ namespace map2agbgui.Models.Main
             _blockEditorModel = new BlockEditorModel(romData.Tilesets);
             _blockEditorModel.PropertyChanged += BlockEditorModel_PropertyChanged;
             _banks = new ObservableCollectionEx<DisplayTuple<int, IBankModel>>(romData.Banks.Select((p, pi) =>
-                new DisplayTuple<int, IBankModel>(pi, (p == null)? (IBankModel)new NullpointerBankModel() : new BankModel(p, this))));
-            _banks.CollectionChanged += Banks_CollectionChanged;
-            _banks.ItemPropertyChanged += Banks_ItemPropertyChanged;
+                new DisplayTuple<int, IBankModel>(pi, (p == null) ? (IBankModel)new NullpointerBankModel() : new BankModel(p, this))));
+            _phHandler = new PropertyDependencyHandler(this);
         }
+
+#if DEBUG
+        public MainModel() : this(MockData.MockRomData())
+        {
+            if (!(bool)(DesignerProperties.IsInDesignModeProperty.GetMetadata(typeof(DependencyObject)).DefaultValue))
+                throw new InvalidOperationException("MainModel can only be constructed without parameters by the designer");
+            ((BankModel)Banks.First().Value).Maps[0].Value.IsSelected = true;
+        }
+#endif
 
         #endregion
 
@@ -118,51 +120,27 @@ namespace map2agbgui.Models.Main
 
         private void NSEditorDataModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            switch (e.PropertyName)
-            {
-                case "Names":
-                    foreach (DisplayTuple<int, IBankModel> bank in _banks) if (bank.Value.EntryMode == BankEntryType.Bank)
-                            foreach (DisplayTuple<int, IMapModel> map in ((BankModel)bank.Value).Maps)
-                                if (map.Value.EntryMode == MapEntryType.Map) ((MapHeaderModel)map.Value).RaisePropertyChanged("Name");
-                    break;
+            if(e.PropertyName == "Names")
+            { 
+                foreach (DisplayTuple<int, IBankModel> bank in _banks) if (bank.Value.EntryMode == BankEntryType.Bank)
+                        foreach (DisplayTuple<int, IMapModel> map in ((BankModel)bank.Value).Maps)
+                            if (map.Value.EntryMode == MapEntryType.Map) ((MapHeaderModel)map.Value).RaisePropertyChanged("Name");
             }
         }
 
         private void BlockEditorModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            switch (e.PropertyName)
-            {
-                case "PrimaryTilesets":
-                case "SecondaryTilesets":
-                    foreach (DisplayTuple<int, IBankModel> bank in _banks) if (bank.Value.EntryMode == BankEntryType.Bank)
-                        foreach (DisplayTuple<int, IMapModel> map in ((BankModel)bank.Value).Maps)
-                            if (map.Value.EntryMode == MapEntryType.Map) ((MapHeaderModel)map.Value).Footer.RaisePropertyChanged("ValidTileSets");
-                    RaisePropertyChanged("Valid");
-                    break;
-                case "Valid":
-                    RaisePropertyChanged("Valid");
-                    break;
+            if(e.PropertyName == "PrimaryTilesets" || e.PropertyName == "SecondaryTilesets")
+            { 
+                foreach (DisplayTuple<int, IBankModel> bank in _banks) if (bank.Value.EntryMode == BankEntryType.Bank)
+                    foreach (DisplayTuple<int, IMapModel> map in ((BankModel)bank.Value).Maps)
+                        if (map.Value.EntryMode == MapEntryType.Map) ((MapHeaderModel)map.Value).Footer.RaisePropertyChanged("ValidTilesets");
             }
         }
 
-        private void Banks_ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == "Value.Valid")
-            {
-                RaisePropertyChanged("MapsValid");
-                RaisePropertyChanged("Valid");
-            }
-        }
+        #endregion
 
-        private void Banks_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            RaisePropertyChanged("MapsValid");
-            RaisePropertyChanged("Valid");
-        }
-
-#endregion
-
-#region Methods
+        #region Methods
 
         public override RomData ToRomData()
         {
@@ -173,9 +151,9 @@ namespace map2agbgui.Models.Main
             return romData;
         }
 
-#endregion
+        #endregion
 
-#region INotifyPropertyChanged
+        #region INotifyPropertyChanged
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void RaisePropertyChanged(string propertyName)
@@ -183,7 +161,7 @@ namespace map2agbgui.Models.Main
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-#endregion
+        #endregion
 
     }
 

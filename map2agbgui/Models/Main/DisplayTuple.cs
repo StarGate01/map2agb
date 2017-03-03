@@ -5,10 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Windows;
+using map2agbgui.Extensions;
 
 namespace map2agbgui.Models.Main
 {
-    public class DisplayTuple<K, T> : INotifyPropertyChanged where T : ITupleFormattable, INotifyPropertyChanged
+    public class DisplayTuple<K, T> : IRaisePropertyChanged where T : ITupleFormattable
     {
 
         #region Properties
@@ -29,6 +30,7 @@ namespace map2agbgui.Models.Main
         }
 
         private T _value;
+        [PropertyDependency("DisplayValue")]
         public T Value
         {
             get
@@ -40,7 +42,6 @@ namespace map2agbgui.Models.Main
                 _value = value;
                 _value.PropertyChanged += Value_PropertyChanged;
                 RaisePropertyChanged("Value");
-                RaisePropertyChanged("DisplayValue");
             }
         }
 
@@ -56,11 +57,13 @@ namespace map2agbgui.Models.Main
 
         #region Constructors
 
+        private PropertyDependencyHandler _phHandler;
         public DisplayTuple(K index, T value)
         {
             Index = index;
             Value = value;
             value.PropertyChanged += Value_PropertyChanged;
+            _phHandler = new PropertyDependencyHandler(this);
         }
 
         #endregion
@@ -69,7 +72,7 @@ namespace map2agbgui.Models.Main
 
         private void Value_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            //RaisePropertyChanged("Value." + e.PropertyName);
+            RaisePropertyChanged("Value." + e.PropertyName);
             RaisePropertyChanged("DisplayValue");
         }
 
@@ -82,10 +85,6 @@ namespace map2agbgui.Models.Main
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        //public void RaisePropertyChanged(object sender, string propertyName)
-        //{
-        //    PropertyChanged?.Invoke(sender, new PropertyChangedEventArgs(propertyName));
-        //}
 
         #endregion
 

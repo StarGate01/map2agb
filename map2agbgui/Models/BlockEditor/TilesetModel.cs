@@ -21,7 +21,7 @@ using System.Runtime.InteropServices;
 namespace map2agbgui.Models.BlockEditor
 {
 
-    public class TilesetModel : IRomSerializable<TilesetModel, LazyReference<Tileset>>, ITupleFormattable, INotifyPropertyChanged
+    public class TilesetModel : IRomSerializable<TilesetModel, LazyReference<Tileset>>, ITupleFormattable, IRaisePropertyChanged
     {
 
         #region Native
@@ -65,6 +65,7 @@ namespace map2agbgui.Models.BlockEditor
             }
         }
 
+        [PropertyDependency("Valid")]
         public bool ValidSettings
         {
             get
@@ -73,14 +74,7 @@ namespace map2agbgui.Models.BlockEditor
             }
         }
 
-        public bool ValidAdditionalDesignerTileset
-        {
-            get
-            {
-                return _blockEditorViewModel.Tilesets.Any(p => p.Index == _additionalDesignerTileset && p.Value.Secondary != _secondary);
-            }
-        }
-
+        [PropertyDependency("Valid")]
         public bool ValidBlocks
         {
             get
@@ -89,7 +83,30 @@ namespace map2agbgui.Models.BlockEditor
             }
         }
 
+        [PropertyDependency("ValidBlocks")]
+        public bool ValidAdditionalDesignerTileset
+        {
+            get
+            {
+                return _blockEditorViewModel.Tilesets.Any(p => p.Index == _additionalDesignerTileset && p.Value.Secondary != _secondary);
+            }
+        }
+
+        [PropertyDependency("ValidSettings")]
+        public bool ValidImage
+        {
+            get
+            {
+                return _graphicPath != null & File.Exists(_graphicPath);
+            }
+        }
+
+        #endregion
+
+        #region Data properties
+
         private string _additionalDesignerTileset;
+        [PropertyDependency("ValidAdditionalDesignerTileset")]
         public string AdditionalDesignerTileset
         {
             get
@@ -100,17 +117,11 @@ namespace map2agbgui.Models.BlockEditor
             {
                 _additionalDesignerTileset = value;
                 RaisePropertyChanged("AdditionalDesignerTileset");
-                RaisePropertyChanged("ValidAdditionalDesignerTileset");
-                RaisePropertyChanged("ValidBlocks");
-                RaisePropertyChanged("Valid");
             }
         }
 
-        #endregion
-
-        #region Data properties
-
         private string _graphicPath;
+        [PropertyDependency(new string[] { "Graphic", "ValidImage" })]
         public string GraphicPath
         {
             get
@@ -123,26 +134,6 @@ namespace map2agbgui.Models.BlockEditor
                 _graphicBuffer = null;
                 _graphicBaseBuffer = null;
                 RaisePropertyChanged("GraphicPath");
-                RaisePropertyChanged("BaseGraphic");
-                RaisePropertyChanged("Graphic");
-                RaisePropertyChanged("ValidImage");
-                RaisePropertyChanged("ValidSettings");
-                RaisePropertyChanged("Valid");
-            }
-        }
-        public DisplayTuple<int, PaletteModel> _selectedPalette;
-        public DisplayTuple<int, PaletteModel> SelectedPalette
-        {
-            get
-            {
-                return _selectedPalette;
-            }
-            set
-            {
-                _selectedPalette = value;
-                _graphicBuffer = null;
-                RaisePropertyChanged("SelectedPalette");
-                RaisePropertyChanged("Graphic");
             }
         }
 
@@ -160,11 +151,20 @@ namespace map2agbgui.Models.BlockEditor
                 else return null;
             }
         }
-        public bool ValidImage
+
+        public DisplayTuple<int, PaletteModel> _selectedPalette;
+        [PropertyDependency("Graphic")]
+        public DisplayTuple<int, PaletteModel> SelectedPalette
         {
             get
             {
-                return _graphicPath != null & File.Exists(_graphicPath);
+                return _selectedPalette;
+            }
+            set
+            {
+                _selectedPalette = value;
+                _graphicBuffer = null;
+                RaisePropertyChanged("SelectedPalette");
             }
         }
 
@@ -254,6 +254,7 @@ namespace map2agbgui.Models.BlockEditor
 
         #region Constructor
 
+        private PropertyDependencyHandler _phHandler;
         public TilesetModel(LazyReference<Tileset> tileset, BlockEditorModel parentEditorModel) : base(tileset)
         {
             _graphicPath = tileset.Data.Graphic;
@@ -266,6 +267,7 @@ namespace map2agbgui.Models.BlockEditor
             _blocks = new ObservableCollection<TilesetEntryModel>(tileset.Data.Blocks.Select(p => new TilesetEntryModel(p)));
             _selectedPalette = _palettes[0];
             _blockEditorViewModel = parentEditorModel;
+            _phHandler = new PropertyDependencyHandler(this);
         }
 
         #endregion

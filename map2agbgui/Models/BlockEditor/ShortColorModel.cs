@@ -6,16 +6,18 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 using map2agblib.Imaging;
 using System.Windows.Media;
+using map2agbgui.Extensions;
 
 namespace map2agbgui.Models.BlockEditor
 {
 
-    public class ShortColorModel: IRomSerializable<ShortColorModel, ShortColor>, INotifyPropertyChanged
+    public class ShortColorModel: IRomSerializable<ShortColorModel, ShortColor>, IRaisePropertyChanged
     {
 
         #region Properties
 
         private byte _red, _green, _blue;
+        [PropertyDependency("Color")]
         public byte Red
         {
             get
@@ -26,10 +28,9 @@ namespace map2agbgui.Models.BlockEditor
             {
                 _red = value;
                 RaisePropertyChanged("Red");
-                RaisePropertyChanged("Color");
-                RaisePropertyChanged("Brush");
             }
         }
+        [PropertyDependency("Color")]
         public byte Green
         {
             get
@@ -40,10 +41,9 @@ namespace map2agbgui.Models.BlockEditor
             {
                 _green = value;
                 RaisePropertyChanged("Green");
-                RaisePropertyChanged("Color");
-                RaisePropertyChanged("Brush");
             }
         }
+        [PropertyDependency("Color")]
         public byte Blue
         {
             get
@@ -54,11 +54,10 @@ namespace map2agbgui.Models.BlockEditor
             {
                 _blue = value;
                 RaisePropertyChanged("Blue");
-                RaisePropertyChanged("Color");
-                RaisePropertyChanged("Brush");
             }
         }
-
+        
+        [PropertyDependency("Brush")]
         public Color Color
         {
             get
@@ -78,11 +77,13 @@ namespace map2agbgui.Models.BlockEditor
 
         #region Constructor
 
+        private PropertyDependencyHandler _phHandler;
         public ShortColorModel(ShortColor color) : base(color)
         {
             _red = color.Red;
             _green = color.Green;
             _blue = color.Blue;
+            _phHandler = new PropertyDependencyHandler(this);
         }
 
         #endregion

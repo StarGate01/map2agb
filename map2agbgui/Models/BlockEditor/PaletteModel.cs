@@ -75,9 +75,9 @@ namespace map2agbgui.Models.BlockEditor
             return new BitmapPalette(_colors.Select(p => p.Color).ToList());
         }
 
-#endregion
+        #endregion
 
-#region INotifyPropertyChanged
+        #region INotifyPropertyChanged
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void RaisePropertyChanged(string propertyName)
@@ -85,7 +85,7 @@ namespace map2agbgui.Models.BlockEditor
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-#endregion
+        #endregion
 
     }
 

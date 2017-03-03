@@ -15,7 +15,19 @@ namespace map2agbgui.Models.Main
 
         #region Properties
 
-        public bool IsSelected { get; set; }
+        private bool _isSelected;
+        public bool IsSelected
+        {
+            get
+            {
+                return _isSelected;
+            }
+            set
+            {
+                _isSelected = value;
+                RaisePropertyChanged("IsSelected");
+            }
+        }
 
         public string FormatString
         {

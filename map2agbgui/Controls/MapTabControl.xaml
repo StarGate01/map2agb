@@ -145,7 +145,7 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             
-                            <Grid Visibility="{Binding Footer.ValidTileSets, Converter={StaticResource inverseBooleanToVisibilityConverter}}" Margin="2" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
+                            <Grid Visibility="{Binding Footer.ValidTilesets, Converter={StaticResource inverseBooleanToVisibilityConverter}}" Margin="2" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />

@@ -22,6 +22,7 @@ namespace map2agbgui.Models.BlockEditor
         #region Properties
 
         private string _filterText;
+        [PropertyDependency("FilteredTilesets")]
         public string FilterText
         {
             get
@@ -32,14 +33,14 @@ namespace map2agbgui.Models.BlockEditor
             {
                 _filterText = value;
                 RaisePropertyChanged("FilterText");
-                RaisePropertyChanged("FilteredTilesets");
             }
         }
 
         private ObservableCollectionEx<DisplayTuple<string, TilesetModel>> _tilesets;
-
-        [PropertyDependency(new string[] { "Valid", "PrimaryTilesets", "SecondaryTilesets", "FilteredTilesets" })]
-        [CollectionPropertyDependency(new string[] { "Tilesets", "Valid", "PrimaryTilesets", "SecondaryTilesets", "FilteredTilesets" })]
+        [PropertyDependency (new string[] { "Valid", "PrimaryTilesets", "SecondaryTilesets", "FilteredTilesets" })]
+        [CollectionPropertyDependency("Tilesets")]
+        [CollectionItemPropertyDependency("Value.Secondary", new string[] { "PrimaryTilesets", "SecondaryTilesets" })]
+        [CollectionItemPropertyDependency("Value.Valid", "Valid")]
         public ObservableCollectionEx<DisplayTuple<string, TilesetModel>> Tilesets
         {
             get
@@ -49,6 +50,8 @@ namespace map2agbgui.Models.BlockEditor
             set
             {
                 _tilesets = value;
+                _tilesets.ItemPropertyChanged += Tilesets_ItemPropertyChanged;
+                _tilesets.CollectionChanged += Tilesets_CollectionChanged;
                 RaisePropertyChanged("Tilesets");
             }
         }
@@ -87,12 +90,15 @@ namespace map2agbgui.Models.BlockEditor
 
         #region Constructor
 
+        private PropertyDependencyHandler _phHandler;
         public BlockEditorModel(Dictionary<string, LazyReference<Tileset>> tilesets) : base(tilesets)
         {
             _tilesets = new ObservableCollectionEx<DisplayTuple<string, TilesetModel>>(tilesets.Select(p => new DisplayTuple<string, TilesetModel>(p.Key, new TilesetModel(p.Value, this))));
-            foreach(DisplayTuple<string, TilesetModel> element in _tilesets)
-                element.Value.SelectedPalette = element.Value.Palettes.First();
-            PropertyDependencyHandler.Handle(this);
+            foreach (DisplayTuple<string, TilesetModel> element in _tilesets)
+                element.Value.SelectedPalette = element.Value.Palettes[0];
+            _phHandler = new PropertyDependencyHandler(this);
+            _tilesets.ItemPropertyChanged += Tilesets_ItemPropertyChanged;
+            _tilesets.CollectionChanged += Tilesets_CollectionChanged;
         }
 
 #if DEBUG
@@ -100,6 +106,7 @@ namespace map2agbgui.Models.BlockEditor
         {
             if (!(bool)(DesignerProperties.IsInDesignModeProperty.GetMetadata(typeof(DependencyObject)).DefaultValue))
                 throw new InvalidOperationException("NSEditorModel can only be constructed without parameters by the designer");
+            Tilesets[0].Value.AdditionalDesignerTileset = Tilesets[2].Index;
         }
 #endif
 
@@ -109,41 +116,28 @@ namespace map2agbgui.Models.BlockEditor
 
         private void Tilesets_ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            switch(e.PropertyName )
+            if (e.PropertyName == "Value.Secondary")
             {
-                case "Value.Secondary":
-                    RaisePropertyChanged("PrimaryTilesets");
-                    RaisePropertyChanged("SecondaryTilesets");
-                    RaisePropertyChanged("FilteredTilesets");
-                    foreach (DisplayTuple<string, TilesetModel> entry in _tilesets)
-                    {
-                        entry.Value.RaisePropertyChanged("AdditionalDesignerTileset");
-                        entry.Value.RaisePropertyChanged("ValidBlocks");
-                    }
-                    break;
-                case "Value.Valid":
-                    RaisePropertyChanged("Valid");
-                    break;
+                foreach (DisplayTuple<string, TilesetModel> entry in _tilesets)
+                {
+                    entry.Value.RaisePropertyChanged("AdditionalDesignerTileset");
+                    entry.Value.RaisePropertyChanged("ValidBlocks");
+                }
             }
         }
 
         private void Tilesets_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            RaisePropertyChanged("Tilesets");
-            RaisePropertyChanged("PrimaryTilesets");
-            RaisePropertyChanged("SecondaryTilesets");
-            RaisePropertyChanged("FilteredTilesets");
             foreach (DisplayTuple<string, TilesetModel> entry in _tilesets)
             {
                 entry.Value.RaisePropertyChanged("AdditionalDesignerTileset");
                 entry.Value.RaisePropertyChanged("ValidBlocks");
             }
-            RaisePropertyChanged("Valid");
         }
 
-#endregion
+        #endregion
 
-#region Methods
+        #region Methods
 
         public override Dictionary<string, LazyReference<Tileset>> ToRomData()
         {
@@ -152,7 +146,7 @@ namespace map2agbgui.Models.BlockEditor
 
 #endregion
 
-#region INotifyPropertyChanged
+        #region INotifyPropertyChanged
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void RaisePropertyChanged(string propertyName)
@@ -160,7 +154,7 @@ namespace map2agbgui.Models.BlockEditor
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-#endregion
+        #endregion
 
     }
 

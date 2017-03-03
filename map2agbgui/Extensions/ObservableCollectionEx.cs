@@ -14,7 +14,7 @@ namespace map2agbgui.Extensions
     /// ObservableCollection which triggers on PropertyChanged of elements
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class ObservableCollectionEx<T> : ObservableCollection<T> where T : INotifyPropertyChanged
+    public class ObservableCollectionEx<T> : ObservableCollection<T>, IItemPropertyChanged where T : INotifyPropertyChanged
     {
 
         public ObservableCollectionEx() : base() { SetupCollectionChanged();  }

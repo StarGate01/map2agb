@@ -11,13 +11,15 @@ using System.Collections.ObjectModel;
 namespace map2agbgui.Extensions
 {
 
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = true, Inherited = false)]
     public class CollectionPropertyDependency : Attribute
     {
 
         public string PropertyName { get; private set; }
         public string[] Dependency { get; private set; }
 
+        public CollectionPropertyDependency(string dependency, [CallerMemberName] string propertyName = null) 
+            : this(new string[] { dependency }, propertyName) { }
         public CollectionPropertyDependency(string[] dependency, [CallerMemberName] string propertyName = null)
         {
             PropertyName = propertyName;

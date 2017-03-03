@@ -111,10 +111,13 @@
       <DependentUpon>MapTabControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Extensions\CollectionItemPropertyDependency.cs" />
+    <Compile Include="Extensions\IItemPropertyChanged.cs" />
     <Compile Include="Extensions\IRaiseItemPropertyChanged.cs" />
     <Compile Include="Extensions\IRaisePropertyChanged.cs" />
     <Compile Include="Extensions\ObservableCollectionEx.cs" />
-    <Compile Include="Extensions\CollectionPropertyDependency .cs" />
+    <Compile Include="Extensions\CollectionPropertyDependency.cs" />
+    <Compile Include="Extensions\ChildPropertyDependency.cs" />
+    <Compile Include="Extensions\Pair.cs" />
     <Compile Include="Extensions\PropertyDependency.cs" />
     <Compile Include="Extensions\PropertyDependencyHandler.cs" />
     <Compile Include="MainWindow.xaml.cs">
