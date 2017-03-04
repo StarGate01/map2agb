@@ -186,8 +186,23 @@ namespace map2agbimport
                             ConnectionHeader connections = new ConnectionHeader();
                             br.BaseStream.Seek(connectionOffset, SeekOrigin.Begin);
 
+                            uint connectionCount = br.ReadUInt32();
+                            br.BaseStream.Seek(br.ReadUInt32() & 0x1FFFFFF, SeekOrigin.Begin);
 
-                            header.Connections = null;
+                            for (int i = 0; i < connectionCount; ++i)
+                            {
+                                connections.Connections.Add(new Connection()
+                                {
+                                    Direction = (Connection.ConnectionDirection)br.ReadUInt32(),
+                                    Displacement = br.ReadInt32(),
+                                    Bank = br.ReadByte(),
+                                    Map = br.ReadByte(),
+                                    FieldA = br.ReadByte(),
+                                    FieldB = br.ReadByte()
+                                });
+                            }
+                            header.Connections = connections;
+
                             header.MapScripts = null;
                         }
 
