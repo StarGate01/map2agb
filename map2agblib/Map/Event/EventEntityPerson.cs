@@ -64,9 +64,11 @@ namespace map2agblib.Map.Event
         public byte Movement { get; set; }
 
         /// <summary>
+        /// NOTE: This is actually a whole byte and is used for something except determining if the event is a trainer
+        ///       yet I'm not sure what exactly
         /// Gets or sets the Trainer bit of the NPC, if true, the Trainer Script is executed once the player enters its AlertRadius
         /// </summary>
-        public bool IsTrainer { get; set; }
+        public byte IsTrainer { get; set; }
 
         /// <summary>
         /// Gets or sets FieldD, which's purpose is unknown

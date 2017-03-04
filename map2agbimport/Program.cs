@@ -1,9 +1,10 @@
-﻿using System;
-using System.Linq;
-using System.Globalization;
-using map2agblib.Common;
-using System.IO;
+﻿using map2agblib.Common;
 using map2agblib.Map;
+using System;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using map2agblib.Map.Event;
 
 namespace map2agbimport
 {
@@ -86,7 +87,106 @@ namespace map2agbimport
                             footer.BorderHeight = borderHeight;
 
                             header.Footer = footer;
-                            header.Events = null;
+                            EventHeader events = new EventHeader();
+                            br.BaseStream.Seek(eventOffset & 0x1FFFFFF, SeekOrigin.Begin);
+                            byte personCount = br.ReadByte();
+                            byte warpCount = br.ReadByte();
+                            byte signCount = br.ReadByte();
+                            byte scriptCount = br.ReadByte();
+                            uint personOffset = br.ReadUInt32();
+                            uint warpOffset = br.ReadUInt32();
+                            uint signOffset = br.ReadUInt32();
+                            uint scriptOffset = br.ReadUInt32();
+
+                            br.BaseStream.Seek(personOffset & 0x1FFFFFF, SeekOrigin.Begin);
+                            for (int i = 0; i < personCount; ++i)
+                            {
+                                events.Persons.Add(new EventEntityPerson()
+                                {
+                                    Id = br.ReadByte(),
+                                    Picture = br.ReadByte(),
+                                    Field2 = br.ReadByte(),
+                                    Field3 = br.ReadByte(),
+                                    X = br.ReadInt16(),
+                                    Y = br.ReadInt16(),
+                                    Facing = br.ReadInt16(),
+                                    Height = br.ReadByte(),
+                                    Behaviour = br.ReadByte(),
+                                    Movement = br.ReadByte(),
+                                    FieldB = br.ReadByte(),
+                                    IsTrainer = br.ReadByte(),
+                                    FieldD = br.ReadByte(),
+                                    AlertRadius = br.ReadByte(),
+                                    Script = "npc_m_" + opt.BankNumber.ToString() + "_" + opt.MapNumber.ToString(),
+                                    Flag = br.ReadUInt16(),
+                                    Padding = br.ReadUInt16()
+                                });
+                            }
+
+                            br.BaseStream.Seek(warpOffset & 0x1FFFFFF, SeekOrigin.Begin);
+                            for (int i = 0; i < warpCount; ++i)
+                            {
+                                events.Warps.Add(new EventEntityWarp()
+                                {
+                                    X = br.ReadInt16(),
+                                    Y = br.ReadInt16(),
+                                    Height = br.ReadByte(),
+                                    TargetWarp = br.ReadByte(),
+                                    TargetBank = br.ReadByte(),
+                                    TargetMap = br.ReadByte()
+                                });
+                            }
+
+                            br.BaseStream.Seek(signOffset & 0x1FFFFFF, SeekOrigin.Begin);
+                            for (int i = 0; i < signCount; ++i)
+                            {
+                                events.Signs.Add(new EventEntitySign()
+                                {
+                                    X = br.ReadInt16(),
+                                    Y = br.ReadInt16(),
+                                    Height = br.ReadByte(),
+                                    Type = br.ReadByte(),
+                                    Unknown = br.ReadUInt16()
+                                });
+                                if (events.Signs[i].Layout == EventEntitySign.SignType.Item)
+                                {
+                                    events.Signs[i].ItemId = br.ReadUInt16();
+                                    events.Signs[i].HiddenId = br.ReadByte();
+                                    byte bField = br.ReadByte();
+                                    events.Signs[i].ItemCount = (byte)(bField & 0x3F);
+                                    events.Signs[i].IsCoin = (bField & 0x40) > 0;
+                                    events.Signs[i].DetectorDisabled = (bField & 0x80) > 0;
+                                }
+                                else
+                                {
+                                    /* ITEM ID ??? */
+                                    events.Signs[i].Script = "sgn_m_" + opt.BankNumber.ToString() + "_" + opt.MapNumber.ToString();
+                                }
+                            }
+
+                            br.BaseStream.Seek(scriptOffset & 0x1FFFFFF, SeekOrigin.Begin);
+                            for (int i = 0; i < scriptCount; ++i)
+                            {
+                                events.ScriptTriggers.Add(new EventEntityTrigger()
+                                {
+                                    X = br.ReadInt16(),
+                                    Y = br.ReadInt16(),
+                                    Height = br.ReadByte(),
+                                    Field5 = br.ReadByte(),
+                                    Variable = br.ReadUInt16(),
+                                    Value = br.ReadUInt16(),
+                                    FieldA = br.ReadByte(),
+                                    FieldB = br.ReadByte(),
+                                    Script = "scr_m_" + opt.BankNumber.ToString() + "_" + opt.MapNumber.ToString()
+                                });
+                            }
+
+                            header.Events = events;
+
+                            ConnectionHeader connections = new ConnectionHeader();
+                            br.BaseStream.Seek(connectionOffset, SeekOrigin.Begin);
+
+
                             header.Connections = null;
                             header.MapScripts = null;
                         }
