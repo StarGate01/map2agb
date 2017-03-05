@@ -20,4 +20,6 @@ Windows
 
 .NET Framework ca. 4 or 4.5
 
-To build: VS Community 2015
+To build: 
+ - All projects: VS Community 2015
+ - GUI: https://github.com/StarGate01/ShaderEffect
