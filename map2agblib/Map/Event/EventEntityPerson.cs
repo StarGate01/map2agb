@@ -83,7 +83,7 @@ namespace map2agblib.Map.Event
         /// <summary>
         /// Gets or sets the AlertRadius, only used when IsTrainer equals true
         /// </summary>
-        public byte AlertRadius { get; set; }
+        public ushort AlertRadius { get; set; }
 
         /* As part of the UX design we should consider having a flag that allows to disable the script entirely (or setting it null on string.empty)
            since some NPCs will never be getting a script */
@@ -101,12 +101,18 @@ namespace map2agblib.Map.Event
         /// Gets or sets the Padding, normally 0x0000 
         /// </summary>
         public ushort Padding { get; set; }
+
+        /// <summary>
+        /// Gets or sets the internal script, used when importing from a rom
+        /// NOTE: I don't know if this field will be needed, importing it anyways
+        /// </summary>
+        public uint InternalScript { get; set; }
         #endregion
 
         #region Constructor
         public EventEntityPerson()
         {
-            throw new NotImplementedException();
+            
         }
         #endregion
     }

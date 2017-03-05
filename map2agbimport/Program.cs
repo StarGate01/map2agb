@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using map2agblib.Map.Event;
+using map2agblib.Map.LevelScript;
 
 namespace map2agbimport
 {
@@ -69,7 +70,7 @@ namespace map2agbimport
 
                             br.BaseStream.Seek(borderOffset & 0x1FFFFFF, SeekOrigin.Begin);
 
-                            ushort[][] borderBlock = Enumerable.Repeat(new ushort[borderWidth], borderHeight).ToArray();                            
+                            ushort[][] borderBlock = Enumerable.Repeat(new ushort[borderWidth], borderHeight).ToArray();
                             for (int y = 0; y < borderHeight; ++y)
                                 for (int x = 0; x < borderWidth; ++x)
                                     borderBlock[y][x] = br.ReadUInt16();
@@ -91,12 +92,14 @@ namespace map2agbimport
                             br.BaseStream.Seek(eventOffset & 0x1FFFFFF, SeekOrigin.Begin);
                             byte personCount = br.ReadByte();
                             byte warpCount = br.ReadByte();
-                            byte signCount = br.ReadByte();
                             byte scriptCount = br.ReadByte();
+                            byte signCount = br.ReadByte();
+
                             uint personOffset = br.ReadUInt32();
                             uint warpOffset = br.ReadUInt32();
-                            uint signOffset = br.ReadUInt32();
                             uint scriptOffset = br.ReadUInt32();
+                            uint signOffset = br.ReadUInt32();
+
 
                             br.BaseStream.Seek(personOffset & 0x1FFFFFF, SeekOrigin.Begin);
                             for (int i = 0; i < personCount; ++i)
@@ -109,15 +112,15 @@ namespace map2agbimport
                                     Field3 = br.ReadByte(),
                                     X = br.ReadInt16(),
                                     Y = br.ReadInt16(),
-                                    Facing = br.ReadInt16(),
                                     Height = br.ReadByte(),
                                     Behaviour = br.ReadByte(),
                                     Movement = br.ReadByte(),
                                     FieldB = br.ReadByte(),
                                     IsTrainer = br.ReadByte(),
                                     FieldD = br.ReadByte(),
-                                    AlertRadius = br.ReadByte(),
-                                    Script = "npc_m_" + opt.BankNumber.ToString() + "_" + opt.MapNumber.ToString(),
+                                    AlertRadius = br.ReadUInt16(),
+                                    Script = "npc_m_" + opt.BankNumber.ToString() + "_" + opt.MapNumber.ToString() + "_" + i.ToString(),
+                                    InternalScript = br.ReadUInt32(),
                                     Flag = br.ReadUInt16(),
                                     Padding = br.ReadUInt16()
                                 });
@@ -132,8 +135,8 @@ namespace map2agbimport
                                     Y = br.ReadInt16(),
                                     Height = br.ReadByte(),
                                     TargetWarp = br.ReadByte(),
-                                    TargetBank = br.ReadByte(),
-                                    TargetMap = br.ReadByte()
+                                    TargetMap = br.ReadByte(),
+                                    TargetBank = br.ReadByte()
                                 });
                             }
 
@@ -161,12 +164,14 @@ namespace map2agbimport
                                 {
                                     /* ITEM ID ??? */
                                     events.Signs[i].Script = "sgn_m_" + opt.BankNumber.ToString() + "_" + opt.MapNumber.ToString();
+                                    events.Signs[i].InternalScript = br.ReadUInt32();
                                 }
                             }
 
                             br.BaseStream.Seek(scriptOffset & 0x1FFFFFF, SeekOrigin.Begin);
                             for (int i = 0; i < scriptCount; ++i)
                             {
+                                /* TODO: Check */
                                 events.ScriptTriggers.Add(new EventEntityTrigger()
                                 {
                                     X = br.ReadInt16(),
@@ -177,14 +182,16 @@ namespace map2agbimport
                                     Value = br.ReadUInt16(),
                                     FieldA = br.ReadByte(),
                                     FieldB = br.ReadByte(),
+                                    InternalScript = br.ReadUInt32(),
                                     Script = "scr_m_" + opt.BankNumber.ToString() + "_" + opt.MapNumber.ToString()
                                 });
                             }
 
+
                             header.Events = events;
 
                             ConnectionHeader connections = new ConnectionHeader();
-                            br.BaseStream.Seek(connectionOffset, SeekOrigin.Begin);
+                            br.BaseStream.Seek(connectionOffset & 0x1FFFFFF, SeekOrigin.Begin);
 
                             uint connectionCount = br.ReadUInt32();
                             br.BaseStream.Seek(br.ReadUInt32() & 0x1FFFFFF, SeekOrigin.Begin);
@@ -203,10 +210,38 @@ namespace map2agbimport
                             }
                             header.Connections = connections;
 
-                            header.MapScripts = null;
+                            MapScriptHeader scriptHeader = new MapScriptHeader();
+                            br.BaseStream.Seek(levelScriptOffset & 0x1FFFFFF, SeekOrigin.Begin);
+                            byte scrType;
+                            while ((scrType = br.ReadByte()) != 0)
+                            {
+                                MapScript script = new MapScript((MapScript.MapScriptTypes)scrType);
+                                switch (script.Layout)
+                                {
+                                    case MapScript.MapScriptLayout.Script:
+
+                                        br.ReadUInt32();
+                                        break;
+                                    case MapScript.MapScriptLayout.ExtendedScript:
+                                        long pos = br.BaseStream.Position + 4;
+                                        br.BaseStream.Seek(br.ReadUInt32() & 0x1FFFFFF, SeekOrigin.Begin);
+                                        script.Variable = br.ReadUInt16();
+                                        script.Value = br.ReadUInt16();
+                                        br.BaseStream.Seek(pos, SeekOrigin.Begin);
+                                        break;
+                                    case MapScript.MapScriptLayout.None:
+                                        throw new Exception("invalid code reached");
+                                }
+                                script.Script = "lscr_m_" + opt.BankNumber.ToString() + "_" + opt.MapNumber.ToString();
+                                scriptHeader.MapScripts.Add(script);
+                            }
+                            header.MapScripts = scriptHeader;
+
+                            if (opt.ExportMap)
+                            {
+                                header.ExportToFile(header, "test.hxml");
+                            }
                         }
-
-
                     }
                 }
                 catch (Exception ex)

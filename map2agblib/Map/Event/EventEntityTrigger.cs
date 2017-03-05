@@ -54,12 +54,16 @@ namespace map2agblib.Map.Event
         /// Gets or sets the Script, it is only executed if Variable != Value - (???) - Variable < Value
         /// </summary>
         public string Script { get; set; }
+
+        /// <summary>
+        /// Gets or sets the InternalScript of the trigger, used when importing from ROM
+        /// </summary>
+        public uint InternalScript { get; set; }
         #endregion
 
         #region Constructor
         public EventEntityTrigger()
         {
-            throw new NotImplementedException();
         }
         #endregion
     }

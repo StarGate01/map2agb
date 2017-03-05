@@ -56,13 +56,20 @@ namespace map2agblib.Map.Event
         public ushort Unknown { get; set; }
 
         /// <summary>
+        /// Gets or sets the InternalScript of the Signpost, currently only used while importing
+        /// from a ROM File
+        /// </summary>
+        public uint InternalScript { get; set; }
+
+
+        /// <summary>
         /// Gets the Layout, determined by the Type of the Sign Entity
         /// </summary>
         public SignType Layout
         {
             get
             {
-                return Type >= 5 ? SignType.Script : SignType.Item;
+                return Type >= 5 ? SignType.Item : SignType.Script;
             }
         }
 
@@ -73,14 +80,7 @@ namespace map2agblib.Map.Event
         {
             get
             {
-                if (Layout == SignType.Script)
-                {
-                    return _script;
-                }
-                else
-                {
-                    throw new InvalidOperationException();
-                }
+                return _script;
             }
             set
             {
@@ -102,10 +102,7 @@ namespace map2agblib.Map.Event
         {
             get
             {
-                if (Layout == SignType.Item)
-                    return _itemId;
-                else
-                    throw new InvalidOperationException();
+                return _itemId;
             }
             set
             {
@@ -123,10 +120,7 @@ namespace map2agblib.Map.Event
         {
             get
             {
-                if (Layout == SignType.Item)
-                    return _hiddenId;
-                else
-                    throw new InvalidOperationException();
+                return _hiddenId;
             }
             set
             {
@@ -144,10 +138,7 @@ namespace map2agblib.Map.Event
         {
             get
             {
-                if (Layout == SignType.Item)
-                    return _count;
-                else
-                    throw new InvalidOperationException();
+                return _count;
             }
             set
             {
@@ -165,10 +156,7 @@ namespace map2agblib.Map.Event
         {
             get
             {
-                if (Layout == SignType.Item)
-                    return _detectorDisabled;
-                else
-                    throw new InvalidOperationException();
+                return _detectorDisabled;
             }
             set
             {
@@ -186,10 +174,7 @@ namespace map2agblib.Map.Event
         {
             get
             {
-                if (Layout == SignType.Item)
-                    return _isCoin;
-                else
-                    throw new InvalidOperationException();
+                return _isCoin;
             }
             set
             {
@@ -203,7 +188,6 @@ namespace map2agblib.Map.Event
 
         public EventEntitySign()
         {
-            throw new NotImplementedException();
         }
     }
 }

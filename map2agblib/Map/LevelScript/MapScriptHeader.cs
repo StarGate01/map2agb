@@ -15,14 +15,6 @@ namespace map2agblib.Map.LevelScript
         public enum MapScriptTypes { None, OnBlockDeltaSync, AfterStepOrEnter, BeforeSetup, AfterEventSync, Type5, Type6, Type7};
         #endregion
 
-        #region Structures
-        public struct MapScript
-        {
-            public MapScriptTypes Type;
-            public string MapScriptData;
-        }
-        #endregion
-
         #region Properties
 
         /// <summary>
@@ -35,7 +27,7 @@ namespace map2agblib.Map.LevelScript
         #region Constructor
         public MapScriptHeader()
         {
-           
+            MapScripts = new List<MapScript>();
         }
         #endregion
 

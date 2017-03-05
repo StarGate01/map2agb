@@ -39,7 +39,6 @@ namespace map2agblib.Map.Event
         #region Constructor
         public EventEntityWarp()
         {
-            throw new NotImplementedException();
         }
         #endregion
     }
