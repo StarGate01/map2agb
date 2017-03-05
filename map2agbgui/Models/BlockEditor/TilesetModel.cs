@@ -15,7 +15,6 @@ using map2agbgui.Extensions;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.IO;
-using System.Drawing;
 using System.Runtime.InteropServices;
 
 namespace map2agbgui.Models.BlockEditor
@@ -121,7 +120,7 @@ namespace map2agbgui.Models.BlockEditor
         }
 
         private string _graphicPath;
-        [PropertyDependency(new string[] { "Graphic", "ValidImage" })]
+        [PropertyDependency(new string[] { "ValidImage" })]
         public string GraphicPath
         {
             get
@@ -132,20 +131,22 @@ namespace map2agbgui.Models.BlockEditor
             {
                 _graphicPath = value;
                 _graphicBuffer = null;
-                _graphicBaseBuffer = null;
                 RaisePropertyChanged("GraphicPath");
             }
         }
 
-        private WriteableBitmap _graphicBaseBuffer, _graphicBuffer;
+        private WriteableBitmap _graphicBuffer;
         public WriteableBitmap Graphic
         {
             get
             {
                 if (ValidImage)
                 {
-                    if(_graphicBaseBuffer == null) _graphicBaseBuffer = new WriteableBitmap(new BitmapImage(new Uri(_graphicPath, UriKind.Absolute)));
-                    if (_graphicBuffer == null) _graphicBuffer = PaletteShader(_graphicBaseBuffer, _selectedPalette?.Value);
+                    if (_graphicBuffer == null)
+                    {
+                        _graphicBuffer = new WriteableBitmap(new BitmapImage(new Uri(_graphicPath, UriKind.Absolute)));
+                        PrepareForPaletteShader(ref _graphicBuffer);
+                    }
                     return _graphicBuffer;
                 }
                 else return null;
@@ -153,7 +154,6 @@ namespace map2agbgui.Models.BlockEditor
         }
 
         public DisplayTuple<int, PaletteModel> _selectedPalette;
-        [PropertyDependency("Graphic")]
         public DisplayTuple<int, PaletteModel> SelectedPalette
         {
             get
@@ -163,7 +163,6 @@ namespace map2agbgui.Models.BlockEditor
             set
             {
                 _selectedPalette = value;
-                _graphicBuffer = null;
                 RaisePropertyChanged("SelectedPalette");
             }
         }
@@ -287,10 +286,10 @@ namespace map2agbgui.Models.BlockEditor
             return new LazyReference<Tileset>(tileset);
         }
 
-        private WriteableBitmap PaletteShader(WriteableBitmap bitmap, PaletteModel palette)
+        private static BitmapPalette greyPalette = new BitmapPalette(Enumerable.Range(0, 15).Select(p => Color.FromArgb((byte)((p << 4) + 1), 0, 0, 0)).ToList());
+        private void PrepareForPaletteShader(ref WriteableBitmap bitmap)
         {
-            if (palette == null) return bitmap;
-            WriteableBitmap newbitmap = new WriteableBitmap(bitmap.PixelWidth, bitmap.PixelHeight, bitmap.DpiX, bitmap.DpiY, bitmap.Format, palette.ToBitmapPalette());
+            WriteableBitmap newbitmap = new WriteableBitmap(bitmap.PixelWidth, bitmap.PixelHeight, bitmap.DpiX, bitmap.DpiY, bitmap.Format, greyPalette);
             uint bufferLen = (uint)(bitmap.PixelHeight * bitmap.PixelWidth * bitmap.Format.BitsPerPixel) / 8;
             newbitmap.Lock();
             bitmap.Lock();
@@ -298,7 +297,7 @@ namespace map2agbgui.Models.BlockEditor
             bitmap.Unlock();
             newbitmap.AddDirtyRect(new Int32Rect(0, 0, newbitmap.PixelWidth, newbitmap.PixelHeight));
             newbitmap.Unlock();
-            return newbitmap;
+            bitmap = newbitmap;
         }
 
         #endregion

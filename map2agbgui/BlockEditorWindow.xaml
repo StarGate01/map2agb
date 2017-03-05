@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         xmlns:model="clr-namespace:map2agbgui.Models.BlockEditor"
         xmlns:c="clr-namespace:map2agbgui.Converters"
+        xmlns:effects="clr-namespace:map2agbgui.Effects"
         Title="Tileset Editor" Height="400" Width="700" MinWidth="700" WindowStartupLocation="CenterOwner" SourceInitialized="Window_SourceInitialized" ResizeMode="NoResize">
 
     <Window.Resources>
@@ -131,18 +132,7 @@
                                             <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
                                         <TextBlock Grid.Row="0" Text="{Binding DisplayValue}" />
-                                        <ItemsControl Grid.Row="1" ItemsSource="{Binding Value.Colors}">
-                                            <ItemsControl.ItemsPanel>
-                                                <ItemsPanelTemplate>
-                                                    <StackPanel Orientation="Horizontal"/>
-                                                </ItemsPanelTemplate>
-                                            </ItemsControl.ItemsPanel>
-                                            <ItemsControl.ItemTemplate>
-                                                <DataTemplate>
-                                                    <Rectangle Fill="{Binding Brush}" Margin="0,1" Height="10" Width="7" />
-                                                </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
+                                        <Image Width="100" Height="10" RenderOptions.BitmapScalingMode="NearestNeighbor" Grid.Row="1" Source="{Binding Value.TextureSource}" />
                                     </Grid>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
@@ -184,12 +174,15 @@
                                     <TextBlock Text="No image" Foreground="#FFD10000" FontSize="10" />
                                 </StackPanel>
                             </Border>
-                            <Image Margin="3" Grid.Row="6" Grid.Column="1" Visibility="{Binding Value.ValidImage, Converter={StaticResource booleanToVisibilityConverter}}" Source="{Binding Value.Graphic}" RenderTransformOrigin="0.5,0.5" >
+                            <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Margin="3" Grid.Row="6" Grid.Column="1" Visibility="{Binding Value.ValidImage, Converter={StaticResource booleanToVisibilityConverter}}" Source="{Binding Value.Graphic}" RenderTransformOrigin="0.5,0.5" >
                                 <Image.LayoutTransform>
                                     <TransformGroup>
                                         <RotateTransform Angle="90"/>
                                     </TransformGroup>
                                 </Image.LayoutTransform>
+                                <Image.Effect>
+                                    <effects:PaletteEffect Palette="{Binding ElementName=PaletteListBox, Path=SelectedItem.Value.Texture}"  />
+                                </Image.Effect>
                             </Image>
                         </Grid>
                     </GroupBox>

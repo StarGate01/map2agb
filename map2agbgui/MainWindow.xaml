@@ -8,6 +8,7 @@
         xmlns:model="clr-namespace:map2agbgui.Models.Main"
         xmlns:c="clr-namespace:map2agbgui.Converters"
         xmlns:controls="clr-namespace:map2agbgui.Controls"
+        xmlns:effects="clr-namespace:map2agbgui.Effects"
         Title="map2agb - Unsaved project" Height="600" Width="800" WindowStartupLocation="CenterScreen" WindowState="Maximized" Loaded="Window_Loaded" Closing="Window_Closing" MinWidth="800" MinHeight="600">
 
     <Window.Resources>
@@ -47,7 +48,7 @@
             </MenuItem>
             <MenuItem x:Name="MoveMapDownContextEntry" Header="Move map down" Click="MoveMapDownContextEntry_Click">
                 <MenuItem.Icon>
-                    <Image Source="Assets/arrow_Down_16xLG.png"/>
+                    <Image Source="Assets/arrow_Down_16xLG.png" />
                 </MenuItem.Icon>
             </MenuItem>
             <MenuItem x:Name="ReplaceMapContextEntry" Header="Replace map" Click="ReplaceMapContextEntry_Click">

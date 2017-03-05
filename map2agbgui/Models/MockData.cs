@@ -55,7 +55,7 @@ namespace map2agbgui.Models
             };
             try
             {
-                romData.Tilesets["TSE0"].Data.Palettes[0] = JASCPAL.Import(@"C:\Users\Christoph\Desktop\deko-iv.pal");
+                romData.Tilesets["TSE0"].Data.Palettes[0] = JASCPAL.Import(@"C:\Users\Christoph\Desktop\test3.pal");
                 romData.Tilesets["TSE0"].Data.Palettes[1] = JASCPAL.Import(@"C:\Users\Christoph\Desktop\deko-iv.pal");
                 romData.Tilesets["TSE1"].Data.Palettes[0] = JASCPAL.Import(@"C:\Users\Christoph\Desktop\deko-iv.pal");
                 romData.Tilesets["TSE245157"].Data.Palettes[0] = JASCPAL.Import(@"C:\Users\Christoph\Desktop\deko-iv.pal");

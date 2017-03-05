@@ -142,6 +142,7 @@ namespace map2agbgui
 
         private void OKButton_Click(object sender, RoutedEventArgs e)
         {
+            backup.RefreshTexture();
             DialogDataResult = backup;
             DialogResult = true;
             Close();
