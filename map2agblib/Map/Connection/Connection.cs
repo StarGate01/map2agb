@@ -31,22 +31,22 @@ namespace map2agblib.Map
         /// <summary>
         /// Gets or sets the Bank of the Map connected
         /// </summary>
-        byte Bank { get; set; }
+        public byte Bank { get; set; }
 
         /// <summary>
         /// Gets or sets the Number of the Map connected
         /// </summary>
-        byte Map { get; set; }
+        public byte Map { get; set; }
 
         /// <summary>
         /// Gets or sets FieldA, possibly a Padding
         /// </summary>
-        byte FieldA { get; set; }
+        public byte FieldA { get; set; }
 
         /// <summary>
         /// Gets or sets FieldB, possibly a Padding
         /// </summary>
-        byte FieldB { get; set; }
+        public byte FieldB { get; set; }
 
         /// <summary>
         /// Creates a new skeleton connection
