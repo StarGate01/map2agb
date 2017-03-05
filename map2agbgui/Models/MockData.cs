@@ -56,6 +56,17 @@ namespace map2agbgui.Models
             try
             {
                 romData.Tilesets["TSE0"].Data.Palettes[0] = JASCPAL.Import(@"C:\Users\Christoph\Desktop\test3.pal");
+                romData.Tilesets["TSE0"].Data.Blocks = new TilesetEntry[] { new TilesetEntry() };
+
+                romData.Tilesets["TSE0"].Data.Blocks[0].TilemapEntry[0] = new BlockTilemap() { PalIndex = 0, TileId = 8 };
+                romData.Tilesets["TSE0"].Data.Blocks[0].TilemapEntry[1] = new BlockTilemap() { PalIndex = 0, TileId = 9 };
+                romData.Tilesets["TSE0"].Data.Blocks[0].TilemapEntry[2] = new BlockTilemap() { PalIndex = 0, TileId = 10 };
+                romData.Tilesets["TSE0"].Data.Blocks[0].TilemapEntry[3] = new BlockTilemap() { PalIndex = 0, TileId = 11 };
+                romData.Tilesets["TSE0"].Data.Blocks[0].TilemapEntry[4] = new BlockTilemap() { PalIndex = 1, TileId = 30 };
+                romData.Tilesets["TSE0"].Data.Blocks[0].TilemapEntry[5] = new BlockTilemap() { PalIndex = 1, TileId = 31 };
+                romData.Tilesets["TSE0"].Data.Blocks[0].TilemapEntry[6] = new BlockTilemap() { PalIndex = 1, TileId = 32 };
+                romData.Tilesets["TSE0"].Data.Blocks[0].TilemapEntry[7] = new BlockTilemap() { PalIndex = 1, TileId = 33 };
+
                 romData.Tilesets["TSE0"].Data.Palettes[1] = JASCPAL.Import(@"C:\Users\Christoph\Desktop\deko-iv.pal");
                 romData.Tilesets["TSE1"].Data.Palettes[0] = JASCPAL.Import(@"C:\Users\Christoph\Desktop\deko-iv.pal");
                 romData.Tilesets["TSE245157"].Data.Palettes[0] = JASCPAL.Import(@"C:\Users\Christoph\Desktop\deko-iv.pal");

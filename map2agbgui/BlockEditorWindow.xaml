@@ -33,6 +33,9 @@
             <c:InverseBooleanConverter />
             <BooleanToVisibilityConverter />
         </c:ValueConverterGroup>
+        <c:IntToFloatConverter x:Key="intToFloatConverter" />
+        <c:BoolToFloatConverter x:Key="boolToFloatConverter" />
+        <ImageBrush ImageSource="Assets/TestBlock_16x16.bmp" x:Key="testBlock" />
     </Window.Resources>
 
     <Grid d:DataContext="{d:DesignInstance Type=model:BlockEditorModel, IsDesignTimeCreatable=True}">
@@ -132,7 +135,18 @@
                                             <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
                                         <TextBlock Grid.Row="0" Text="{Binding DisplayValue}" />
-                                        <Image Width="100" Height="10" RenderOptions.BitmapScalingMode="NearestNeighbor" Grid.Row="1" Source="{Binding Value.TextureSource}" />
+                                        <ItemsControl Grid.Row="1" ItemsSource="{Binding Value.Colors}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel Orientation="Horizontal"/>
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Rectangle Fill="{Binding Brush}" Margin="0,1" Height="10" Width="7" />
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
                                     </Grid>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
@@ -174,6 +188,7 @@
                                     <TextBlock Text="No image" Foreground="#FFD10000" FontSize="10" />
                                 </StackPanel>
                             </Border>
+                            <!--<Border Grid.Row="6" Grid.Column="1" Height="60" RenderOptions.BitmapScalingMode="NearestNeighbor" Background="{Binding Value.PalettesTexture}" />-->
                             <Image Margin="3" Grid.Row="6" Grid.Column="1" Visibility="{Binding Value.ValidImage, Converter={StaticResource booleanToVisibilityConverter}}" Source="{Binding Value.Graphic}" RenderTransformOrigin="0.5,0.5" >
                                 <Image.LayoutTransform>
                                     <TransformGroup>
@@ -181,7 +196,7 @@
                                     </TransformGroup>
                                 </Image.LayoutTransform>
                                 <Image.Effect>
-                                    <effects:PaletteEffect Palette="{Binding ElementName=PaletteListBox, Path=SelectedItem.Value.Texture}"  />
+                                    <effects:PaletteEffect Palette="{Binding Value.PalettesTexture}" PaletteIndex="{Binding ElementName=PaletteListBox, Path=SelectedIndex, Converter={StaticResource intToFloatConverter}}"  />
                                 </Image.Effect>
                             </Image>
                         </Grid>
@@ -214,13 +229,34 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <TextBlock Visibility="{Binding ElementName=TilesetListBox, Path=SelectedItem.Value.Secondary, Converter={StaticResource inverseBooleanToVisibilityConverter}}" Grid.Column="0" Text="Secondary tileset:" VerticalAlignment="Center" />
-                            <ComboBox Visibility="{Binding ElementName=TilesetListBox, Path=SelectedItem.Value.Secondary, Converter={StaticResource inverseBooleanToVisibilityConverter}}" Grid.Row="2" Grid.Column="1" ItemsSource="{Binding SecondaryTilesets}" DisplayMemberPath="Index" SelectedValuePath="Index" SelectedValue="{Binding ElementName=TilesetListBox, Path=SelectedItem.Value.AdditionalDesignerTileset, Mode=TwoWay}" Margin="3" VerticalAlignment="Center" />
+                            <ComboBox Visibility="{Binding ElementName=TilesetListBox, Path=SelectedItem.Value.Secondary, Converter={StaticResource inverseBooleanToVisibilityConverter}}" Grid.Row="2" Grid.Column="1" ItemsSource="{Binding SecondaryTilesets}" DisplayMemberPath="Index" SelectedValuePath="Index" SelectedValue="{Binding ElementName=TilesetListBox, Path=SelectedItem.Value.AdditionalDesignerTilesetID, Mode=TwoWay}" Margin="3" VerticalAlignment="Center" />
                             <TextBlock Visibility="{Binding ElementName=TilesetListBox, Path=SelectedItem.Value.Secondary, Converter={StaticResource booleanToVisibilityConverter}}" Grid.Column="0" Text="Primary tileset:" VerticalAlignment="Center" />
-                            <ComboBox Visibility="{Binding ElementName=TilesetListBox, Path=SelectedItem.Value.Secondary, Converter={StaticResource booleanToVisibilityConverter}}" Grid.Row="2" Grid.Column="1" ItemsSource="{Binding PrimaryTilesets}" DisplayMemberPath="Index" SelectedValuePath="Index" SelectedValue="{Binding ElementName=TilesetListBox, Path=SelectedItem.Value.AdditionalDesignerTileset, Mode=TwoWay}" Margin="3" VerticalAlignment="Center" />
+                            <ComboBox Visibility="{Binding ElementName=TilesetListBox, Path=SelectedItem.Value.Secondary, Converter={StaticResource booleanToVisibilityConverter}}" Grid.Row="2" Grid.Column="1" ItemsSource="{Binding PrimaryTilesets}" DisplayMemberPath="Index" SelectedValuePath="Index" SelectedValue="{Binding ElementName=TilesetListBox, Path=SelectedItem.Value.AdditionalDesignerTilesetID, Mode=TwoWay}" Margin="3" VerticalAlignment="Center" />
                         </Grid>
                     </GroupBox>
-                    <Grid DataContext="{Binding ElementName=TilesetListBox, Path=SelectedItem}" >
-                        
+                    <Grid Grid.Row="1" DataContext="{Binding ElementName=TilesetListBox, Path=SelectedItem}" >
+                        <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Height="128" Width="128" Source="Assets/TestBlock_16x16.bmp">
+                            <Image.Effect>
+                                  <!--bottom-layer (left-top, right-top, left-bottom, right-bottom) and the same for the top layer--> 
+                                <effects:BlockCompositorEffect 
+                                    LowGraphic="{Binding Value.GraphicTexture}"
+                                    LowGraphicWidth="{Binding Value.Graphic.PixelWidth}"
+                                    LowGraphicHeight="{Binding Value.Graphic.PixelHeight}"
+                                    HighGraphic="{Binding Value.AdditionalDesignerTileset.Value.GraphicTexture}"
+                                    HighGraphicWidth="{Binding Value.AdditionalDesignerTileset.Value.Graphic.PixelWidth}"
+                                    HighGraphicHeight="{Binding Value.AdditionalDesignerTileset.Value.Graphic.PixelHeight}"
+                                    MergedPalette="{Binding Value.PalettesTexture}" 
+                                    Secondary="{Binding Value.Secondary}"
+                                    BottomLayer_TopLeft="{Binding Value.Blocks[0].Tilemap[0].ShaderParams}"
+                                    BottomLayer_TopRight="{Binding Value.Blocks[0].Tilemap[1].ShaderParams}"
+                                    BottomLayer_BottomLeft="{Binding Value.Blocks[0].Tilemap[2].ShaderParams}"
+                                    BottomLayer_BottomRight="{Binding Value.Blocks[0].Tilemap[3].ShaderParams}"
+                                    TopLayer_TopLeft="{Binding Value.Blocks[0].Tilemap[4].ShaderParams}"
+                                    TopLayer_TopRight="{Binding Value.Blocks[0].Tilemap[5].ShaderParams}"
+                                    TopLayer_BottomLeft="{Binding Value.Blocks[0].Tilemap[6].ShaderParams}"
+                                    TopLayer_BottomRight="{Binding Value.Blocks[0].Tilemap[7].ShaderParams}"/>
+                            </Image.Effect>
+                        </Image>
                     </Grid>
                 </Grid>
             </TabItem>

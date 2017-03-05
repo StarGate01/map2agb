@@ -34,6 +34,7 @@ namespace map2agblib.Tilesets
 
         public TilesetEntry()
         {
+            Behaviour = new BlockBehaviour();
             TilemapEntry = Enumerable.Repeat(new BlockTilemap(), 8).ToArray();
         }
 

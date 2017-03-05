@@ -34,14 +34,14 @@ namespace map2agbgui.Effects
             set { SetValue(PaletteProperty, value); }
         }
 
-        //public static readonly DependencyProperty ColorFilterProperty =
-        //   DependencyProperty.Register("ColorFilter", typeof(Color), typeof(PaletteEffect),
-        //    new UIPropertyMetadata(Colors.Yellow, PixelShaderConstantCallback(0)));
-        //public Color ColorFilter
-        //{
-        //    get { return (Color)GetValue(ColorFilterProperty); }
-        //    set { SetValue(ColorFilterProperty, value); }
-        //}
+        public static readonly DependencyProperty PaletteIndexProperty =
+            DependencyProperty.Register("PaletteIndex", typeof(float), typeof(PaletteEffect),
+            new UIPropertyMetadata(0f, PixelShaderConstantCallback(0)));
+        public float PaletteIndex
+        {
+            get { return (float)GetValue(PaletteIndexProperty); }
+            set { SetValue(PaletteIndexProperty, value); }
+        }
 
         #endregion
 
@@ -57,6 +57,7 @@ namespace map2agbgui.Effects
             this.PixelShader = _pixelShader;
             UpdateShaderValue(InputProperty);
             UpdateShaderValue(PaletteProperty);
+            UpdateShaderValue(PaletteIndexProperty);
         }
 
         #endregion

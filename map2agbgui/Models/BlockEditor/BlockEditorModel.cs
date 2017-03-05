@@ -106,7 +106,7 @@ namespace map2agbgui.Models.BlockEditor
         {
             if (!(bool)(DesignerProperties.IsInDesignModeProperty.GetMetadata(typeof(DependencyObject)).DefaultValue))
                 throw new InvalidOperationException("NSEditorModel can only be constructed without parameters by the designer");
-            Tilesets[0].Value.AdditionalDesignerTileset = Tilesets[2].Index;
+            Tilesets[0].Value.AdditionalDesignerTilesetID = Tilesets[2].Index;
         }
 #endif
 

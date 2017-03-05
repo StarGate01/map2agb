@@ -36,43 +36,10 @@ namespace map2agbgui.Models.BlockEditor
             set
             {
                 _colors = value;
-                RefreshTexture();
                 RaisePropertyChanged("Colors");
             }
         }
-
-        private WriteableBitmap _texture = new WriteableBitmap(new BitmapImage(new Uri("pack://application:,,,/map2agbgui;component/Assets/TestPalette_16x1.bmp")));
-        private ImageBrush _textureBrush;
-        public ImageBrush Texture
-        {
-            get
-            {
-                if(_textureBrush == null) _textureBrush = new ImageBrush(_texture);
-                return _textureBrush;
-            }
-        }
-        public WriteableBitmap TextureSource
-        {
-            get
-            {
-                return _texture;
-            }
-        }
-
-        public unsafe void RefreshTexture()
-        {
-            _texture.Lock();
-            byte* data = (byte*)_texture.BackBuffer;
-            for (int i=0; i<16; i++)
-            {
-                data[i * 4] = (byte)(_colors[i].Blue << 3);
-                data[(i * 4) + 1] = (byte)(_colors[i].Green << 3);
-                data[(i * 4) + 2] = (byte)(_colors[i].Red << 3);
-            }
-            _texture.AddDirtyRect(new Int32Rect(0, 0, 16, 1));
-            _texture.Unlock();
-        }
-
+        
         #endregion
 
         #region Constructor
@@ -80,7 +47,6 @@ namespace map2agbgui.Models.BlockEditor
         public PaletteModel(Palette palette) : base(palette)
         {
             _colors = new ObservableCollection<ShortColorModel>(palette.Colors.Select(p => new ShortColorModel(p)));
-            RefreshTexture();
         }
 
 #if DEBUG
@@ -89,7 +55,6 @@ namespace map2agbgui.Models.BlockEditor
             if ((bool)(DesignerProperties.IsInDesignModeProperty.GetMetadata(typeof(DependencyObject)).DefaultValue))
             {
                 _colors = new ObservableCollection<ShortColorModel>((MockData.MockRomData()).Tilesets.First().Value.Data.Palettes.First().Colors.Select(p => new ShortColorModel(p)));
-                RefreshTexture();
             }
         }
 #endif
