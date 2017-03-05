@@ -174,7 +174,7 @@
                                     <TextBlock Text="No image" Foreground="#FFD10000" FontSize="10" />
                                 </StackPanel>
                             </Border>
-                            <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Margin="3" Grid.Row="6" Grid.Column="1" Visibility="{Binding Value.ValidImage, Converter={StaticResource booleanToVisibilityConverter}}" Source="{Binding Value.Graphic}" RenderTransformOrigin="0.5,0.5" >
+                            <Image Margin="3" Grid.Row="6" Grid.Column="1" Visibility="{Binding Value.ValidImage, Converter={StaticResource booleanToVisibilityConverter}}" Source="{Binding Value.Graphic}" RenderTransformOrigin="0.5,0.5" >
                                 <Image.LayoutTransform>
                                     <TransformGroup>
                                         <RotateTransform Angle="90"/>
