@@ -8,7 +8,7 @@
         xmlns:model="clr-namespace:map2agbgui.Models.BlockEditor"
         xmlns:c="clr-namespace:map2agbgui.Converters"
         xmlns:effects="clr-namespace:map2agbgui.Effects"
-        Title="Tileset Editor" Height="400" Width="700" MinWidth="700" WindowStartupLocation="CenterOwner" SourceInitialized="Window_SourceInitialized" ResizeMode="NoResize">
+        Title="Tileset Editor" Height="400" Width="600" MinWidth="600" WindowStartupLocation="CenterOwner" SourceInitialized="Window_SourceInitialized" ResizeMode="NoResize">
 
     <Window.Resources>
         <ContextMenu x:Key="tilesetContextMenu">
