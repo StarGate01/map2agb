@@ -34,6 +34,15 @@ namespace map2agbgui.Effects
             set { SetValue(PaletteProperty, value); }
         }
 
+        //public static readonly DependencyProperty ColorFilterProperty =
+        //   DependencyProperty.Register("ColorFilter", typeof(Color), typeof(PaletteEffect),
+        //    new UIPropertyMetadata(Colors.Yellow, PixelShaderConstantCallback(0)));
+        //public Color ColorFilter
+        //{
+        //    get { return (Color)GetValue(ColorFilterProperty); }
+        //    set { SetValue(ColorFilterProperty, value); }
+        //}
+
         #endregion
 
         #region Constructors

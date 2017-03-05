@@ -29,8 +29,8 @@ namespace map2agbgui.Models.BlockEditor
             }
         }
 
-        private BlockTilemapModel _tilemap;
-        public BlockTilemapModel Tilemap
+        private BlockTilemapModel[] _tilemap;
+        public BlockTilemapModel[] Tilemap
         {
             get
             {
@@ -50,7 +50,7 @@ namespace map2agbgui.Models.BlockEditor
         public TilesetEntryModel(TilesetEntry entry) : base(entry)
         {
             _behaviour = new BlockBehaviourModel(entry.Behaviour);
-            _tilemap = new BlockTilemapModel(entry.TilemapEntry);
+            _tilemap = entry.TilemapEntry.Select(p => new BlockTilemapModel(p)).ToArray();
         }
 
         #endregion
@@ -61,7 +61,7 @@ namespace map2agbgui.Models.BlockEditor
         {
             TilesetEntry data = new TilesetEntry();
             data.Behaviour = _behaviour.ToRomData();
-            data.TilemapEntry = _tilemap.ToRomData();
+            data.TilemapEntry = _tilemap.Select(p => p.ToRomData()).ToArray();
             return data;
         }
 
