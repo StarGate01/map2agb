@@ -23,20 +23,42 @@ namespace map2agb
             String outPath = opts.OutputPath;
             List<string> inputFiles = opts.InputFiles;
             MapHeader mapHeaderBuilder = new MapHeader();
+            
 
             try {
-                List<Tuple<MapHeader, string>> maps = (List<Tuple<MapHeader, string>>)inputFiles.Select(path => {
-                    //Map to a tuple of MapHeader, FileName (is used as symbol name)
-                    return new Tuple<MapHeader, string>(mapHeaderBuilder.ImportFromFile(path), Path.GetFileNameWithoutExtension(path));
+
+                //Append all maps into this single StringBuilder's String
+                StringBuilder b = new StringBuilder();
+                foreach (String inputFile in inputFiles)
+                {
+                    // First try to import
+                    MapHeader mapHeader = mapHeaderBuilder.ImportFromFile(inputFile);
+                    try
+                    {
+                        // Try to convert
+                        String baseSymbol = Path.GetFileNameWithoutExtension(inputFile);
+                        b.Append(MapCompiler.MapToString(mapHeader, baseSymbol));
                     }
-                ).ToList();
-                
+                    catch (Exception ex)
+                    {
+                        Console.Error.WriteLine("Error at converting map '" + inputFile + "':");
+                        throw ex;
+                    }
+                    
+                }
+                try
+                {
+                    // Export all files
+                    File.WriteAllText(outPath, b.ToString());
 
-
-                Console.ReadKey();
+                }catch(Exception ex)
+                {
+                    Console.Error.WriteLine("Error at exporting file '" + outPath + "':");
+                    throw ex;
+                }
                 return 0;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.Error.WriteLine(ex.Message);
                 return 1;

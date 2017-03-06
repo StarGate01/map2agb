@@ -19,7 +19,7 @@ namespace map2agb
         /// </summary>
         /// <param name="mapHeader"></param>
         /// <returns></returns>
-        public static string ToAssemblyString(MapHeader mapHeader, string baseSymbol)
+        public static string MapToString(MapHeader mapHeader, string baseSymbol)
         {
             StringBuilder b = new StringBuilder();
             b.Append("@ Map Assembly created by map2agb at ");
@@ -255,8 +255,8 @@ namespace map2agb
                 b.Append("\t.hword "); b.Append(person.X.ToString()); b.Append(Environment.NewLine);
                 b.Append("\t.hword "); b.Append(person.Y.ToString()); b.Append(Environment.NewLine);
                 b.Append("\t.byte "); b.Append(person.Height.ToString()); b.Append(Environment.NewLine);
-                b.Append("\t.byte "); b.Append(person.Facing.ToString()); b.Append(Environment.NewLine);
                 b.Append("\t.byte "); b.Append(person.Behaviour.ToString()); b.Append(Environment.NewLine);
+                b.Append("\t.byte "); b.Append(person.Movement.ToString()); b.Append(Environment.NewLine);
                 b.Append("\t.byte "); b.Append(person.FieldB.ToString()); b.Append(Environment.NewLine);
                 b.Append("\t.byte "); b.Append(person.IsTrainer.ToString()); b.Append(Environment.NewLine);
                 b.Append("\t.byte "); b.Append(person.FieldD.ToString()); b.Append(Environment.NewLine);
