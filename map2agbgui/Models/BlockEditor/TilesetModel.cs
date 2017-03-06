@@ -367,18 +367,14 @@ namespace map2agbgui.Models.BlockEditor
             int v = Math.Max(bitmap.PixelWidth, bitmap.PixelHeight);
             v--; v |= v >> 1; v |= v >> 2; v |= v >> 4; v |= v >> 8; v |= v >> 16; v++;
             WriteableBitmap newbitmap = new WriteableBitmap(v, v, bitmap.DpiX, bitmap.DpiY, bitmap.Format, bitmap.Palette);
-            uint bufferLen = (uint)(bitmap.PixelHeight * bitmap.PixelWidth * bitmap.Format.BitsPerPixel) / 8;
+            int bufferLen = (bitmap.PixelHeight * bitmap.PixelWidth * bitmap.Format.BitsPerPixel) / 8;
             newbitmap.Lock();
             bitmap.Lock();
             byte[] data = new byte[bufferLen];
-            fixed (byte* p = data)
-            {
-                memcpy((IntPtr)p, bitmap.BackBuffer, (UIntPtr)bufferLen);
-            }
+            fixed (byte* p = data) memcpy((IntPtr)p, bitmap.BackBuffer, (UIntPtr)bufferLen);
             newbitmap.WritePixels(new Int32Rect(0, 0, bitmap.PixelWidth, bitmap.PixelHeight), data, bitmap.BackBufferStride, 0, 0);
-            //memcpy(newbitmap.BackBuffer, bitmap.BackBuffer, (UIntPtr)bufferLen);
             bitmap.Unlock();
-            newbitmap.AddDirtyRect(new Int32Rect(0, 0, newbitmap.PixelWidth, newbitmap.PixelHeight));
+            newbitmap.AddDirtyRect(new Int32Rect(0, 0, v, v));
             newbitmap.Unlock();
             bitmap = newbitmap;
         }

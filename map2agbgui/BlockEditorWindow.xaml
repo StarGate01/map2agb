@@ -235,9 +235,15 @@
                         </Grid>
                     </GroupBox>
                     <Grid Grid.Row="1" DataContext="{Binding ElementName=TilesetListBox, Path=SelectedItem}" >
-                        <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Height="128" Width="128" Source="Assets/TestBlock_16x16.bmp">
-                            <Image.Effect>
-                                  <!--bottom-layer (left-top, right-top, left-bottom, right-bottom) and the same for the top layer--> 
+                        <!--<Rectangle Height="256" Width="256">
+                            <Rectangle.Fill>
+                                <VisualBrush RenderOptions.CachingHint="Cache">
+                                    <VisualBrush.Visual>
+                                        <Image Source="{Binding Value.Graphic}" RenderOptions.BitmapScalingMode="NearestNeighbor" />
+                                    </VisualBrush.Visual>
+                                </VisualBrush>
+                            </Rectangle.Fill>
+                            <Rectangle.Effect>
                                 <effects:BlockCompositorEffect 
                                     LowGraphic="{Binding Value.GraphicTexture}"
                                     LowGraphicWidth="{Binding Value.Graphic.PixelWidth}"
@@ -255,8 +261,8 @@
                                     TopLayer_TopRight="{Binding Value.Blocks[0].Tilemap[5].ShaderParams}"
                                     TopLayer_BottomLeft="{Binding Value.Blocks[0].Tilemap[6].ShaderParams}"
                                     TopLayer_BottomRight="{Binding Value.Blocks[0].Tilemap[7].ShaderParams}"/>
-                            </Image.Effect>
-                        </Image>
+                            </Rectangle.Effect>
+                        </Rectangle>-->
                     </Grid>
                 </Grid>
             </TabItem>

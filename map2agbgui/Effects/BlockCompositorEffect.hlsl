@@ -25,6 +25,7 @@ float secondary : register(C8);
 
 sampler2D implicitInputSampler : register(S0);
 sampler2D lowGraphic : register(S1);
+
 sampler2D highGraphic : register(S2);
 sampler2D mergedPalette : register(S3);
 
@@ -107,8 +108,9 @@ float4 main(float2 uv : TEXCOORD) : COLOR
     }
     */
 
-    //float2(((16.0 + floor(uv.x * 16.0)) / 128.0) + (1.0 / 256.0), ((floor(uv.y * 16.0)) / 320.0) + (1.0 / 640.0))
-    
-    return tex2D(lowGraphic, uv);
+    int step = 512 / 16;
+    float tstep = 1.0 / (float) step;
+
+    return tex2D(lowGraphic, float2(uv.x / 2.0, uv.y / 2.0));
 
 }

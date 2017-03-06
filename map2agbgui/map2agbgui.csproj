@@ -304,6 +304,9 @@
   <ItemGroup>
     <Resource Include="Assets\TestBlock_16x16.bmp" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\TestBlock_256x256.bmp" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EffectCompile" Condition="'@(Effect)' != '' ">
     <PixelShaderCompile Sources="@(Effect)">
