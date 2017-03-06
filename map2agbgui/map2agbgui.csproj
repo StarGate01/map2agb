@@ -113,7 +113,6 @@
     <Compile Include="Controls\MapTabControl.xaml.cs">
       <DependentUpon>MapTabControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Effects\BlockCompositorEffect.cs" />
     <Compile Include="Effects\PaletteEffect.cs" />
     <Compile Include="Extensions\CollectionItemPropertyDependency.cs" />
     <Compile Include="Extensions\IItemPropertyChanged.cs" />
@@ -296,16 +295,7 @@
     <Effect Include="Effects\PaletteEffect.hlsl" />
   </ItemGroup>
   <ItemGroup>
-    <Effect Include="Effects\BlockCompositorEffect.hlsl" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\TestPalette_16x12.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\TestBlock_16x16.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\TestBlock_256x256.bmp" />
+    <Resource Include="Assets\TestPalette_16x6.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EffectCompile" Condition="'@(Effect)' != '' ">

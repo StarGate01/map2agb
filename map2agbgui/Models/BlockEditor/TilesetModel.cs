@@ -130,7 +130,7 @@ namespace map2agbgui.Models.BlockEditor
         }
 
         private string _graphicPath;
-        [PropertyDependency(new string[] { "ValidImage", "Graphic", "GraphicTexture" })]
+        [PropertyDependency(new string[] { "ValidImage", "Graphic" })]
         public string GraphicPath
         {
             get
@@ -141,12 +141,11 @@ namespace map2agbgui.Models.BlockEditor
             {
                 _graphicPath = value;
                 _graphicBuffer = null;
-                _potGraphicBugger = null;
                 RaisePropertyChanged("GraphicPath");
             }
         }
 
-        private WriteableBitmap _graphicBuffer, _potGraphicBugger;
+        private WriteableBitmap _graphicBuffer;
         public BitmapSource Graphic
         {
             get
@@ -161,19 +160,6 @@ namespace map2agbgui.Models.BlockEditor
                     return  _graphicBuffer;
                 }
                 else return null;
-            }
-        }
-        public ImageBrush GraphicTexture
-        {
-            get
-            {
-                if (_potGraphicBugger == null)
-                {
-                    _potGraphicBugger = new WriteableBitmap(new BitmapImage(new Uri(_graphicPath, UriKind.Absolute)));
-                    PrepareForPaletteShader(ref _potGraphicBugger);
-                    ResizeToPOT(ref _potGraphicBugger);
-                }
-                return new ImageBrush(_potGraphicBugger);
             }
         }
 
@@ -278,7 +264,7 @@ namespace map2agbgui.Models.BlockEditor
             }
         }
 
-        private WriteableBitmap _palettesTexture = new WriteableBitmap(new BitmapImage(new Uri("pack://application:,,,/map2agbgui;component/Assets/TestPalette_16x12.bmp")));
+        private WriteableBitmap _palettesTexture = new WriteableBitmap(new BitmapImage(new Uri("pack://application:,,,/map2agbgui;component/Assets/TestPalette_16x6.bmp")));
         private ImageBrush _palettesTextureBrush;
         public ImageBrush PalettesTexture
         {
@@ -356,26 +342,6 @@ namespace map2agbgui.Models.BlockEditor
             bitmap.Unlock();
             newbitmap.AddDirtyRect(new Int32Rect(0, 0, newbitmap.PixelWidth, newbitmap.PixelHeight));
             newbitmap.Unlock();
-            bitmap = newbitmap;//new WriteableBitmap(new FormatConvertedBitmap(newbitmap, PixelFormats.Bgra32, null, 0));
-        }
-
-        private unsafe void ResizeToPOT(ref WriteableBitmap bitmap)
-        {
-#if DEBUG
-            Debug.WriteLine("TilesetModel: ResizeToPOT");
-#endif
-            int v = Math.Max(bitmap.PixelWidth, bitmap.PixelHeight);
-            v--; v |= v >> 1; v |= v >> 2; v |= v >> 4; v |= v >> 8; v |= v >> 16; v++;
-            WriteableBitmap newbitmap = new WriteableBitmap(v, v, bitmap.DpiX, bitmap.DpiY, bitmap.Format, bitmap.Palette);
-            int bufferLen = (bitmap.PixelHeight * bitmap.PixelWidth * bitmap.Format.BitsPerPixel) / 8;
-            newbitmap.Lock();
-            bitmap.Lock();
-            byte[] data = new byte[bufferLen];
-            fixed (byte* p = data) memcpy((IntPtr)p, bitmap.BackBuffer, (UIntPtr)bufferLen);
-            newbitmap.WritePixels(new Int32Rect(0, 0, bitmap.PixelWidth, bitmap.PixelHeight), data, bitmap.BackBufferStride, 0, 0);
-            bitmap.Unlock();
-            newbitmap.AddDirtyRect(new Int32Rect(0, 0, v, v));
-            newbitmap.Unlock();
             bitmap = newbitmap;
         }
 
@@ -397,21 +363,7 @@ namespace map2agbgui.Models.BlockEditor
                     data[rowOffset + (j * 4) + 2] = (byte)(_palettes[i].Value.Colors[j].Red << 3);
                 }
             }
-            DisplayTuple<string, TilesetModel> addTileset = AdditionalDesignerTileset;
-            if(addTileset != null)
-            {
-                for (int i = 0; i < 6; i++)
-                {
-                    int rowOffset = (i + 6) * _palettesTexture.BackBufferStride;
-                    for (int j = 0; j < 16; j++)
-                    {
-                        data[rowOffset + (j * 4)] = (byte)(addTileset.Value._palettes[i].Value.Colors[j].Blue << 3);
-                        data[rowOffset + (j * 4) + 1] = (byte)(addTileset.Value._palettes[i].Value.Colors[j].Green << 3);
-                        data[rowOffset + (j * 4) + 2] = (byte)(addTileset.Value._palettes[i].Value.Colors[j].Red << 3);
-                    }
-                }
-            }
-            _palettesTexture.AddDirtyRect(new Int32Rect(0, 0, 16, 12));
+            _palettesTexture.AddDirtyRect(new Int32Rect(0, 0, 16, 6));
             _palettesTexture.Unlock();
         }
 

@@ -8,8 +8,6 @@ Palette sampler texture looks like this:
 ...
 |0|1|2| ... |14|15|
 
-[other palette]
-
 15 colums and 6 rows.
 Rows = palettes, index corresponds to C0 (paletteIndex), 
 Colums = colors of palette
@@ -33,7 +31,7 @@ float4 main(float2 uv : TEXCOORD) : COLOR
 	float index = tex2D(implicitInputSampler, uv).a;
     if (index > one16th)
     {
-        return tex2D(palette, float2(index, ((paletteIndex / 6.0) + one12th) / 2.0));
+        return tex2D(palette, float2(index, (paletteIndex / 6.0) + one12th));
     }
     else
     {
