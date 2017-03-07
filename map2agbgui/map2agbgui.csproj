@@ -86,6 +86,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\BlockControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\MapTabControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -104,6 +108,9 @@
     <Compile Include="BlockEditorWindow.xaml.cs">
       <DependentUpon>BlockEditorWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\BlockControl.xaml.cs">
+      <DependentUpon>BlockControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\ColorSingleChannelFilterConverter.cs" />
     <Compile Include="Converters\HexStringToNumberConverter.cs" />
     <Compile Include="Converters\ToFloatConverter.cs" />
@@ -113,7 +120,6 @@
     <Compile Include="Controls\MapTabControl.xaml.cs">
       <DependentUpon>MapTabControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Effects\TileEffect.cs" />
     <Compile Include="Effects\PaletteEffect.cs" />
     <Compile Include="Extensions\CollectionItemPropertyDependency.cs" />
     <Compile Include="Extensions\IItemPropertyChanged.cs" />
@@ -297,9 +303,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\TestPalette_16x6.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Effect Include="Effects\TileEffect.hlsl" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EffectCompile" Condition="'@(Effect)' != '' ">

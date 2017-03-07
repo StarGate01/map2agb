@@ -7,6 +7,7 @@ using System.ComponentModel;
 using map2agblib.Tilesets;
 using System.Windows.Media.Media3D;
 using map2agbgui.Extensions;
+using System.Windows.Media;
 
 namespace map2agbgui.Models.BlockEditor
 {
@@ -45,6 +46,7 @@ namespace map2agbgui.Models.BlockEditor
         }
 
         private bool _hFlip, _vFlip;
+        [PropertyDependency("FlipTransform")]
         public bool HFlip
         {
             get
@@ -57,6 +59,7 @@ namespace map2agbgui.Models.BlockEditor
                 RaisePropertyChanged("HFlip");
             }
         }
+        [PropertyDependency("FlipTransform")]
         public bool VFlip
         {
             get
@@ -67,6 +70,14 @@ namespace map2agbgui.Models.BlockEditor
             {
                 _vFlip = value;
                 RaisePropertyChanged("VFlip");
+            }
+        }
+
+        public ScaleTransform FlipTransform
+        {
+            get
+            {
+                return new ScaleTransform(_hFlip ? -1 : 1, _vFlip ? -1 : 1);
             }
         }
 

@@ -8,6 +8,7 @@
         xmlns:model="clr-namespace:map2agbgui.Models.BlockEditor"
         xmlns:c="clr-namespace:map2agbgui.Converters"
         xmlns:effects="clr-namespace:map2agbgui.Effects"
+        xmlns:controls="clr-namespace:map2agbgui.Controls"
         Title="Tileset Editor" Height="400" Width="600" MinWidth="600" WindowStartupLocation="CenterOwner" SourceInitialized="Window_SourceInitialized" ResizeMode="NoResize">
 
     <Window.Resources>
@@ -195,7 +196,7 @@
                                     </TransformGroup>
                                 </Image.LayoutTransform>
                                 <Image.Effect>
-                                    <effects:PaletteEffect Palette="{Binding Value.PalettesTexture}" PaletteIndex="{Binding ElementName=PaletteListBox, Path=SelectedIndex, Converter={StaticResource intToFloatConverter}}"  />
+                                    <effects:PaletteEffect Palette="{Binding Value.PalettesTexture}" PaletteIndex="{Binding Value.SelectedPalette.Index}"  />
                                 </Image.Effect>
                             </Image>
                         </Grid>
@@ -234,40 +235,7 @@
                         </Grid>
                     </GroupBox>
                     <Grid Grid.Row="1" DataContext="{Binding ElementName=TilesetListBox, Path=SelectedItem}" >
-                        <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Height="128" Width="128" Source="{Binding Value.GraphicTiles[17]}" >
-                            <!--<Image.Effect>
-                                <effects:PaletteEffect Palette="{Binding Value.PalettesTexture}" PaletteIndex="{Binding ElementName=PaletteListBox, Path=SelectedIndex, Converter={StaticResource intToFloatConverter}}"  />
-                            </Image.Effect>-->
-                        </Image>
-
-                        <!--<Rectangle Height="256" Width="256">
-                            <Rectangle.Fill>
-                                <VisualBrush RenderOptions.CachingHint="Cache">
-                                    <VisualBrush.Visual>
-                                        <Image Source="{Binding Value.Graphic}" RenderOptions.BitmapScalingMode="NearestNeighbor" />
-                                    </VisualBrush.Visual>
-                                </VisualBrush>
-                            </Rectangle.Fill>
-                            <Rectangle.Effect>
-                                <effects:BlockCompositorEffect 
-                                    LowGraphic="{Binding Value.GraphicTexture}"
-                                    LowGraphicWidth="{Binding Value.Graphic.PixelWidth}"
-                                    LowGraphicHeight="{Binding Value.Graphic.PixelHeight}"
-                                    HighGraphic="{Binding Value.AdditionalDesignerTileset.Value.GraphicTexture}"
-                                    HighGraphicWidth="{Binding Value.AdditionalDesignerTileset.Value.Graphic.PixelWidth}"
-                                    HighGraphicHeight="{Binding Value.AdditionalDesignerTileset.Value.Graphic.PixelHeight}"
-                                    MergedPalette="{Binding Value.PalettesTexture}" 
-                                    Secondary="{Binding Value.Secondary}"
-                                    BottomLayer_TopLeft="{Binding Value.Blocks[0].Tilemap[0].ShaderParams}"
-                                    BottomLayer_TopRight="{Binding Value.Blocks[0].Tilemap[1].ShaderParams}"
-                                    BottomLayer_BottomLeft="{Binding Value.Blocks[0].Tilemap[2].ShaderParams}"
-                                    BottomLayer_BottomRight="{Binding Value.Blocks[0].Tilemap[3].ShaderParams}"
-                                    TopLayer_TopLeft="{Binding Value.Blocks[0].Tilemap[4].ShaderParams}"
-                                    TopLayer_TopRight="{Binding Value.Blocks[0].Tilemap[5].ShaderParams}"
-                                    TopLayer_BottomLeft="{Binding Value.Blocks[0].Tilemap[6].ShaderParams}"
-                                    TopLayer_BottomRight="{Binding Value.Blocks[0].Tilemap[7].ShaderParams}"/>
-                            </Rectangle.Effect>
-                        </Rectangle>-->
+                        <controls:BlockControl Width="256" Height="256" DataContext="{Binding Value.Blocks[0]}" />
                     </Grid>
                 </Grid>
             </TabItem>

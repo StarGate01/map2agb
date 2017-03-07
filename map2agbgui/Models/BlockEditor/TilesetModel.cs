@@ -177,20 +177,6 @@ namespace map2agbgui.Models.BlockEditor
             }
         }
 
-        public DisplayTuple<int, PaletteModel> _selectedPalette;
-        public DisplayTuple<int, PaletteModel> SelectedPalette
-        {
-            get
-            {
-                return _selectedPalette;
-            }
-            set
-            {
-                _selectedPalette = value;
-                RaisePropertyChanged("SelectedPalette");
-            }
-        }
-
         private bool _compressed, _secondary;
         public bool Compressed
         {
@@ -261,6 +247,20 @@ namespace map2agbgui.Models.BlockEditor
 
         #region Palettes
 
+        public DisplayTuple<int, PaletteModel> _selectedPalette;
+        public DisplayTuple<int, PaletteModel> SelectedPalette
+        {
+            get
+            {
+                return _selectedPalette;
+            }
+            set
+            {
+                _selectedPalette = value;
+                RaisePropertyChanged("SelectedPalette");
+            }
+        }
+
         private ObservableCollectionEx<DisplayTuple<int, PaletteModel>> _palettes;
         [PropertyDependency("PalettesTexture")]
         public ObservableCollectionEx<DisplayTuple<int, PaletteModel>> Palettes
@@ -287,7 +287,7 @@ namespace map2agbgui.Models.BlockEditor
                 if (_palettesTextureBrush == null)
                 {
                     _palettesTextureBrush = new ImageBrush(_palettesTexture);
-                    RefreshPaletteTexture(ref _palettesTexture);
+                    RefreshPaletteTexture(_palettesTexture);
                 }
                 return _palettesTextureBrush;
             }
@@ -310,7 +310,7 @@ namespace map2agbgui.Models.BlockEditor
             _palettes = new ObservableCollectionEx<DisplayTuple<int, PaletteModel>>(tileset.Data.Palettes.Select((p, pi) =>
                 new DisplayTuple<int, PaletteModel>(pi, new PaletteModel(p))));
             _palettes.ItemPropertyChanged += Palettes_ItemPropertyChanged;
-            _blocks = new ObservableCollection<TilesetEntryModel>(tileset.Data.Blocks.Select(p => new TilesetEntryModel(p)));
+            _blocks = new ObservableCollection<TilesetEntryModel>(tileset.Data.Blocks.Select(p => new TilesetEntryModel(p, this)));
             _selectedPalette = _palettes[0];
             _blockEditorViewModel = parentEditorModel;
             _phHandler = new PropertyDependencyHandler(this);
@@ -322,7 +322,7 @@ namespace map2agbgui.Models.BlockEditor
 
         private void Palettes_ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if(e.PropertyName == "Value") RefreshPaletteTexture(ref _palettesTexture);
+            if(e.PropertyName == "Value") RefreshPaletteTexture(_palettesTexture);
         }
 
         #endregion
@@ -348,8 +348,9 @@ namespace map2agbgui.Models.BlockEditor
 #if DEBUG
             Debug.WriteLine("TilesetModel: PrepareForPaletteShader");
 #endif
+            if (bitmap == null) return;
             WriteableBitmap newbitmap = new WriteableBitmap(bitmap.PixelWidth, bitmap.PixelHeight, bitmap.DpiX, bitmap.DpiY, bitmap.Format, greyPalette);
-            uint bufferLen = (uint)(bitmap.PixelHeight * bitmap.PixelWidth * bitmap.Format.BitsPerPixel) / 8;
+            int bufferLen = (bitmap.PixelHeight * bitmap.PixelWidth * bitmap.Format.BitsPerPixel) >> 3;
             newbitmap.Lock();
             bitmap.Lock();
             memcpy(newbitmap.BackBuffer, bitmap.BackBuffer, (UIntPtr)bufferLen);
@@ -359,7 +360,7 @@ namespace map2agbgui.Models.BlockEditor
             bitmap = newbitmap;
         }
 
-        private unsafe void RefreshPaletteTexture(ref WriteableBitmap bitmap)
+        private unsafe void RefreshPaletteTexture(WriteableBitmap bitmap)
         {
 #if DEBUG
             Debug.WriteLine("TilesetModel: RefreshPaletteTexture");
@@ -386,6 +387,7 @@ namespace map2agbgui.Models.BlockEditor
 #if DEBUG
             Debug.WriteLine("TilesetModel: RefreshGraphicTiles");
 #endif
+            if (bitmap == null) return new BitmapSource[0];
             int rows = bitmap.PixelHeight >> 3;
             int cols = bitmap.PixelWidth >> 3;
             WriteableBitmap[] tiles = new WriteableBitmap[rows * cols];
@@ -397,14 +399,12 @@ namespace map2agbgui.Models.BlockEditor
                     tiles[offset] = new WriteableBitmap(8, 8, bitmap.DpiX, bitmap.DpiY, bitmap.Format, bitmap.Palette);
                     tiles[offset].Lock();
                     byte* tileData = (byte*)tiles[offset].BackBuffer;
-                    bitmap.CopyPixels(new Int32Rect(x << 3, y << 3, 8, 8), 
-                        (IntPtr)tileData, bitmap.Format.BitsPerPixel << 3, bitmap.Format.BitsPerPixel);
+                    bitmap.CopyPixels(new Int32Rect(x << 3, y << 3, 8, 8), (IntPtr)tileData, bitmap.Format.BitsPerPixel << 3, bitmap.Format.BitsPerPixel);
                     tiles[offset].AddDirtyRect(new Int32Rect(0, 0, 8, 8));
                     tiles[offset].Unlock();
                 }
             }
             return tiles;
-            //return new ObservableCollection<BitmapSource>(tiles);
         }
 
         #endregion

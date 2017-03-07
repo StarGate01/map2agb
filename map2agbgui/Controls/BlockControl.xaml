@@ -1,0 +1,62 @@
+﻿<UserControl x:Class="map2agbgui.Controls.BlockControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:map2agbgui.Controls"
+             mc:Ignorable="d" 
+             xmlns:model="clr-namespace:map2agbgui.Models.BlockEditor"
+             xmlns:c="clr-namespace:map2agbgui.Converters"
+             xmlns:effects="clr-namespace:map2agbgui.Effects"
+             d:DesignHeight="256" d:DesignWidth="256">
+    <Grid RenderOptions.BitmapScalingMode="NearestNeighbor" d:DataContext="{d:DesignInstance Type=model:TilesetEntryModel, IsDesignTimeCreatable=True}" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Image Grid.Row="0" Grid.Column="0" Source="{Binding GraphicTilemap[0]}" RenderTransformOrigin="0.5,0.5" RenderTransform="{Binding Tilemap[0].FlipTransform}" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+            <Image.Effect>
+                <effects:PaletteEffect Palette="{Binding TilesetViewModel.PalettesTexture}" PaletteIndex="{Binding Tilemap[0].PalIndex}" />
+            </Image.Effect>
+        </Image>
+        <Image Grid.Row="0" Grid.Column="0" Source="{Binding GraphicTilemap[4]}" RenderTransformOrigin="0.5,0.5" RenderTransform="{Binding Tilemap[4].FlipTransform}" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+            <Image.Effect>
+                <effects:PaletteEffect Palette="{Binding TilesetViewModel.PalettesTexture}" PaletteIndex="{Binding Tilemap[4].PalIndex}" />
+            </Image.Effect>
+        </Image>
+        <Image Grid.Row="0" Grid.Column="1" Source="{Binding GraphicTilemap[1]}" RenderTransformOrigin="0.5,0.5" RenderTransform="{Binding Tilemap[1].FlipTransform}" HorizontalAlignment="Left" VerticalAlignment="Bottom" >
+            <Image.Effect>
+                <effects:PaletteEffect Palette="{Binding TilesetViewModel.PalettesTexture}" PaletteIndex="{Binding Tilemap[1].PalIndex}" />
+            </Image.Effect>
+        </Image>
+        <Image Grid.Row="0" Grid.Column="1" Source="{Binding GraphicTilemap[5]}" RenderTransformOrigin="0.5,0.5" RenderTransform="{Binding Tilemap[5].FlipTransform}" HorizontalAlignment="Left" VerticalAlignment="Bottom">
+            <Image.Effect>
+                <effects:PaletteEffect Palette="{Binding TilesetViewModel.PalettesTexture}" PaletteIndex="{Binding Tilemap[5].PalIndex}" />
+            </Image.Effect>
+        </Image>
+        <Image Grid.Row="1" Grid.Column="0" Source="{Binding GraphicTilemap[2]}" RenderTransformOrigin="0.5,0.5" RenderTransform="{Binding Tilemap[2].FlipTransform}" VerticalAlignment="Top" HorizontalAlignment="Right" >
+            <Image.Effect>
+                <effects:PaletteEffect Palette="{Binding TilesetViewModel.PalettesTexture}" PaletteIndex="{Binding Tilemap[2].PalIndex}" />
+            </Image.Effect>
+        </Image>
+        <Image Grid.Row="1" Grid.Column="0" Source="{Binding GraphicTilemap[6]}" RenderTransformOrigin="0.5,0.5" RenderTransform="{Binding Tilemap[6].FlipTransform}" VerticalAlignment="Top" HorizontalAlignment="Right">
+            <Image.Effect>
+                <effects:PaletteEffect Palette="{Binding TilesetViewModel.PalettesTexture}" PaletteIndex="{Binding Tilemap[6].PalIndex}" />
+            </Image.Effect>
+        </Image>
+        <Image Grid.Row="1" Grid.Column="1" Source="{Binding GraphicTilemap[3]}" RenderTransformOrigin="0.5,0.5" RenderTransform="{Binding Tilemap[3].FlipTransform}" HorizontalAlignment="Left" VerticalAlignment="Top" >
+            <Image.Effect>
+                <effects:PaletteEffect Palette="{Binding TilesetViewModel.PalettesTexture}" PaletteIndex="{Binding Tilemap[3].PalIndex}" />
+            </Image.Effect>
+        </Image>
+        <Image Grid.Row="1" Grid.Column="1" Source="{Binding GraphicTilemap[7]}" RenderTransformOrigin="0.5,0.5" RenderTransform="{Binding Tilemap[7].FlipTransform}" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <Image.Effect>
+                <effects:PaletteEffect Palette="{Binding TilesetViewModel.PalettesTexture}" PaletteIndex="{Binding Tilemap[7].PalIndex}" />
+            </Image.Effect>
+        </Image>
+    </Grid>
+</UserControl>
