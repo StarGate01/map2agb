@@ -1,12 +1,19 @@
 # map2agb
-Gameboy Advance mapping tool collection
+Gameboy Advance pokemon mapping tool collection
 
 ### Collaborators
-https://github.com/WodkaRHR
+- https://github.com/WodkaRHR
+ - map2agb
+ - map2agblib
 
-https://github.com/SBird1337
+- https://github.com/SBird1337
+ - map2agb
+ - map2agblib
+ - map2agbimport
 
-https://github.com/StarGate01
+- https://github.com/StarGate01
+ - map2agbgui
+ - map2agblib
 
 ### Modules
 - **map2agb**: Compiles mapping projects to sourcecode (Console Application)
@@ -16,7 +23,7 @@ https://github.com/StarGate01
 - **map2agbtest**: Test surrounding, internal use only (Console Application)
 
 ### Requirements
-- Windows
+- Windows or Mono, WPF subsystem support for map2agbgui (Windows only afaik)
 - .NET Framework, minimum = 4, recommended = 4.5.2
 
 ### Build
