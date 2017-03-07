@@ -1,6 +1,8 @@
-﻿using map2agblib.Map;
+﻿using map2agbimport.Compression;
+using map2agblib.Map;
 using map2agblib.Map.Event;
 using map2agblib.Map.LevelScript;
+using map2agblib.Tilesets;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -283,6 +285,20 @@ namespace map2agbimport
             header.Connections = ConnectionsFromReader(reader, connectionOffset);
             header.MapScripts = LevelScriptsFromReader(reader, levelScriptOffset, mapBasePrefix);
             return header;
+        }
+
+        private static Tileset TilesetFromStream(BinaryReader reader, uint offset)
+        {
+            reader.BaseStream.Seek(offset, SeekOrigin.Begin);
+            reader.ReadUInt32();
+            reader.BaseStream.Seek(reader.ReadUInt32() & 0x1FFFFFF, SeekOrigin.Begin);
+            byte[] tileset = reader.ReadLzArray().ToArray();
+            return null;
+        }
+
+        public static Tuple<Tileset, Tileset> TilesetsFromStream(BinaryReader reader, MapHeader header)
+        {
+            return new Tuple<Tileset, Tileset>(TilesetFromStream(reader, header.Footer.FirstTilesetInternal & 0x1FFFFFF), TilesetFromStream(reader, header.Footer.SecondTilesetInternal & 0x1FFFFFF));
         }
     }
 }
