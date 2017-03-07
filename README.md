@@ -16,10 +16,10 @@ Gameboy Advance pokemon mapping tool collection
  - map2agblib
 
 ### Modules
-- **map2agb**: Compiles mapping projects to sourcecode (Console Application)
+- **map2agb**: Compiles mapping projects to sourcecode (Console Application & Class Library)
 - **map2agbgui**: Creates and edits mapping projects (WPF GUI Application)
-- **map2agblib**: Commonly used functions and data model (Class library)
-- **map2agbimport**: Imports data from ROMs (Class library)
+- **map2agblib**: Commonly used functions and data model (Class Library)
+- **map2agbimport**: Imports data from ROMs (Console Application & Class Library)
 - **map2agbtest**: Test surrounding, internal use only (Console Application)
 
 ### Requirements
