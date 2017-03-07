@@ -31,11 +31,12 @@ namespace map2agbimport
                         if (opt.ExportMap)
                         {
                             header = AgbImport.HeaderFromStream(br, mapTable, opt.BankNumber, opt.MapNumber);
+                            
                             //TODO serialize
                         }
                         if (opt.ExportTileset)
                         {
-                            header = header == null ? AgbImport.HeaderFromStream(br, mapTable, opt.BankNumber, opt.MapNumber) : header;
+                            header = header ?? AgbImport.HeaderFromStream(br, mapTable, opt.BankNumber, opt.MapNumber);
                             //TODO import tileset
                             //TODO serialize
                         }
