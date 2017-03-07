@@ -50,7 +50,7 @@ namespace map2agbimport.Compression
                         output.Add(reader.ReadByte());
                 }
             }
-            return output.GetRange(0, (int)size);
+            return output.Take((int)size);
 
         }
     }
