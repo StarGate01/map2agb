@@ -17,7 +17,6 @@ namespace map2agbgui.Models.BlockEditor
         #region Properties
 
         private ushort _tileID;
-        [PropertyDependency("ShaderParams")]
         public ushort TileID
         {
             get
@@ -32,7 +31,6 @@ namespace map2agbgui.Models.BlockEditor
         }
 
         private byte _palIndex;
-        [PropertyDependency("ShaderParams")]
         public byte PalIndex
         {
             get
@@ -47,7 +45,6 @@ namespace map2agbgui.Models.BlockEditor
         }
 
         private bool _hFlip, _vFlip;
-        [PropertyDependency("ShaderParams")]
         public bool HFlip
         {
             get
@@ -60,7 +57,6 @@ namespace map2agbgui.Models.BlockEditor
                 RaisePropertyChanged("HFlip");
             }
         }
-        [PropertyDependency("ShaderParams")]
         public bool VFlip
         {
             get
@@ -71,14 +67,6 @@ namespace map2agbgui.Models.BlockEditor
             {
                 _vFlip = value;
                 RaisePropertyChanged("VFlip");
-            }
-        }
-
-        public Point4D ShaderParams
-        {
-            get
-            {
-                return new Point4D(_hFlip? 1:0, _vFlip? 1:0, (((float)_palIndex) / 16f) + (1f / 32f), (float)_tileID);
             }
         }
 

@@ -92,7 +92,7 @@ namespace map2agblib.Tilesets
         public Tileset()
         {
             Blocks = new TilesetEntry[0];
-            Palettes = Enumerable.Repeat(new Palette(), 6).ToArray();
+            Palettes = Enumerable.Repeat(new Palette(), MAX_PALETTES).ToArray();
         }
 
         #endregion

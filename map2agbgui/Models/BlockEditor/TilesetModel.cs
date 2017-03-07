@@ -130,7 +130,7 @@ namespace map2agbgui.Models.BlockEditor
         }
 
         private string _graphicPath;
-        [PropertyDependency(new string[] { "ValidImage", "Graphic" })]
+        [PropertyDependency(new string[] { "ValidImage", "Graphic", "GraphicTiles" })]
         public string GraphicPath
         {
             get
@@ -141,6 +141,7 @@ namespace map2agbgui.Models.BlockEditor
             {
                 _graphicPath = value;
                 _graphicBuffer = null;
+                _graphicTileBuffers = null;
                 RaisePropertyChanged("GraphicPath");
             }
         }
@@ -160,6 +161,19 @@ namespace map2agbgui.Models.BlockEditor
                     return  _graphicBuffer;
                 }
                 else return null;
+            }
+        }
+
+        private BitmapSource[] _graphicTileBuffers;
+        public BitmapSource[] GraphicTiles
+        {
+            get
+            {
+                if (_graphicTileBuffers == null)
+                {
+                    _graphicTileBuffers = RefreshGraphicTiles((WriteableBitmap)Graphic);
+                }
+                return _graphicTileBuffers;
             }
         }
 
@@ -273,7 +287,7 @@ namespace map2agbgui.Models.BlockEditor
                 if (_palettesTextureBrush == null)
                 {
                     _palettesTextureBrush = new ImageBrush(_palettesTexture);
-                    RefreshPaletteTexture();
+                    RefreshPaletteTexture(ref _palettesTexture);
                 }
                 return _palettesTextureBrush;
             }
@@ -308,7 +322,7 @@ namespace map2agbgui.Models.BlockEditor
 
         private void Palettes_ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if(e.PropertyName == "Value") RefreshPaletteTexture();
+            if(e.PropertyName == "Value") RefreshPaletteTexture(ref _palettesTexture);
         }
 
         #endregion
@@ -345,26 +359,52 @@ namespace map2agbgui.Models.BlockEditor
             bitmap = newbitmap;
         }
 
-        private unsafe void RefreshPaletteTexture()
+        private unsafe void RefreshPaletteTexture(ref WriteableBitmap bitmap)
         {
 #if DEBUG
             Debug.WriteLine("TilesetModel: RefreshPaletteTexture");
 #endif
-            if (_palettesTexture == null) return;
-            _palettesTexture.Lock();
-            byte* data = (byte*)_palettesTexture.BackBuffer;
+            if (bitmap == null) return;
+            bitmap.Lock();
+            byte* data = (byte*)bitmap.BackBuffer;
             for (int i = 0; i < 6; i++)
             {
-                int rowOffset = i * _palettesTexture.BackBufferStride;
+                int rowOffset = i * bitmap.BackBufferStride;
                 for (int j = 0; j < 16; j++)
                 {
-                    data[rowOffset + (j * 4)] = (byte)(_palettes[i].Value.Colors[j].Blue << 3);
-                    data[rowOffset + (j * 4) + 1] = (byte)(_palettes[i].Value.Colors[j].Green << 3);
-                    data[rowOffset + (j * 4) + 2] = (byte)(_palettes[i].Value.Colors[j].Red << 3);
+                    data[rowOffset + (j << 2)] = (byte)(_palettes[i].Value.Colors[j].Blue << 3);
+                    data[rowOffset + (j << 2) + 1] = (byte)(_palettes[i].Value.Colors[j].Green << 3);
+                    data[rowOffset + (j << 2) + 2] = (byte)(_palettes[i].Value.Colors[j].Red << 3);
                 }
             }
-            _palettesTexture.AddDirtyRect(new Int32Rect(0, 0, 16, 6));
-            _palettesTexture.Unlock();
+            bitmap.AddDirtyRect(new Int32Rect(0, 0, 16, 6));
+            bitmap.Unlock();
+        }
+
+        private unsafe BitmapSource[] RefreshGraphicTiles(WriteableBitmap bitmap)
+        {
+#if DEBUG
+            Debug.WriteLine("TilesetModel: RefreshGraphicTiles");
+#endif
+            int rows = bitmap.PixelHeight >> 3;
+            int cols = bitmap.PixelWidth >> 3;
+            WriteableBitmap[] tiles = new WriteableBitmap[rows * cols];
+            for (int y = 0; y < rows; y++)
+            {
+                for (int x = 0; x < cols; x++)
+                {
+                    int offset = (cols * y) + x;
+                    tiles[offset] = new WriteableBitmap(8, 8, bitmap.DpiX, bitmap.DpiY, bitmap.Format, bitmap.Palette);
+                    tiles[offset].Lock();
+                    byte* tileData = (byte*)tiles[offset].BackBuffer;
+                    bitmap.CopyPixels(new Int32Rect(x << 3, y << 3, 8, 8), 
+                        (IntPtr)tileData, bitmap.Format.BitsPerPixel << 3, bitmap.Format.BitsPerPixel);
+                    tiles[offset].AddDirtyRect(new Int32Rect(0, 0, 8, 8));
+                    tiles[offset].Unlock();
+                }
+            }
+            return tiles;
+            //return new ObservableCollection<BitmapSource>(tiles);
         }
 
         #endregion
