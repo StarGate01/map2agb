@@ -18,7 +18,7 @@ using map2agbgui.Extensions;
 
 namespace map2agbgui.Models.Main
 {
-    public class MainModel : IRomSerializable<MainModel, RomData>, IRaisePropertyChanged
+    public class MainModel : IRomSerializable<MainModel, RomData>, IRaisePropertyChanged, IDisposable
     {
 
         #region Properties
@@ -162,6 +162,11 @@ namespace map2agbgui.Models.Main
         }
 
         #endregion
+
+        public void Dispose()
+        {
+            BlockEditorViewModel.Dispose();
+        }
 
     }
 

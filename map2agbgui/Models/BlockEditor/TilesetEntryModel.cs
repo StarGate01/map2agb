@@ -73,11 +73,13 @@ namespace map2agbgui.Models.BlockEditor
             _tilesetViewModel = parent;
         }
 
+#if DEBUG
         public TilesetEntryModel() : this(MockData.MockRomData().Tilesets["TSE0"].Data.Blocks[0], new TilesetModel(MockData.MockRomData().Tilesets["TSE0"], new BlockEditorModel()))
         {
             if (!(bool)(DesignerProperties.IsInDesignModeProperty.GetMetadata(typeof(DependencyObject)).DefaultValue))
                 throw new InvalidOperationException("NSEditorModel can only be constructed without parameters by the designer");
         }
+#endif
 
         #endregion
 

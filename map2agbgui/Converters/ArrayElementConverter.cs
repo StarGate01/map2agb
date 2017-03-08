@@ -17,8 +17,11 @@ namespace map2agbgui.Converters
 
         public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null) return null;
-            return ((ImageBrush)((object[])(value[1]))[System.Convert.ToInt32(value[0])]).ImageSource;
+            try
+            {
+                return ((ImageBrush)((object[])(value[1]))[System.Convert.ToInt32(value[0])]).ImageSource;
+            }
+            catch (Exception) { return null; }
         }
 
         public object[] ConvertBack(object value, Type[] targetType, object parameter, CultureInfo culture)
@@ -34,8 +37,11 @@ namespace map2agbgui.Converters
 
         public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null) return null;
-            return ((object[])(value[1]))[System.Convert.ToInt32(value[0])];
+            try
+            {
+                return ((object[])(value[1]))[System.Convert.ToInt32(value[0])];
+            }
+            catch (Exception) { return null; }
         }
 
         public object[] ConvertBack(object value, Type[] targetType, object parameter, CultureInfo culture)

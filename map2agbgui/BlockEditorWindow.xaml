@@ -204,6 +204,7 @@
                 </Grid>
             </TabItem>
             <TabItem>
+                <!--Visibility="{Binding ElementName=TilesetListBox, Path=SelectedItem.Value.ValidSettings, Converter={StaticResource booleanToVisibilityConverter}}"-->
                 <TabItem.Header>
                     <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
                         <Grid.ColumnDefinitions>
@@ -248,7 +249,7 @@
                                 <TextBlock Text="Blocks" FontWeight="Bold" />
                             </GroupBox.Header>
                             <ScrollViewer CanContentScroll="True" Margin="5" VerticalScrollBarVisibility="Auto">
-                                <ItemsControl ItemsSource="{Binding Value.Blocks}">
+                                <ItemsControl ItemsSource="{Binding Value.RenderedBlocks}">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
                                             <WrapPanel />
@@ -257,12 +258,12 @@
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
                                             <Border BorderThickness="1" BorderBrush="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
-                                                <controls:BlockControl Width="32" Height="32" DataContext="{Binding}" />
+                                                <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Height="32" Width="32" Source="{Binding}" />
                                             </Border>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
-                            </ScrollViewer>
+                                </ScrollViewer>
                         </GroupBox>
                         <GroupBox Grid.Row="1" Grid.Column="0"  >
                             <GroupBox.Header>
