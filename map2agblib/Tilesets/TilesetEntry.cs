@@ -35,7 +35,8 @@ namespace map2agblib.Tilesets
         public TilesetEntry()
         {
             Behaviour = new BlockBehaviour();
-            TilemapEntry = Enumerable.Repeat(new BlockTilemap(), 8).ToArray();
+            TilemapEntry = new BlockTilemap[8];
+            for (int i = 0; i < 8; i++) TilemapEntry[i] = new BlockTilemap();
         }
 
         #endregion

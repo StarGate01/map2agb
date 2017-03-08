@@ -48,7 +48,8 @@ namespace map2agblib.Imaging
         /// </summary>
         public Palette()
         {
-            Colors = Enumerable.Repeat(new ShortColor(0, 0, 0), 16).ToArray();
+            Colors = new ShortColor[16];
+            for (int i = 0; i < 16; i++) Colors[i] = new ShortColor(0, 0, 0);
         }
 
         public Palette(ShortColor[] colors)

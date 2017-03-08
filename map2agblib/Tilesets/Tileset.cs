@@ -14,9 +14,9 @@ namespace map2agblib.Tilesets
     public class Tileset : XMLImportExport<Tileset>
     {
 
-        const int MAX_SECOND_TILESET_SIZE = 0x180;
-        const int MAX_FIRST_TILESET_SIZE = 0x280;
-        const int MAX_PALETTES = 6;
+        public const int MAX_SECOND_TILESET_SIZE = 0x180;
+        public const int MAX_FIRST_TILESET_SIZE = 0x280;
+        public const int MAX_PALETTES = 6;
 
         #region Properties
 
@@ -83,16 +83,17 @@ namespace map2agblib.Tilesets
             Secondary = isSecondary;
 
             Blocks = Secondary ? new TilesetEntry[MAX_SECOND_TILESET_SIZE] : new TilesetEntry[MAX_FIRST_TILESET_SIZE];
-            Palettes = Enumerable.Repeat(new Palette(), MAX_PALETTES).ToArray();
+            for (int i = 0; i < Blocks.Length; i++) Blocks[i] = new TilesetEntry();
+            Palettes = new Palette[MAX_PALETTES];
+            for (int i = 0; i < Palettes.Length; i++) Palettes[i] = new Palette();
 
             Graphic = string.Empty;
             AnimationInitFunction = string.Empty;
         }
 
-        public Tileset()
+        public Tileset() : this(false, false)
         {
-            Blocks = new TilesetEntry[0];
-            Palettes = Enumerable.Repeat(new Palette(), MAX_PALETTES).ToArray();
+         
         }
 
         #endregion
