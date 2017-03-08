@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using map2agblib.Map.Event;
 using map2agblib.Map.LevelScript;
+using map2agblib.Tilesets;
 
 namespace map2agbimport
 {
@@ -23,6 +24,8 @@ namespace map2agbimport
                 FileStream fs = null;
                 try
                 {
+                    if (!Directory.Exists(opt.OutputFolder))
+                        Directory.CreateDirectory(opt.OutputFolder);
                     fs = new FileStream(opt.InputFile, FileMode.Open, FileAccess.Read);
                     using (BinaryReader br = new BinaryReader(fs))
                     {
@@ -31,13 +34,17 @@ namespace map2agbimport
                         if (opt.ExportMap)
                         {
                             header = AgbImport.HeaderFromStream(br, mapTable, opt.BankNumber, opt.MapNumber);
-
+                            header.ExportToFile(header, opt.OutputFolder + "/" + opt.BankNumber.ToString("D2") + "_" + opt.MapNumber.ToString("D2") + ".mapheader");
                             //TODO serialize
                         }
                         if (opt.ExportTileset)
                         {
                             header = header ?? AgbImport.HeaderFromStream(br, mapTable, opt.BankNumber, opt.MapNumber);
-                            AgbImport.TilesetsFromStream(br, header);
+                            if (!Directory.Exists(opt.OutputFolder + "/tileset"))
+                                Directory.CreateDirectory(opt.OutputFolder + "/tileset");
+                            Tuple<Tileset, Tileset> sets = AgbImport.TilesetsFromStream(br, header, opt.OutputFolder + "/tileset");
+                            sets.Item1.ExportToFile(sets.Item1, opt.OutputFolder + "/tileset/" + header.Footer.FirstTilesetInternal.ToString("X8") + "_tileset.tileset");
+                            sets.Item2.ExportToFile(sets.Item2, opt.OutputFolder + "/tileset/" + header.Footer.SecondTilesetInternal.ToString("X8") + "_tileset.tileset");
                             //TODO import tileset
                             //TODO serialize
                         }
@@ -54,8 +61,6 @@ namespace map2agbimport
                     if (fs != null)
                         fs.Dispose();
                 }
-                if (error)
-                    return;
             }
             Console.ReadKey();
         }
