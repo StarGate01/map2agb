@@ -31,7 +31,7 @@ namespace map2agbimport
                         if (opt.ExportMap)
                         {
                             header = AgbImport.HeaderFromStream(br, mapTable, opt.BankNumber, opt.MapNumber);
-                            
+
                             //TODO serialize
                         }
                         if (opt.ExportTileset)
@@ -41,7 +41,7 @@ namespace map2agbimport
                             //TODO import tileset
                             //TODO serialize
                         }
-                            
+
                     }
                 }
                 catch (Exception ex)

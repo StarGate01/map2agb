@@ -1,4 +1,5 @@
 ﻿using map2agbimport.Compression;
+using map2agbimport.Graphics;
 using map2agblib.Map;
 using map2agblib.Map.Event;
 using map2agblib.Map.LevelScript;
@@ -293,6 +294,8 @@ namespace map2agbimport
             reader.ReadUInt32();
             reader.BaseStream.Seek(reader.ReadUInt32() & 0x1FFFFFF, SeekOrigin.Begin);
             byte[] tileset = reader.ReadLzArray().ToArray();
+            TileCollection set = new TileCollection(tileset);
+            set.ToImage(16).Save("test.png");
             return null;
         }
 

@@ -16,6 +16,14 @@ namespace map2agbimport.Graphics
 
         #region Properties
 
+        public byte[] Indices
+        {
+            get
+            {
+                return _indices;
+            }
+        }
+
         public byte this[int index]
         {
             get
