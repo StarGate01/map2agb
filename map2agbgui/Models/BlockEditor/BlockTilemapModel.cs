@@ -12,7 +12,7 @@ using System.Windows.Media;
 namespace map2agbgui.Models.BlockEditor
 {
 
-    public class BlockTilemapModel : IRomSerializable<BlockTilemapModel, BlockTilemap>, IRaisePropertyChanged
+    public class BlockTilemapModel : IRomSerializable<BlockTilemapModel, BlockTilemap>, INotifyPropertyChanged
     {
 
         #region Properties
@@ -46,7 +46,6 @@ namespace map2agbgui.Models.BlockEditor
         }
 
         private bool _hFlip, _vFlip;
-        [PropertyDependency("FlipTransform")]
         public bool HFlip
         {
             get
@@ -59,7 +58,6 @@ namespace map2agbgui.Models.BlockEditor
                 RaisePropertyChanged("HFlip");
             }
         }
-        [PropertyDependency("FlipTransform")]
         public bool VFlip
         {
             get
@@ -73,26 +71,16 @@ namespace map2agbgui.Models.BlockEditor
             }
         }
 
-        public ScaleTransform FlipTransform
-        {
-            get
-            {
-                return new ScaleTransform(_hFlip ? -1 : 1, _vFlip ? -1 : 1);
-            }
-        }
-
         #endregion
 
         #region Constructor
 
-        private PropertyDependencyHandler _phHandler;
         public BlockTilemapModel(BlockTilemap entry) : base(entry)
         {
             _tileID = entry.TileId;
             _palIndex = entry.PalIndex;
             _hFlip = entry.HFlip;
             _vFlip = entry.VFlip;
-            _phHandler = new PropertyDependencyHandler(this);
         }
 
         #endregion

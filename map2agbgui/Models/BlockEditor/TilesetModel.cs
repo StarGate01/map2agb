@@ -164,8 +164,8 @@ namespace map2agbgui.Models.BlockEditor
             }
         }
 
-        private BitmapSource[] _graphicTileBuffers;
-        public BitmapSource[] GraphicTiles
+        private ImageBrush[] _graphicTileBuffers;
+        public ImageBrush[] GraphicTiles
         {
             get
             {
@@ -190,6 +190,7 @@ namespace map2agbgui.Models.BlockEditor
                 RaisePropertyChanged("Compressed");
             }
         }
+        [PropertyDependency(new string[] { "Blocks", "PalettesTexture" })]
         public bool Secondary
         {
             get
@@ -199,6 +200,15 @@ namespace map2agbgui.Models.BlockEditor
             set
             {
                 _secondary = value;
+                int targetSize = _secondary ? Tileset.MAX_SECOND_TILESET_SIZE : Tileset.MAX_FIRST_TILESET_SIZE;
+                if(_blocks.Count() > targetSize)
+                {
+                    _blocks = new ObservableCollection<TilesetEntryModel>(_blocks.Take(targetSize));
+                }
+                else if(_blocks.Count() < targetSize)
+                {
+                    while (_blocks.Count() < targetSize) _blocks.Add(new TilesetEntryModel(new TilesetEntry(), this));
+                }
                 RaisePropertyChanged("Secondary");
             }
         }
@@ -278,7 +288,7 @@ namespace map2agbgui.Models.BlockEditor
             }
         }
 
-        private WriteableBitmap _palettesTexture = new WriteableBitmap(new BitmapImage(new Uri("pack://application:,,,/map2agbgui;component/Assets/TestPalette_16x6.bmp")));
+        private WriteableBitmap _palettesTexture = new WriteableBitmap(new BitmapImage(new Uri("pack://application:,,,/map2agbgui;component/Assets/TestPalette_16x12.bmp")));
         private ImageBrush _palettesTextureBrush;
         public ImageBrush PalettesTexture
         {
@@ -378,16 +388,30 @@ namespace map2agbgui.Models.BlockEditor
                     data[rowOffset + (j << 2) + 2] = (byte)(_palettes[i].Value.Colors[j].Red << 3);
                 }
             }
-            bitmap.AddDirtyRect(new Int32Rect(0, 0, 16, 6));
+            DisplayTuple<string, TilesetModel> addTileset = AdditionalDesignerTileset;
+            if (addTileset != null)
+            {
+                for (int i = 0; i < 6; i++)
+                {
+                    int rowOffset = (i + 6) * bitmap.BackBufferStride;
+                    for (int j = 0; j < 16; j++)
+                    {
+                        data[rowOffset + (j * 4)] = (byte)(addTileset.Value._palettes[i].Value.Colors[j].Blue << 3);
+                        data[rowOffset + (j * 4) + 1] = (byte)(addTileset.Value._palettes[i].Value.Colors[j].Green << 3);
+                        data[rowOffset + (j * 4) + 2] = (byte)(addTileset.Value._palettes[i].Value.Colors[j].Red << 3);
+                    }
+                }
+            }
+            bitmap.AddDirtyRect(new Int32Rect(0, 0, 16, 12));
             bitmap.Unlock();
         }
 
-        private unsafe BitmapSource[] RefreshGraphicTiles(WriteableBitmap bitmap)
+        private unsafe ImageBrush[] RefreshGraphicTiles(WriteableBitmap bitmap)
         {
 #if DEBUG
             Debug.WriteLine("TilesetModel: RefreshGraphicTiles");
 #endif
-            if (bitmap == null) return new BitmapSource[0];
+            if (bitmap == null) return new ImageBrush[0];
             int rows = bitmap.PixelHeight >> 3;
             int cols = bitmap.PixelWidth >> 3;
             WriteableBitmap[] tiles = new WriteableBitmap[rows * cols];
@@ -404,7 +428,7 @@ namespace map2agbgui.Models.BlockEditor
                     tiles[offset].Unlock();
                 }
             }
-            return tiles;
+            return tiles.Select(p => new ImageBrush(p)).ToArray();
         }
 
         #endregion

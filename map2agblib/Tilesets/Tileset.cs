@@ -89,16 +89,17 @@ namespace map2agblib.Tilesets
             Secondary = isSecondary;
 
             Blocks = Secondary ? new TilesetEntry[MAX_SECOND_TILESET_SIZE] : new TilesetEntry[MAX_FIRST_TILESET_SIZE];
-            Palettes = Enumerable.Repeat(new Palette(), MAX_PALETTES).ToArray();
+            for (int i = 0; i < Blocks.Length; i++) Blocks[i] = new TilesetEntry();
+            Palettes = new Palette[MAX_PALETTES];
+            for (int i = 0; i < Palettes.Length; i++) Palettes[i] = new Palette();
 
             Graphic = string.Empty;
             AnimationInitFunction = string.Empty;
         }
 
-        public Tileset()
+        public Tileset() : this(false, false)
         {
-            Blocks = new TilesetEntry[0];
-            Palettes = Enumerable.Repeat(new Palette(), MAX_PALETTES).ToArray();
+         
         }
 
         #endregion

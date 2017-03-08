@@ -9,11 +9,12 @@ using map2agblib.Tilesets;
 using System.Windows;
 using map2agbgui.Extensions;
 using System.Windows.Media.Imaging;
+using System.Windows.Media;
 
 namespace map2agbgui.Models.BlockEditor
 {
 
-    public class TilesetEntryModel : IRomSerializable<TilesetEntryModel, TilesetEntry>, IRaisePropertyChanged
+    public class TilesetEntryModel : IRomSerializable<TilesetEntryModel, TilesetEntry>, INotifyPropertyChanged
     {
 
         #region Properties
@@ -61,25 +62,15 @@ namespace map2agbgui.Models.BlockEditor
             }
         }
 
-        public BitmapSource[] GraphicTilemap
-        {
-            get
-            {
-                return _tilemap.Select(p => (p.TileID < _tilesetViewModel.GraphicTiles.Length)? _tilesetViewModel.GraphicTiles[p.TileID] : null).ToArray();
-            }
-        }
-
         #endregion
 
         #region Constructor
 
-        private PropertyDependencyHandler _phHandler;
         public TilesetEntryModel(TilesetEntry entry, TilesetModel parent) : base(entry)
         {
             _behaviour = new BlockBehaviourModel(entry.Behaviour);
             _tilemap = new ObservableCollectionEx<BlockTilemapModel>(entry.TilemapEntry.Select(p => new BlockTilemapModel(p)));
             _tilesetViewModel = parent;
-            _phHandler = new PropertyDependencyHandler(this);
         }
 
         public TilesetEntryModel() : this(MockData.MockRomData().Tilesets["TSE0"].Data.Blocks[0], new TilesetModel(MockData.MockRomData().Tilesets["TSE0"], new BlockEditorModel()))

@@ -9,7 +9,17 @@
              xmlns:c="clr-namespace:map2agbgui.Converters"
              xmlns:effects="clr-namespace:map2agbgui.Effects"
              d:DesignHeight="256" d:DesignWidth="256">
-    <Grid RenderOptions.BitmapScalingMode="NearestNeighbor" d:DataContext="{d:DesignInstance Type=model:TilesetEntryModel, IsDesignTimeCreatable=True}" >
+
+    <UserControl.Resources>
+        <c:BoolToFloatConverter x:Key="boolToFloatConverter" />
+        <c:GraphicTilesElementConverter x:Key="arrayElementConverter" />
+        <c:GraphicTilesTextureElementConverter x:Key="textureArrayElementConverter" />
+    </UserControl.Resources>
+
+    <Grid d:DataContext="{d:DesignInstance Type=model:TilesetEntryModel, IsDesignTimeCreatable=True}" >
+        <Grid.CacheMode>
+            <BitmapCache />
+        </Grid.CacheMode>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
@@ -18,44 +28,108 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Image Grid.Row="0" Grid.Column="0" Source="{Binding GraphicTilemap[0]}" RenderTransformOrigin="0.5,0.5" RenderTransform="{Binding Tilemap[0].FlipTransform}" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+        <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+            <Image.Source>
+                <MultiBinding Converter="{StaticResource arrayElementConverter}">
+                    <Binding Path="Tilemap[0].TileID" />
+                    <Binding Path="TilesetViewModel.GraphicTiles"/>
+                </MultiBinding>
+            </Image.Source>
             <Image.Effect>
-                <effects:PaletteEffect Palette="{Binding TilesetViewModel.PalettesTexture}" PaletteIndex="{Binding Tilemap[0].PalIndex}" />
+                <effects:TileEffect
+                    Palette="{Binding TilesetViewModel.PalettesTexture}" 
+                    PaletteIndex="{Binding Tilemap[0].PalIndex}"
+                    HFlip="{Binding Tilemap[0].HFlip, Converter={StaticResource boolToFloatConverter}}"
+                    VFlip="{Binding Tilemap[0].VFlip, Converter={StaticResource boolToFloatConverter}}"
+                    OverlayPaletteIndex="{Binding Tilemap[4].PalIndex}"
+                    OverlayHFlip="{Binding Tilemap[4].HFlip, Converter={StaticResource boolToFloatConverter}}"
+                    OverlayVFlip="{Binding Tilemap[4].VFlip, Converter={StaticResource boolToFloatConverter}}"
+                    SwapPalettes="{Binding TilesetViewModel.Secondary, Converter={StaticResource boolToFloatConverter}}" >
+                    <effects:TileEffect.Overlay>
+                        <MultiBinding Converter="{StaticResource textureArrayElementConverter}">
+                            <Binding Path="Tilemap[4].TileID" />
+                            <Binding Path="TilesetViewModel.GraphicTiles"/>
+                        </MultiBinding>
+                    </effects:TileEffect.Overlay>
+                </effects:TileEffect>
             </Image.Effect>
         </Image>
-        <Image Grid.Row="0" Grid.Column="0" Source="{Binding GraphicTilemap[4]}" RenderTransformOrigin="0.5,0.5" RenderTransform="{Binding Tilemap[4].FlipTransform}" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+        <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+            <Image.Source>
+                <MultiBinding Converter="{StaticResource arrayElementConverter}">
+                    <Binding Path="Tilemap[1].TileID" />
+                    <Binding Path="TilesetViewModel.GraphicTiles"/>
+                </MultiBinding>
+            </Image.Source>
             <Image.Effect>
-                <effects:PaletteEffect Palette="{Binding TilesetViewModel.PalettesTexture}" PaletteIndex="{Binding Tilemap[4].PalIndex}" />
+                <effects:TileEffect
+                    Palette="{Binding TilesetViewModel.PalettesTexture}" 
+                    PaletteIndex="{Binding Tilemap[1].PalIndex}"
+                    HFlip="{Binding Tilemap[1].HFlip, Converter={StaticResource boolToFloatConverter}}"
+                    VFlip="{Binding Tilemap[1].VFlip, Converter={StaticResource boolToFloatConverter}}"
+                    OverlayPaletteIndex="{Binding Tilemap[5].PalIndex}"
+                    OverlayHFlip="{Binding Tilemap[5].HFlip, Converter={StaticResource boolToFloatConverter}}"
+                    OverlayVFlip="{Binding Tilemap[5].VFlip, Converter={StaticResource boolToFloatConverter}}"
+                    SwapPalettes="{Binding TilesetViewModel.Secondary, Converter={StaticResource boolToFloatConverter}}" >
+                    <effects:TileEffect.Overlay>
+                        <MultiBinding Converter="{StaticResource textureArrayElementConverter}">
+                            <Binding Path="Tilemap[5].TileID" />
+                            <Binding Path="TilesetViewModel.GraphicTiles"/>
+                        </MultiBinding>
+                    </effects:TileEffect.Overlay>
+                </effects:TileEffect>
             </Image.Effect>
         </Image>
-        <Image Grid.Row="0" Grid.Column="1" Source="{Binding GraphicTilemap[1]}" RenderTransformOrigin="0.5,0.5" RenderTransform="{Binding Tilemap[1].FlipTransform}" HorizontalAlignment="Left" VerticalAlignment="Bottom" >
+        <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+            <Image.Source>
+                <MultiBinding Converter="{StaticResource arrayElementConverter}">
+                    <Binding Path="Tilemap[2].TileID" />
+                    <Binding Path="TilesetViewModel.GraphicTiles"/>
+                </MultiBinding>
+            </Image.Source>
             <Image.Effect>
-                <effects:PaletteEffect Palette="{Binding TilesetViewModel.PalettesTexture}" PaletteIndex="{Binding Tilemap[1].PalIndex}" />
+                <effects:TileEffect
+                    Palette="{Binding TilesetViewModel.PalettesTexture}" 
+                    PaletteIndex="{Binding Tilemap[2].PalIndex}"
+                    HFlip="{Binding Tilemap[2].HFlip, Converter={StaticResource boolToFloatConverter}}"
+                    VFlip="{Binding Tilemap[2].VFlip, Converter={StaticResource boolToFloatConverter}}"
+                    OverlayPaletteIndex="{Binding Tilemap[6].PalIndex}"
+                    OverlayHFlip="{Binding Tilemap[6].HFlip, Converter={StaticResource boolToFloatConverter}}"
+                    OverlayVFlip="{Binding Tilemap[6].VFlip, Converter={StaticResource boolToFloatConverter}}"
+                    SwapPalettes="{Binding TilesetViewModel.Secondary, Converter={StaticResource boolToFloatConverter}}" >
+                    <effects:TileEffect.Overlay>
+                        <MultiBinding Converter="{StaticResource textureArrayElementConverter}">
+                            <Binding Path="Tilemap[6].TileID" />
+                            <Binding Path="TilesetViewModel.GraphicTiles"/>
+                        </MultiBinding>
+                    </effects:TileEffect.Overlay>
+                </effects:TileEffect>
             </Image.Effect>
         </Image>
-        <Image Grid.Row="0" Grid.Column="1" Source="{Binding GraphicTilemap[5]}" RenderTransformOrigin="0.5,0.5" RenderTransform="{Binding Tilemap[5].FlipTransform}" HorizontalAlignment="Left" VerticalAlignment="Bottom">
+        <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+            <Image.Source>
+                <MultiBinding Converter="{StaticResource arrayElementConverter}">
+                    <Binding Path="Tilemap[3].TileID" />
+                    <Binding Path="TilesetViewModel.GraphicTiles"/>
+                </MultiBinding>
+            </Image.Source>
             <Image.Effect>
-                <effects:PaletteEffect Palette="{Binding TilesetViewModel.PalettesTexture}" PaletteIndex="{Binding Tilemap[5].PalIndex}" />
-            </Image.Effect>
-        </Image>
-        <Image Grid.Row="1" Grid.Column="0" Source="{Binding GraphicTilemap[2]}" RenderTransformOrigin="0.5,0.5" RenderTransform="{Binding Tilemap[2].FlipTransform}" VerticalAlignment="Top" HorizontalAlignment="Right" >
-            <Image.Effect>
-                <effects:PaletteEffect Palette="{Binding TilesetViewModel.PalettesTexture}" PaletteIndex="{Binding Tilemap[2].PalIndex}" />
-            </Image.Effect>
-        </Image>
-        <Image Grid.Row="1" Grid.Column="0" Source="{Binding GraphicTilemap[6]}" RenderTransformOrigin="0.5,0.5" RenderTransform="{Binding Tilemap[6].FlipTransform}" VerticalAlignment="Top" HorizontalAlignment="Right">
-            <Image.Effect>
-                <effects:PaletteEffect Palette="{Binding TilesetViewModel.PalettesTexture}" PaletteIndex="{Binding Tilemap[6].PalIndex}" />
-            </Image.Effect>
-        </Image>
-        <Image Grid.Row="1" Grid.Column="1" Source="{Binding GraphicTilemap[3]}" RenderTransformOrigin="0.5,0.5" RenderTransform="{Binding Tilemap[3].FlipTransform}" HorizontalAlignment="Left" VerticalAlignment="Top" >
-            <Image.Effect>
-                <effects:PaletteEffect Palette="{Binding TilesetViewModel.PalettesTexture}" PaletteIndex="{Binding Tilemap[3].PalIndex}" />
-            </Image.Effect>
-        </Image>
-        <Image Grid.Row="1" Grid.Column="1" Source="{Binding GraphicTilemap[7]}" RenderTransformOrigin="0.5,0.5" RenderTransform="{Binding Tilemap[7].FlipTransform}" HorizontalAlignment="Left" VerticalAlignment="Top">
-            <Image.Effect>
-                <effects:PaletteEffect Palette="{Binding TilesetViewModel.PalettesTexture}" PaletteIndex="{Binding Tilemap[7].PalIndex}" />
+                <effects:TileEffect
+                    Palette="{Binding TilesetViewModel.PalettesTexture}" 
+                    PaletteIndex="{Binding Tilemap[3].PalIndex}"
+                    HFlip="{Binding Tilemap[3].HFlip, Converter={StaticResource boolToFloatConverter}}"
+                    VFlip="{Binding Tilemap[3].VFlip, Converter={StaticResource boolToFloatConverter}}"
+                    OverlayPaletteIndex="{Binding Tilemap[7].PalIndex}"
+                    OverlayHFlip="{Binding Tilemap[7].HFlip, Converter={StaticResource boolToFloatConverter}}"
+                    OverlayVFlip="{Binding Tilemap[7].VFlip, Converter={StaticResource boolToFloatConverter}}"
+                    SwapPalettes="{Binding TilesetViewModel.Secondary, Converter={StaticResource boolToFloatConverter}}" >
+                    <effects:TileEffect.Overlay>
+                        <MultiBinding Converter="{StaticResource textureArrayElementConverter}">
+                            <Binding Path="Tilemap[7].TileID" />
+                            <Binding Path="TilesetViewModel.GraphicTiles"/>
+                        </MultiBinding>
+                    </effects:TileEffect.Overlay>
+                </effects:TileEffect>
             </Image.Effect>
         </Image>
     </Grid>

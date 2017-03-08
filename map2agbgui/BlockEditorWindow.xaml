@@ -9,7 +9,7 @@
         xmlns:c="clr-namespace:map2agbgui.Converters"
         xmlns:effects="clr-namespace:map2agbgui.Effects"
         xmlns:controls="clr-namespace:map2agbgui.Controls"
-        Title="Tileset Editor" Height="400" Width="600" MinWidth="600" WindowStartupLocation="CenterOwner" SourceInitialized="Window_SourceInitialized" ResizeMode="NoResize">
+        Title="Tileset Editor" Height="500" Width="750" MinWidth="750" WindowStartupLocation="CenterOwner" SourceInitialized="Window_SourceInitialized" ResizeMode="NoResize">
 
     <Window.Resources>
         <ContextMenu x:Key="tilesetContextMenu">
@@ -143,7 +143,7 @@
                                             </ItemsControl.ItemsPanel>
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
-                                                    <Rectangle Fill="{Binding Brush}" Margin="0,1" Height="10" Width="7" />
+                                                    <Rectangle Fill="{Binding Brush}" Margin="0,1" Height="10" Width="10" />
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>
                                         </ItemsControl>
@@ -235,7 +235,59 @@
                         </Grid>
                     </GroupBox>
                     <Grid Grid.Row="1" DataContext="{Binding ElementName=TilesetListBox, Path=SelectedItem}" >
-                        <controls:BlockControl Width="256" Height="256" DataContext="{Binding Value.Blocks[0]}" />
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="295"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <GroupBox Grid.Row="0" Grid.Column="0" >
+                            <GroupBox.Header>
+                                <TextBlock Text="Blocks" FontWeight="Bold" />
+                            </GroupBox.Header>
+                            <ScrollViewer CanContentScroll="True" Margin="5" VerticalScrollBarVisibility="Auto">
+                                <ItemsControl ItemsSource="{Binding Value.Blocks}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderThickness="1" BorderBrush="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+                                                <controls:BlockControl Width="32" Height="32" DataContext="{Binding}" />
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </GroupBox>
+                        <GroupBox Grid.Row="1" Grid.Column="0"  >
+                            <GroupBox.Header>
+                                <TextBlock Text="Selected Block" FontWeight="Bold" />
+                            </GroupBox.Header>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <controls:BlockControl Margin="5" Grid.Column="0" Width="128" Height="128" DataContext="{Binding Value.Blocks[0]}" />
+                                <GroupBox Grid.Column="1"  >
+                                    <GroupBox.Header>
+                                        <TextBlock Text="Settings" FontWeight="Bold" />
+                                    </GroupBox.Header>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="TODO" />
+                                    </Grid>
+                                </GroupBox>
+                            </Grid>
+                        </GroupBox>
                     </Grid>
                 </Grid>
             </TabItem>

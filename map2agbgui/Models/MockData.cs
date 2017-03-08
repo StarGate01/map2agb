@@ -56,16 +56,25 @@ namespace map2agbgui.Models
             try
             {
                 romData.Tilesets["TSE0"].Data.Palettes[0] = JASCPAL.Import(@"C:\Users\Christoph\Desktop\Tileset12_I.pal");
-                romData.Tilesets["TSE0"].Data.Blocks = new TilesetEntry[] { new TilesetEntry() };
+                //romData.Tilesets["TSE0"].Data.Blocks = Enumerable.Repeat(new TilesetEntry(), 64).ToArray();
 
-                romData.Tilesets["TSE0"].Data.Blocks[0].TilemapEntry[0] = new BlockTilemap() { TileId = 5 };
-                romData.Tilesets["TSE0"].Data.Blocks[0].TilemapEntry[1] = new BlockTilemap() { TileId = 6 };
-                romData.Tilesets["TSE0"].Data.Blocks[0].TilemapEntry[2] = new BlockTilemap() { TileId = 21 };
-                romData.Tilesets["TSE0"].Data.Blocks[0].TilemapEntry[3] = new BlockTilemap() { TileId = 22 };
-                romData.Tilesets["TSE0"].Data.Blocks[0].TilemapEntry[4] = new BlockTilemap() { TileId = 98 };
-                romData.Tilesets["TSE0"].Data.Blocks[0].TilemapEntry[5] = new BlockTilemap() { TileId = 99 };
-                romData.Tilesets["TSE0"].Data.Blocks[0].TilemapEntry[6] = new BlockTilemap() { TileId = 114 };
-                romData.Tilesets["TSE0"].Data.Blocks[0].TilemapEntry[7] = new BlockTilemap() { TileId = 115 };
+                romData.Tilesets["TSE0"].Data.Blocks[0].TilemapEntry[0].TileId = 5;
+                romData.Tilesets["TSE0"].Data.Blocks[0].TilemapEntry[1].TileId = 6;
+                romData.Tilesets["TSE0"].Data.Blocks[0].TilemapEntry[2].TileId = 21;
+                romData.Tilesets["TSE0"].Data.Blocks[0].TilemapEntry[3].TileId = 22;
+                romData.Tilesets["TSE0"].Data.Blocks[0].TilemapEntry[4].TileId = 98;
+                romData.Tilesets["TSE0"].Data.Blocks[0].TilemapEntry[5].TileId = 99;
+                romData.Tilesets["TSE0"].Data.Blocks[0].TilemapEntry[6].TileId = 114;
+                romData.Tilesets["TSE0"].Data.Blocks[0].TilemapEntry[7].TileId = 115;
+
+                romData.Tilesets["TSE0"].Data.Blocks[1].TilemapEntry[0].TileId = 9;
+                romData.Tilesets["TSE0"].Data.Blocks[1].TilemapEntry[1].TileId = 10;
+                romData.Tilesets["TSE0"].Data.Blocks[1].TilemapEntry[2].TileId = 25;
+                romData.Tilesets["TSE0"].Data.Blocks[1].TilemapEntry[3].TileId = 27;
+                romData.Tilesets["TSE0"].Data.Blocks[1].TilemapEntry[4].TileId = 102;
+                romData.Tilesets["TSE0"].Data.Blocks[1].TilemapEntry[5].TileId = 103;
+                romData.Tilesets["TSE0"].Data.Blocks[1].TilemapEntry[6].TileId = 118;
+                romData.Tilesets["TSE0"].Data.Blocks[1].TilemapEntry[7].TileId = 119;
 
                 romData.Tilesets["TSE0"].Data.Palettes[1] = JASCPAL.Import(@"C:\Users\Christoph\Desktop\deko-iv.pal");
                 romData.Tilesets["TSE1"].Data.Palettes[0] = JASCPAL.Import(@"C:\Users\Christoph\Desktop\deko-iv.pal");
