@@ -19,7 +19,7 @@ namespace map2agbimport.Compression
                 throw new ArgumentException("could not read LZ structure, invalid magic number read", "reader");
             uint size = head >> 8;
 
-            List<byte> output = new List<byte>((int)(size * 2));
+            List<byte> output = new List<byte>((int)(size + 16));
             while (output.Count < size)
             {
                 byte compound = reader.ReadByte();
