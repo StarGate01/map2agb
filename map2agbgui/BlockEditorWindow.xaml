@@ -9,7 +9,7 @@
         xmlns:c="clr-namespace:map2agbgui.Converters"
         xmlns:effects="clr-namespace:map2agbgui.Effects"
         xmlns:controls="clr-namespace:map2agbgui.Controls"
-        Title="Tileset Editor" Height="500" Width="770" WindowStartupLocation="CenterOwner" SourceInitialized="Window_SourceInitialized" ResizeMode="NoResize">
+        Title="Tileset Editor" Height="500" Width="782" WindowStartupLocation="CenterOwner" SourceInitialized="Window_SourceInitialized" ResizeMode="NoResize">
 
     <Window.Resources>
         <ContextMenu x:Key="tilesetContextMenu">
@@ -188,23 +188,18 @@
                                     <TextBlock Text="No image" Foreground="#FFD10000" FontSize="10" />
                                 </StackPanel>
                             </Border>
-                            <!--<Border Grid.Row="6" Grid.Column="1" Height="60" RenderOptions.BitmapScalingMode="NearestNeighbor" Background="{Binding Value.PalettesTexture}" />-->
                             <Image Margin="3" Grid.Row="6" Grid.Column="1" Visibility="{Binding Value.ValidImage, Converter={StaticResource booleanToVisibilityConverter}}" Source="{Binding Value.Graphic}" RenderTransformOrigin="0.5,0.5" >
                                 <Image.LayoutTransform>
                                     <TransformGroup>
                                         <RotateTransform Angle="90"/>
                                     </TransformGroup>
                                 </Image.LayoutTransform>
-                                <!--<Image.Effect>
-                                    <effects:PaletteEffect Palette="{Binding Value.PalettesTexture}" PaletteIndex="{Binding Value.SelectedPalette.Index}"  />
-                                </Image.Effect>-->
                             </Image>
                         </Grid>
                     </GroupBox>
                 </Grid>
             </TabItem>
             <TabItem>
-                <!--Visibility="{Binding ElementName=TilesetListBox, Path=SelectedItem.Value.ValidSettings, Converter={StaticResource booleanToVisibilityConverter}}"-->
                 <TabItem.Header>
                     <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
                         <Grid.ColumnDefinitions>
@@ -306,9 +301,19 @@
                                     <TextBlock Text="Tiles" FontWeight="Bold" />
                                 </WrapPanel>
                             </GroupBox.Header>
-                            <ScrollViewer Margin="3">
-                                <Image Width="256" RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{Binding Value.Graphic}" />
-                            </ScrollViewer>
+                            <TabControl Margin="3">
+                                <TabItem Header="Current">
+                                    <ScrollViewer Margin="3">
+                                        <Image Width="256" RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{Binding Value.Graphic}" />
+                                    </ScrollViewer>
+                                </TabItem>
+                                <TabItem Header="Additional">
+                                    <ScrollViewer Margin="3">
+                                        <Image Width="256" RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{Binding Value.AdditionalDesignerTileset.Value.Graphic}" />
+                                    </ScrollViewer>
+                                </TabItem>
+                            </TabControl>
+                           
                         </GroupBox>
                     </Grid>
                 </Grid>

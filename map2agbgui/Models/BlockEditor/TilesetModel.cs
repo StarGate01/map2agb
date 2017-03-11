@@ -29,7 +29,7 @@ namespace map2agbgui.Models.BlockEditor
     public class TilesetModel : IRomSerializable<TilesetModel, LazyReference<Tileset>>, ITupleFormattable, IRaisePropertyChanged, IDisposable
     {
 
-        //private static BitmapPalette greyPalette = new BitmapPalette(Enumerable.Range(0, 15).Select(p => Color.FromArgb((byte)((p << 4) + 8), 0, 0, 0)).ToList());
+        //todo additionaltileset - graphics|palettes change -> blocks rerender
 
         #region Properties
 
@@ -103,12 +103,12 @@ namespace map2agbgui.Models.BlockEditor
 
         #endregion
 
-        #region Data properties
+        #region Data propertiesb
 
         #region General
 
         private string _additionalDesignerTilesetID;
-        [PropertyDependency(new string[] { "ValidAdditionalDesignerTileset", "AdditionalDesignerTileset"})] // "PalettesTexture" 
+        [PropertyDependency(new string[] { "ValidAdditionalDesignerTileset", "AdditionalDesignerTileset"})] 
         public string AdditionalDesignerTilesetID
         {
             get
@@ -119,6 +119,7 @@ namespace map2agbgui.Models.BlockEditor
             {
                 _additionalDesignerTilesetID = value;
                 //_palettesTextureBrush = null;
+                foreach (TilesetEntryModel block in _blocks) block.Dirty = true;
                 RaisePropertyChanged("AdditionalDesignerTilesetID");
             }
         }
@@ -144,7 +145,7 @@ namespace map2agbgui.Models.BlockEditor
                 RaisePropertyChanged("Compressed");
             }
         }
-        [PropertyDependency("Blocks")] //(new string[] { "Blocks", "PalettesTexture" }
+        [PropertyDependency("Blocks")] 
         public bool Secondary
         {
             get
@@ -213,7 +214,6 @@ namespace map2agbgui.Models.BlockEditor
         }
 
         private ObservableCollectionEx<DisplayTuple<int, PaletteModel>> _palettes;
-        //[PropertyDependency("PalettesTexture")]
         public ObservableCollectionEx<DisplayTuple<int, PaletteModel>> Palettes
         {
             get
@@ -229,21 +229,6 @@ namespace map2agbgui.Models.BlockEditor
                 RaisePropertyChanged("Palettes");
             }
         }
-
-        //private WriteableBitmap _palettesTexture = new WriteableBitmap(16, 12, 96, 96, PixelFormats.Bgr32, null);
-        //private ImageBrush _palettesTextureBrush;
-        //public ImageBrush PalettesTexture
-        //{
-        //    get
-        //    {
-        //        if (_palettesTextureBrush == null)
-        //        {
-        //            _palettesTextureBrush = new ImageBrush(_palettesTexture);
-        //            RefreshPaletteTexture(_palettesTexture);
-        //        }
-        //        return _palettesTextureBrush;
-        //    }
-        //}
 
         #endregion
 
@@ -285,19 +270,6 @@ namespace map2agbgui.Models.BlockEditor
                 else return null;
             }
         }
-
-        //private ImageBrush[] _graphicTileBuffers;
-        //public ImageBrush[] GraphicTiles
-        //{
-        //    get
-        //    {
-        //        if (_graphicTileBuffers == null)
-        //        {
-        //            _graphicTileBuffers = RefreshGraphicTiles((WriteableBitmap)Graphic);
-        //        }
-        //        return _graphicTileBuffers;
-        //    }
-        //}
 
         private ObservableCollectionEx<TilesetEntryModel> _blocks;
         public ObservableCollectionEx<TilesetEntryModel> Blocks
@@ -376,7 +348,6 @@ namespace map2agbgui.Models.BlockEditor
         {
             if (e.PropertyName == "Value")
             {
-                //RefreshPaletteTexture(_palettesTexture);
                 foreach (TilesetEntryModel block in _blocks) block.Dirty = true;
             }
         }
@@ -397,42 +368,6 @@ namespace map2agbgui.Models.BlockEditor
             tileset.Blocks = _blocks.Select(p => p.ToRomData()).ToArray();
             return new LazyReference<Tileset>(tileset);
         }
-
-//        private unsafe void RefreshPaletteTexture(WriteableBitmap bitmap)
-//        {
-//#if DEBUG
-//            Debug.WriteLine("TilesetModel: RefreshPaletteTexture");
-//#endif
-//            if (bitmap == null) return;
-//            bitmap.Lock();
-//            byte* data = (byte*)bitmap.BackBuffer;
-//            for (int i = 0; i < 6; i++)
-//            {
-//                int rowOffset = i * bitmap.BackBufferStride;
-//                for (int j = 0; j < 16; j++)
-//                {
-//                    data[rowOffset + (j << 2)] = (byte)(_palettes[i].Value.Colors[j].Blue << 3);
-//                    data[rowOffset + (j << 2) + 1] = (byte)(_palettes[i].Value.Colors[j].Green << 3);
-//                    data[rowOffset + (j << 2) + 2] = (byte)(_palettes[i].Value.Colors[j].Red << 3);
-//                }
-//            }
-//            DisplayTuple<string, TilesetModel> addTileset = AdditionalDesignerTileset;
-//            if (addTileset != null)
-//            {
-//                for (int i = 0; i < 6; i++)
-//                {
-//                    int rowOffset = (i + 6) * bitmap.BackBufferStride;
-//                    for (int j = 0; j < 16; j++)
-//                    {
-//                        data[rowOffset + (j * 4)] = (byte)(addTileset.Value._palettes[i].Value.Colors[j].Blue << 3);
-//                        data[rowOffset + (j * 4) + 1] = (byte)(addTileset.Value._palettes[i].Value.Colors[j].Green << 3);
-//                        data[rowOffset + (j * 4) + 2] = (byte)(addTileset.Value._palettes[i].Value.Colors[j].Red << 3);
-//                    }
-//                }
-//            }
-//            bitmap.AddDirtyRect(new Int32Rect(0, 0, 16, 12));
-//            bitmap.Unlock();
-//        }
 
         public void Dispose()
         {
