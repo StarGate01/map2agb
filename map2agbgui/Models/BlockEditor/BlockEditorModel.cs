@@ -156,7 +156,6 @@ namespace map2agbgui.Models.BlockEditor
 
         #endregion
 
-
         public void Dispose()
         {
             foreach(DisplayTuple<string, TilesetModel> tileset in _tilesets)

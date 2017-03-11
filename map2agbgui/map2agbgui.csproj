@@ -305,16 +305,7 @@
     <Effect Include="Effects\PaletteEffect.hlsl" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Assets\TestPalette_16x6.bmp" />
-  </ItemGroup>
-  <ItemGroup>
     <Effect Include="Effects\TileEffect.hlsl" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\TestPalette_16x12.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\TestBlock_16x16.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EffectCompile" Condition="'@(Effect)' != '' ">

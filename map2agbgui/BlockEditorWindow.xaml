@@ -195,9 +195,9 @@
                                         <RotateTransform Angle="90"/>
                                     </TransformGroup>
                                 </Image.LayoutTransform>
-                                <Image.Effect>
+                                <!--<Image.Effect>
                                     <effects:PaletteEffect Palette="{Binding Value.PalettesTexture}" PaletteIndex="{Binding Value.SelectedPalette.Index}"  />
-                                </Image.Effect>
+                                </Image.Effect>-->
                             </Image>
                         </Grid>
                     </GroupBox>
@@ -246,35 +246,42 @@
                         </Grid.RowDefinitions>
                         <GroupBox Grid.Row="0" Grid.Column="0" >
                             <GroupBox.Header>
-                                <TextBlock Text="Blocks" FontWeight="Bold" />
+                                <WrapPanel>
+                                    <TextBlock Text="Blocks" FontWeight="Bold" />
+                                    <TextBlock Visibility="{Binding Value.IsRendering, Converter={StaticResource booleanToVisibilityConverter}}" Text="  Rebuilding cache: "/>
+                                    <ProgressBar Visibility="{Binding Value.IsRendering, Converter={StaticResource booleanToVisibilityConverter}}" Width="100" Value="{Binding Value.RenderProgress}" Maximum="100" Minimum="0" />
+                                </WrapPanel>
                             </GroupBox.Header>
-                            <ScrollViewer CanContentScroll="True" Margin="5" VerticalScrollBarVisibility="Auto">
-                                <ItemsControl ItemsSource="{Binding Value.RenderedBlocks}">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <WrapPanel />
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Border BorderThickness="1" BorderBrush="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
-                                                <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Height="32" Width="32" Source="{Binding}" />
-                                            </Border>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                                </ScrollViewer>
+                            <ListBox SelectedIndex="0" x:Name="BlocksListBox" ItemsSource="{Binding Value.RenderedBlocks}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel />
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                                <ListBox.ItemContainerStyle>
+                                    <Style TargetType="ListBoxItem">
+                                        <Setter Property="Padding" Value="0"/>
+                                    </Style>
+                                </ListBox.ItemContainerStyle>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border BorderThickness="1" BorderBrush="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+                                            <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Height="32" Width="32" Source="{Binding}" />
+                                        </Border>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
                         </GroupBox>
                         <GroupBox Grid.Row="1" Grid.Column="0"  >
                             <GroupBox.Header>
                                 <TextBlock Text="Selected Block" FontWeight="Bold" />
                             </GroupBox.Header>
-                            <Grid>
+                            <Grid DataContext="{Binding ElementName=BlocksListBox, Path=SelectedItem}">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <controls:BlockControl Margin="5" Grid.Column="0" Width="128" Height="128" DataContext="{Binding Value.Blocks[0]}" />
+                               
                                 <GroupBox Grid.Column="1"  >
                                     <GroupBox.Header>
                                         <TextBlock Text="Settings" FontWeight="Bold" />
@@ -284,7 +291,6 @@
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="TODO" />
                                     </Grid>
                                 </GroupBox>
                             </Grid>
