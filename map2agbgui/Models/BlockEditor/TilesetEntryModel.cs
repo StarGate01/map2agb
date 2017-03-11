@@ -48,7 +48,6 @@ namespace map2agbgui.Models.BlockEditor
         }
 
         private ObservableCollectionEx<BlockTilemapModel> _tilemap;
-        [ChildPropertyDependency("TileID", "GraphicTilemap")]
         public ObservableCollectionEx<BlockTilemapModel> Tilemap
         {
             get
@@ -58,7 +57,38 @@ namespace map2agbgui.Models.BlockEditor
             set
             {
                 _tilemap = value;
+                _tilemap.ItemPropertyChanged += Tilemap_ItemPropertyChanged;
                 RaisePropertyChanged("Tilemap");
+            }
+        }
+
+        private bool _dirty;
+        public bool Dirty
+        {
+            get
+            {
+                return _dirty;
+            }
+            set
+            {
+                _dirty = value;
+                if(_dirty == true) RaisePropertyChanged("Graphic");
+                RaisePropertyChanged("Dirty");
+            }
+        }
+
+        private BitmapSource _graphic;
+        public BitmapSource Graphic
+        {
+            get
+            {
+                if(_dirty) _tilesetViewModel.EnsureBlockRendererRunning();
+                return _graphic;
+            }
+            set
+            {
+                _graphic = value;
+                RaisePropertyChanged("Graphic");
             }
         }
 
@@ -70,7 +100,9 @@ namespace map2agbgui.Models.BlockEditor
         {
             _behaviour = new BlockBehaviourModel(entry.Behaviour);
             _tilemap = new ObservableCollectionEx<BlockTilemapModel>(entry.TilemapEntry.Select(p => new BlockTilemapModel(p)));
+            _tilemap.ItemPropertyChanged += Tilemap_ItemPropertyChanged;
             _tilesetViewModel = parent;
+            _dirty = true;
         }
 
 #if DEBUG
@@ -80,6 +112,15 @@ namespace map2agbgui.Models.BlockEditor
                 throw new InvalidOperationException("NSEditorModel can only be constructed without parameters by the designer");
         }
 #endif
+
+        #endregion
+
+        #region Events
+
+        private void Tilemap_ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            Dirty = true;
+        }
 
         #endregion
 

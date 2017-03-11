@@ -9,7 +9,7 @@
         xmlns:c="clr-namespace:map2agbgui.Converters"
         xmlns:effects="clr-namespace:map2agbgui.Effects"
         xmlns:controls="clr-namespace:map2agbgui.Controls"
-        Title="Tileset Editor" Height="500" Width="750" MinWidth="750" WindowStartupLocation="CenterOwner" SourceInitialized="Window_SourceInitialized" ResizeMode="NoResize">
+        Title="Tileset Editor" Height="500" Width="770" WindowStartupLocation="CenterOwner" SourceInitialized="Window_SourceInitialized" ResizeMode="NoResize">
 
     <Window.Resources>
         <ContextMenu x:Key="tilesetContextMenu">
@@ -237,14 +237,14 @@
                     </GroupBox>
                     <Grid Grid.Row="1" DataContext="{Binding ElementName=TilesetListBox, Path=SelectedItem}" >
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="295"/>
-                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="301"/>
+                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
                             <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
-                        <GroupBox Grid.Row="0" Grid.Column="0" >
+                        <GroupBox Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Margin="0,0,5,0" >
                             <GroupBox.Header>
                                 <WrapPanel>
                                     <TextBlock Text="Blocks" FontWeight="Bold" />
@@ -252,7 +252,7 @@
                                     <ProgressBar Visibility="{Binding Value.IsRendering, Converter={StaticResource booleanToVisibilityConverter}}" Width="100" Value="{Binding Value.RenderProgress}" Maximum="100" Minimum="0" />
                                 </WrapPanel>
                             </GroupBox.Header>
-                            <ListBox SelectedIndex="0" x:Name="BlocksListBox" ItemsSource="{Binding Value.RenderedBlocks}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                            <ListBox Margin="3" SelectedIndex="0" x:Name="BlocksListBox" ItemsSource="{Binding Value.Blocks}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                                 <ListBox.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <WrapPanel />
@@ -266,34 +266,49 @@
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <Border BorderThickness="1" BorderBrush="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
-                                            <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Height="32" Width="32" Source="{Binding}" />
+                                            <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Height="32" Width="32" Source="{Binding Graphic}" />
                                         </Border>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
                             </ListBox>
                         </GroupBox>
-                        <GroupBox Grid.Row="1" Grid.Column="0"  >
+                        <GroupBox Grid.Row="0" Grid.Column="1"  >
                             <GroupBox.Header>
-                                <TextBlock Text="Selected Block" FontWeight="Bold" />
+                                <WrapPanel>
+                                    <TextBlock Text="Selected Block " FontWeight="Bold" />
+                                    <TextBlock Text="#" />
+                                    <TextBlock Text="{Binding ElementName=BlocksListBox, Path=SelectedIndex}" />
+                                </WrapPanel>
                             </GroupBox.Header>
                             <Grid DataContext="{Binding ElementName=BlocksListBox, Path=SelectedItem}">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                               
+                                <Image Margin="3" Grid.Column="0" RenderOptions.BitmapScalingMode="NearestNeighbor" Width="64" Height="64" Source="{Binding Graphic}" />
                                 <GroupBox Grid.Column="1"  >
                                     <GroupBox.Header>
                                         <TextBlock Text="Settings" FontWeight="Bold" />
                                     </GroupBox.Header>
-                                    <Grid>
+                                    <Grid Margin="3">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
+                                        <TextBlock Text="TODO" />
                                     </Grid>
                                 </GroupBox>
                             </Grid>
+                        </GroupBox>
+                        <GroupBox Grid.Row="1" Grid.Column="1"  >
+                            <GroupBox.Header>
+                                <WrapPanel>
+                                    <TextBlock Text="Tiles" FontWeight="Bold" />
+                                </WrapPanel>
+                            </GroupBox.Header>
+                            <ScrollViewer Margin="3">
+                                <Image Width="256" RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{Binding Value.Graphic}" />
+                            </ScrollViewer>
                         </GroupBox>
                     </Grid>
                 </Grid>

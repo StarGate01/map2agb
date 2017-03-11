@@ -29,14 +29,7 @@ namespace map2agbgui.Models.BlockEditor
     public class TilesetModel : IRomSerializable<TilesetModel, LazyReference<Tileset>>, ITupleFormattable, IRaisePropertyChanged, IDisposable
     {
 
-        private static BitmapPalette greyPalette = new BitmapPalette(Enumerable.Range(0, 15).Select(p => Color.FromArgb((byte)((p << 4) + 8), 0, 0, 0)).ToList());
-
-        #region Native
-
-        [DllImport("msvcrt.dll", EntryPoint = "memcpy", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
-        public static extern IntPtr memcpy(IntPtr dest, IntPtr src, UIntPtr count);
-
-        #endregion
+        //private static BitmapPalette greyPalette = new BitmapPalette(Enumerable.Range(0, 15).Select(p => Color.FromArgb((byte)((p << 4) + 8), 0, 0, 0)).ToList());
 
         #region Properties
 
@@ -151,7 +144,7 @@ namespace map2agbgui.Models.BlockEditor
                 RaisePropertyChanged("Compressed");
             }
         }
-        [PropertyDependency(new string[] { "Blocks", "PalettesTexture" })]
+        [PropertyDependency("Blocks")] //(new string[] { "Blocks", "PalettesTexture" }
         public bool Secondary
         {
             get
@@ -170,8 +163,7 @@ namespace map2agbgui.Models.BlockEditor
                 {
                     while (_blocks.Count < targetSize) _blocks.Add(new TilesetEntryModel(new TilesetEntry(), this));
                 }
-                AdjustBlockLength();
-                EnqueueAllBlocks();
+                foreach (TilesetEntryModel block in _blocks) block.Dirty = true;
                 RaisePropertyChanged("Secondary");
             }
         }
@@ -233,7 +225,7 @@ namespace map2agbgui.Models.BlockEditor
                 _palettes = value;
                 //_palettesTextureBrush = null;
                 _palettes.ItemPropertyChanged += Palettes_ItemPropertyChanged;
-                EnqueueAllBlocks();
+                foreach (TilesetEntryModel block in _blocks) block.Dirty = true;
                 RaisePropertyChanged("Palettes");
             }
         }
@@ -286,7 +278,7 @@ namespace map2agbgui.Models.BlockEditor
                         _graphicBuffer = new WriteableBitmap(new BitmapImage(new Uri(_graphicPath, UriKind.Absolute)));
                         _graphicBuffer.Freeze();
                         //ChangePalette(ref _graphicBuffer, greyPalette);
-                        EnqueueAllBlocks();
+                        foreach (TilesetEntryModel block in _blocks) block.Dirty = true;
                     }
                     return _graphicBuffer;
                 }
@@ -308,7 +300,6 @@ namespace map2agbgui.Models.BlockEditor
         //}
 
         private ObservableCollectionEx<TilesetEntryModel> _blocks;
-        [PropertyDependency("RenderedBlocks")]
         public ObservableCollectionEx<TilesetEntryModel> Blocks
         {
             get
@@ -318,30 +309,10 @@ namespace map2agbgui.Models.BlockEditor
             set
             {
                 _blocks = value;
-                _blocks.ItemPropertyChanged += Blocks_ItemPropertyChanged;
-                AdjustBlockLength();
-                EnqueueAllBlocks();
                 RaisePropertyChanged("Blocks");
             }
         }
-
-        private ObservableCollection<BitmapSource> _renderedBlocks;
-        public ObservableCollection<BitmapSource> RenderedBlocks
-        {
-            get
-            {
-                return _renderedBlocks;
-            }
-            set
-            {
-                _renderedBlocks = value;
-                RaisePropertyChanged("RenderedBlocks");
-            }
-        }
-
        
-        private object usingGraphicTileBuffer = new object();
-        private ConcurrentQueue<int> renderBlockQueue;
         private Thread backroundRendererTask;
 
         private bool _isRendering;
@@ -392,13 +363,9 @@ namespace map2agbgui.Models.BlockEditor
                 new DisplayTuple<int, PaletteModel>(pi, new PaletteModel(p))));
             _palettes.ItemPropertyChanged += Palettes_ItemPropertyChanged;
             _blocks = new ObservableCollectionEx<TilesetEntryModel>(tileset.Data.Blocks.Select(p => new TilesetEntryModel(p, this)));
-            _blocks.ItemPropertyChanged += Blocks_ItemPropertyChanged;
-            _renderedBlocks = new ObservableCollection<BitmapSource>();
             _selectedPalette = _palettes[0];
             _blockEditorViewModel = parentEditorModel;
             _phHandler = new PropertyDependencyHandler(this);
-            renderBlockQueue = new ConcurrentQueue<int>();
-            AdjustBlockLength();
         }
 
         #endregion
@@ -410,13 +377,8 @@ namespace map2agbgui.Models.BlockEditor
             if (e.PropertyName == "Value")
             {
                 //RefreshPaletteTexture(_palettesTexture);
-                EnqueueAllBlocks();
+                foreach (TilesetEntryModel block in _blocks) block.Dirty = true;
             }
-        }
-
-        private void Blocks_ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            EnqueueBlocks(_blocks.IndexOf((TilesetEntryModel)sender));
         }
 
         #endregion
@@ -481,40 +443,9 @@ namespace map2agbgui.Models.BlockEditor
 
         #region Threads
 
-        private void AdjustBlockLength()
+        public void EnsureBlockRendererRunning()
         {
-            if (_renderedBlocks.Count > _blocks.Count)
-            {
-                _renderedBlocks = new ObservableCollection<BitmapSource>(_renderedBlocks.Take(_blocks.Count));
-            }
-            else if (_renderedBlocks.Count < _blocks.Count)
-            {
-                WriteableBitmap filler = new WriteableBitmap(16, 16, 96, 96, PixelFormats.Bgr32, null);
-                while (_renderedBlocks.Count < _blocks.Count) _renderedBlocks.Add(filler);
-            }
-        }
-
-        private void EnqueueBlocks(params int[] index)
-        {
-            for (int i = 0; i < index.Length; i++)
-            {
-                if(!renderBlockQueue.Contains(index[i])) renderBlockQueue.Enqueue(index[i]);
-            }
-            StartBackgroundBlockRenderer();
-        }
-
-        private void EnqueueAllBlocks()
-        {
-            for (int i = 0; i < _blocks.Count; i++)
-            {
-                if (!renderBlockQueue.Contains(i)) renderBlockQueue.Enqueue(i);
-            }
-            StartBackgroundBlockRenderer();
-        }
-
-        private void StartBackgroundBlockRenderer()
-        {
-            if (backroundRendererTask == null || backroundRendererTask.ThreadState != System.Threading.ThreadState.Running)
+            if (backroundRendererTask == null || backroundRendererTask.ThreadState == System.Threading.ThreadState.Stopped)
             {
                 backroundRendererTask = new Thread(BackgroundBlockRenderer);
                 backroundRendererTask.SetApartmentState(ApartmentState.STA);
@@ -528,38 +459,37 @@ namespace map2agbgui.Models.BlockEditor
 #if DEBUG
             Debug.WriteLine("BackgroundBlockRenderer: Started");
 #endif
+            IsRendering = true;
             try
             {
-                IsRendering = true;
-                while (!renderBlockQueue.IsEmpty)
+                while (true)
                 {
-                    RenderProgress = 100 - (int)((100f / (float)_blocks.Count) * (float)renderBlockQueue.Count);
-                    int index;
-                    if (renderBlockQueue.TryDequeue(out index))
+                    TilesetEntryModel dirtyBlock = null;
+                    try
                     {
-                        if (index > _renderedBlocks.Count - 1)
-                        {
-                            renderBlockQueue.Enqueue(index);
-                            continue;
-                        }
-#if DEBUG
-                        Debug.WriteLine("BackgroundBlockRenderer: Render block #" + index);
-#endif
+                        dirtyBlock = _blocks.First(p => p.Dirty);
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        break;
+                    }
+                    RenderProgress = 100 - (int)((100f / (float)_blocks.Count) * (float)_blocks.Count(p => p.Dirty));
 
-                        //targets for tile copies
-                        WriteableBitmap newBlockImage = new WriteableBitmap(16, 16, 96, 96, PixelFormats.Bgra32, null);
-                        WriteableBitmap newBlockImageOverlay = new WriteableBitmap(16, 16, 96, 96, PixelFormats.Bgra32, null);
-                        newBlockImage.Lock();
-                        byte* blockData = (byte*)newBlockImage.BackBuffer;
-                        newBlockImageOverlay.Lock();
-                        byte* blockDataOverlay = (byte*)newBlockImageOverlay.BackBuffer;
+                    //targets for tile copies
+                    WriteableBitmap newBlockImage = new WriteableBitmap(16, 16, 96, 96, PixelFormats.Bgra32, null);
+                    WriteableBitmap newBlockImageOverlay = new WriteableBitmap(16, 16, 96, 96, PixelFormats.Bgra32, null);
+                    newBlockImage.Lock();
+                    byte* blockData = (byte*)newBlockImage.BackBuffer;
+                    newBlockImageOverlay.Lock();
+                    byte* blockDataOverlay = (byte*)newBlockImageOverlay.BackBuffer;
 
-                        //copy tiles
-                        for (int k = 0; k < 5; k += 4) for (int i = 0; i < 4; i++)
+                    //copy tiles
+                    for (int k = 0; k < 5; k += 4) for (int i = 0; i < 4; i++)
                         {
+                            //TODO hflip and vflip
                             Int32Rect pos = new Int32Rect((i == 1 || i == 3) ? 8 : 0, (i == 2 || i == 3) ? 8 : 0, 8, 8);
-                            WriteableBitmap tile = GetTile(_blocks[index].Tilemap[i + k].TileID);
-                            IList<Color> currentPalette = _palettes[_blocks[index].Tilemap[i + k].PalIndex].Value.Colors.Select(p => p.Color).ToList();
+                            WriteableBitmap tile = GetTile(dirtyBlock.Tilemap[i + k].TileID);
+                            IList<Color> currentPalette = _palettes[dirtyBlock.Tilemap[i + k].PalIndex].Value.Colors.Select(p => p.Color).ToList();
                             currentPalette[0] = Color.FromArgb(0, 0, 0, 0); //color 0 = transparent
                             ChangePalette(ref tile, new BitmapPalette(currentPalette));
                             WriteableBitmap fbitmap = new WriteableBitmap(new FormatConvertedBitmap(tile, PixelFormats.Bgra32, null, 0));
@@ -569,22 +499,21 @@ namespace map2agbgui.Models.BlockEditor
                             fbitmap.Unlock();
                         }
 
-                        newBlockImageOverlay.AddDirtyRect(new Int32Rect(0, 0, 16, 16));
-                        newBlockImageOverlay.Unlock();
-                        newBlockImage.AddDirtyRect(new Int32Rect(0, 0, 16, 16));
-                        newBlockImage.Unlock();
+                    newBlockImageOverlay.AddDirtyRect(new Int32Rect(0, 0, 16, 16));
+                    newBlockImageOverlay.Unlock();
+                    newBlockImage.AddDirtyRect(new Int32Rect(0, 0, 16, 16));
+                    newBlockImage.Unlock();
 
-                        //merge targets
-                        AddTransparentBlock(newBlockImage, newBlockImageOverlay);
-                        newBlockImage.Freeze();
+                    //merge targets
+                    AddTransparentBlock(newBlockImage, newBlockImageOverlay);
+                    newBlockImage.Freeze();
 
-                        Application.Current.Dispatcher.Invoke(DispatcherPriority.Background, new Action(() =>
-                        {
-                            RenderedBlocks[index] = newBlockImage;
-                        }));
-                    }
+                    Application.Current.Dispatcher.Invoke(DispatcherPriority.Background, new Action(() =>
+                    {
+                        dirtyBlock.Graphic = newBlockImage;
+                        dirtyBlock.Dirty = false;
+                    }));
                 }
-                IsRendering = false;
             }
             catch (ThreadAbortException)
             {
@@ -595,11 +524,19 @@ namespace map2agbgui.Models.BlockEditor
 #if DEBUG
             Debug.WriteLine("BackgroundBlockRenderer: Ended");
 #endif
+            IsRendering = false;
         }
 
         #endregion
 
         #region Imaging methods
+
+        #region Native
+
+        [DllImport("msvcrt.dll", EntryPoint = "memcpy", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+        public static extern IntPtr memcpy(IntPtr dest, IntPtr src, UIntPtr count);
+
+        #endregion
 
         private void ChangePalette(ref WriteableBitmap bitmap, BitmapPalette palette)
         {
