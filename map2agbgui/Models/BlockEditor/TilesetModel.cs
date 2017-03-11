@@ -30,6 +30,7 @@ namespace map2agbgui.Models.BlockEditor
     {
 
         //todo additionaltileset - graphics|palettes change -> blocks rerender
+        //todo block können plaetten und tiles aus additional referenzieren
 
         #region Properties
 
