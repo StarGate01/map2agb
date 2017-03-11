@@ -1,5 +1,6 @@
 ﻿using map2agbimport.Compression;
 using map2agbimport.Graphics;
+using map2agblib.Imaging;
 using map2agblib.Map;
 using map2agblib.Map.Event;
 using map2agblib.Map.LevelScript;
@@ -288,20 +289,68 @@ namespace map2agbimport
             return header;
         }
 
-        private static Tileset TilesetFromStream(BinaryReader reader, uint offset)
+        private static Tileset TilesetFromStream(BinaryReader reader, uint offset, string tilesetDirectory)
         {
+            if (!Directory.Exists(tilesetDirectory))
+                throw new ArgumentException(string.Format("Directory {0} does not exists", tilesetDirectory), tilesetDirectory);
+            
             reader.BaseStream.Seek(offset, SeekOrigin.Begin);
-            reader.ReadUInt32();
-            reader.BaseStream.Seek(reader.ReadUInt32() & 0x1FFFFFF, SeekOrigin.Begin);
+            Tileset output = new Tileset(reader.ReadBoolean(), reader.ReadBoolean());
+            output.Field2 = reader.ReadByte();
+            output.Field3 = reader.ReadByte();
+
+            uint imageOffset = reader.ReadUInt32() & 0x1FFFFFF;
+            uint palOffset = reader.ReadUInt32() & 0x1FFFFFF;
+            uint blockOffset = reader.ReadUInt32() & 0x1FFFFFF;
+            uint animationOffset = reader.ReadUInt32();
+            uint behaviorOffset = reader.ReadUInt32() & 0x1FFFFFF;
+
+            /* NOTE: Check on second tileset palette */
+            if (output.Secondary)
+                palOffset = palOffset + 0xE0;
+            reader.BaseStream.Seek(palOffset, SeekOrigin.Begin);
+            ShortColor[][] palette = new ShortColor[6][];
+            for (int i = 0; i < 6; ++i)
+            {
+                palette[i] = new ShortColor[16];
+                for (int j = 0; j < 16; ++j)
+                {
+                    palette[i][j] = new ShortColor(reader.ReadUInt16());
+                    
+                }
+                output.Palettes[i] = new Palette(palette[i]);
+            }
+            reader.BaseStream.Seek(imageOffset, SeekOrigin.Begin);
             byte[] tileset = reader.ReadLzArray().ToArray();
             TileCollection set = new TileCollection(tileset);
-            set.ToImage(16).Save("test.png");
-            return null;
+            set.ToImage(16, palette[1]).Save(tilesetDirectory + "/" + offset.ToString("X7") + "_tileset_" +
+                (output.Secondary ? "secondary" : "primary") + ".png");
+
+            reader.BaseStream.Seek(blockOffset, SeekOrigin.Begin);
+            int maxBlocks = output.Secondary ? Tileset.MAX_SECOND_TILESET_SIZE : Tileset.MAX_FIRST_TILESET_SIZE;
+            for (int i = 0; i < maxBlocks; ++i)
+            {
+                output.Blocks[i] = new TilesetEntry(null,
+                    new BlockTilemap[] { new BlockTilemap(reader.ReadUInt16()), new BlockTilemap(reader.ReadUInt16()),
+                                         new BlockTilemap(reader.ReadUInt16()), new BlockTilemap(reader.ReadUInt16()),
+
+                                         new BlockTilemap(reader.ReadUInt16()), new BlockTilemap(reader.ReadUInt16()),
+                                         new BlockTilemap(reader.ReadUInt16()), new BlockTilemap(reader.ReadUInt16()) });
+            }
+            output.AnimationInitFunctionInternal = animationOffset;
+
+            reader.BaseStream.Seek(behaviorOffset, SeekOrigin.Begin);
+            for (int i = 0; i < maxBlocks; ++i)
+            {
+                output.Blocks[i].Behaviour = new BlockBehaviour(reader.ReadUInt32());
+            }
+
+            return output;
         }
 
-        public static Tuple<Tileset, Tileset> TilesetsFromStream(BinaryReader reader, MapHeader header)
+        public static Tuple<Tileset, Tileset> TilesetsFromStream(BinaryReader reader, MapHeader header, string tilesetDirectory)
         {
-            return new Tuple<Tileset, Tileset>(TilesetFromStream(reader, header.Footer.FirstTilesetInternal & 0x1FFFFFF), TilesetFromStream(reader, header.Footer.SecondTilesetInternal & 0x1FFFFFF));
+            return new Tuple<Tileset, Tileset>(TilesetFromStream(reader, header.Footer.FirstTilesetInternal & 0x1FFFFFF, tilesetDirectory), TilesetFromStream(reader, header.Footer.SecondTilesetInternal & 0x1FFFFFF, tilesetDirectory));
         }
     }
 }

@@ -68,6 +68,12 @@ namespace map2agblib.Tilesets
         [DataMember]
         public string AnimationInitFunction { set; get; }
 
+        /// <summary>
+        /// Internal Offset of the animation initialization function
+        /// </summary>
+        [DataMember]
+        public uint AnimationInitFunctionInternal { get; set; }
+
         #endregion
 
         #region Constructor
@@ -77,7 +83,7 @@ namespace map2agblib.Tilesets
         /// </summary>
         /// <param name="isSecondary">true: the tileset is classified as secondary and has less blocks</param>
         /// <param name="compressed">true: the tileset will be compiled with the -gzl flag on grit</param>
-        public Tileset(bool isSecondary, bool compressed)
+        public Tileset(bool compressed, bool isSecondary)
         {
             Compressed = compressed;
             Secondary = isSecondary;
