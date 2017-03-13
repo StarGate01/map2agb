@@ -16,7 +16,7 @@ using System.Diagnostics;
 namespace map2agbgui.Models.BlockEditor
 {
 
-    public class BlockEditorModel : IRomSerializable<BlockEditorModel, Dictionary<string, LazyReference<Tileset>>>, IRaisePropertyChanged
+    public class BlockEditorModel : IRomSerializable<BlockEditorModel, Dictionary<string, LazyReference<Tileset>>>, IRaisePropertyChanged, IDisposable
     {
 
         #region Properties
@@ -155,6 +155,14 @@ namespace map2agbgui.Models.BlockEditor
         }
 
         #endregion
+
+        public void Dispose()
+        {
+            foreach(DisplayTuple<string, TilesetModel> tileset in _tilesets)
+            {
+                tileset.Value.Dispose();
+            }
+        }
 
     }
 

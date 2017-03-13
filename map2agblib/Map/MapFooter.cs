@@ -71,6 +71,18 @@ namespace map2agblib.Map
         /// </summary>
         [DataMember]
         public ushort Padding { get; set; }
+
+        /// <summary>
+        /// Gets or sets the internal offset for the first tileset
+        /// </summary>
+        [DataMember]
+        public uint FirstTilesetInternal { get; set; }
+
+        /// <summary>
+        /// Gets or sets the internal offset for the second tileset
+        /// </summary>
+        [DataMember]
+        public uint SecondTilesetInternal { get; set; }
         #endregion
 
         #region Constructor

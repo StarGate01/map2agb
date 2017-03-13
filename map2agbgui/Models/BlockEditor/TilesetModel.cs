@@ -17,19 +17,20 @@ using System.Windows.Media.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Controls;
+using System.Collections.Concurrent;
+using map2agbgui.Controls;
+using System.Threading;
+using System.Windows.Threading;
+using map2agbgui.Effects;
 
 namespace map2agbgui.Models.BlockEditor
 {
 
-    public class TilesetModel : IRomSerializable<TilesetModel, LazyReference<Tileset>>, ITupleFormattable, IRaisePropertyChanged
+    public class TilesetModel : IRomSerializable<TilesetModel, LazyReference<Tileset>>, ITupleFormattable, IRaisePropertyChanged, IDisposable
     {
 
-        #region Native
-
-        [DllImport("msvcrt.dll", EntryPoint = "memcpy", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
-        public static extern IntPtr memcpy(IntPtr dest, IntPtr src, UIntPtr count);
-
-        #endregion
+        //todo additionaltileset - graphics|palettes change -> blocks rerender
+        //todo block können plaetten und tiles aus additional referenzieren
 
         #region Properties
 
@@ -103,10 +104,12 @@ namespace map2agbgui.Models.BlockEditor
 
         #endregion
 
-        #region Data properties
+        #region Data propertiesb
+
+        #region General
 
         private string _additionalDesignerTilesetID;
-        [PropertyDependency(new string[] { "ValidAdditionalDesignerTileset", "AdditionalDesignerTileset", "PalettesTexture" })]
+        [PropertyDependency(new string[] { "ValidAdditionalDesignerTileset", "AdditionalDesignerTileset"})] 
         public string AdditionalDesignerTilesetID
         {
             get
@@ -116,7 +119,8 @@ namespace map2agbgui.Models.BlockEditor
             set
             {
                 _additionalDesignerTilesetID = value;
-                _palettesTextureBrush = null;
+                //_palettesTextureBrush = null;
+                foreach (TilesetEntryModel block in _blocks) block.Dirty = true;
                 RaisePropertyChanged("AdditionalDesignerTilesetID");
             }
         }
@@ -126,54 +130,6 @@ namespace map2agbgui.Models.BlockEditor
             {
                 if (!ValidAdditionalDesignerTileset) return null;
                 return _blockEditorViewModel.Tilesets.First(p => p.Index == _additionalDesignerTilesetID);
-            }
-        }
-
-        private string _graphicPath;
-        [PropertyDependency(new string[] { "ValidImage", "Graphic" })]
-        public string GraphicPath
-        {
-            get
-            {
-                return _graphicPath;
-            }
-            set
-            {
-                _graphicPath = value;
-                _graphicBuffer = null;
-                RaisePropertyChanged("GraphicPath");
-            }
-        }
-
-        private WriteableBitmap _graphicBuffer;
-        public BitmapSource Graphic
-        {
-            get
-            {
-                if (ValidImage)
-                {
-                    if (_graphicBuffer == null)
-                    {
-                        _graphicBuffer = new WriteableBitmap(new BitmapImage(new Uri(_graphicPath, UriKind.Absolute)));
-                        PrepareForPaletteShader(ref _graphicBuffer);
-                    }
-                    return  _graphicBuffer;
-                }
-                else return null;
-            }
-        }
-
-        public DisplayTuple<int, PaletteModel> _selectedPalette;
-        public DisplayTuple<int, PaletteModel> SelectedPalette
-        {
-            get
-            {
-                return _selectedPalette;
-            }
-            set
-            {
-                _selectedPalette = value;
-                RaisePropertyChanged("SelectedPalette");
             }
         }
 
@@ -190,6 +146,7 @@ namespace map2agbgui.Models.BlockEditor
                 RaisePropertyChanged("Compressed");
             }
         }
+        [PropertyDependency("Blocks")] 
         public bool Secondary
         {
             get
@@ -199,6 +156,16 @@ namespace map2agbgui.Models.BlockEditor
             set
             {
                 _secondary = value;
+                int targetSize = _secondary ? Tileset.MAX_SECOND_TILESET_SIZE : Tileset.MAX_FIRST_TILESET_SIZE;
+                if(_blocks.Count > targetSize)
+                {
+                    _blocks = new ObservableCollectionEx<TilesetEntryModel>(_blocks.Take(targetSize));
+                }
+                else if(_blocks.Count < targetSize)
+                {
+                    while (_blocks.Count < targetSize) _blocks.Add(new TilesetEntryModel(new TilesetEntry(), this));
+                }
+                foreach (TilesetEntryModel block in _blocks) block.Dirty = true;
                 RaisePropertyChanged("Secondary");
             }
         }
@@ -229,8 +196,84 @@ namespace map2agbgui.Models.BlockEditor
             }
         }
 
-        private ObservableCollection<TilesetEntryModel> _blocks;
-        public ObservableCollection<TilesetEntryModel> Blocks
+        #endregion
+
+        #region Palettes
+
+        public DisplayTuple<int, PaletteModel> _selectedPalette;
+        public DisplayTuple<int, PaletteModel> SelectedPalette
+        {
+            get
+            {
+                return _selectedPalette;
+            }
+            set
+            {
+                _selectedPalette = value;
+                RaisePropertyChanged("SelectedPalette");
+            }
+        }
+
+        private ObservableCollectionEx<DisplayTuple<int, PaletteModel>> _palettes;
+        public ObservableCollectionEx<DisplayTuple<int, PaletteModel>> Palettes
+        {
+            get
+            {
+                return _palettes;
+            }
+            set
+            {
+                _palettes = value;
+                //_palettesTextureBrush = null;
+                _palettes.ItemPropertyChanged += Palettes_ItemPropertyChanged;
+                foreach (TilesetEntryModel block in _blocks) block.Dirty = true;
+                RaisePropertyChanged("Palettes");
+            }
+        }
+
+        #endregion
+
+        #region Graphics and Blocks
+
+        private string _graphicPath;
+        [PropertyDependency(new string[] { "ValidImage", "Graphic"})] //, "GraphicTiles" 
+        public string GraphicPath
+        {
+            get
+            {
+                return _graphicPath;
+            }
+            set
+            {
+                _graphicPath = value;
+                _graphicBuffer = null;
+                //_graphicTileBuffers = null;
+                RaisePropertyChanged("GraphicPath");
+            }
+        }
+
+        private WriteableBitmap _graphicBuffer;
+        public WriteableBitmap Graphic
+        {
+            get
+            {
+                if (ValidImage)
+                {
+                    if (_graphicBuffer == null)
+                    {
+                        _graphicBuffer = new WriteableBitmap(new BitmapImage(new Uri(_graphicPath, UriKind.Absolute)));
+                        _graphicBuffer.Freeze();
+                        //ChangePalette(ref _graphicBuffer, greyPalette);
+                        foreach (TilesetEntryModel block in _blocks) block.Dirty = true;
+                    }
+                    return _graphicBuffer;
+                }
+                else return null;
+            }
+        }
+
+        private ObservableCollectionEx<TilesetEntryModel> _blocks;
+        public ObservableCollectionEx<TilesetEntryModel> Blocks
         {
             get
             {
@@ -242,42 +285,38 @@ namespace map2agbgui.Models.BlockEditor
                 RaisePropertyChanged("Blocks");
             }
         }
+       
+        private Thread backroundRendererTask;
 
-        #endregion
-
-        #region Palettes
-
-        private ObservableCollectionEx<DisplayTuple<int, PaletteModel>> _palettes;
-        [PropertyDependency("PalettesTexture")]
-        public ObservableCollectionEx<DisplayTuple<int, PaletteModel>> Palettes
+        private bool _isRendering;
+        public bool IsRendering
         {
             get
             {
-                return _palettes;
+                return _isRendering;
             }
             set
             {
-                _palettes = value;
-                _palettesTextureBrush = null;
-                _palettes.ItemPropertyChanged += Palettes_ItemPropertyChanged;
-                RaisePropertyChanged("Palettes");
+                _isRendering = value;
+                RaisePropertyChanged("IsRendering");
             }
         }
 
-        private WriteableBitmap _palettesTexture = new WriteableBitmap(new BitmapImage(new Uri("pack://application:,,,/map2agbgui;component/Assets/TestPalette_16x6.bmp")));
-        private ImageBrush _palettesTextureBrush;
-        public ImageBrush PalettesTexture
+        private int _renderProgress;
+        public int RenderProgress
         {
             get
             {
-                if (_palettesTextureBrush == null)
-                {
-                    _palettesTextureBrush = new ImageBrush(_palettesTexture);
-                    RefreshPaletteTexture();
-                }
-                return _palettesTextureBrush;
+                return _renderProgress;
+            }
+            set
+            {
+                _renderProgress = value;
+                RaisePropertyChanged("RenderProgress");
             }
         }
+
+        #endregion
 
         #endregion
 
@@ -296,7 +335,7 @@ namespace map2agbgui.Models.BlockEditor
             _palettes = new ObservableCollectionEx<DisplayTuple<int, PaletteModel>>(tileset.Data.Palettes.Select((p, pi) =>
                 new DisplayTuple<int, PaletteModel>(pi, new PaletteModel(p))));
             _palettes.ItemPropertyChanged += Palettes_ItemPropertyChanged;
-            _blocks = new ObservableCollection<TilesetEntryModel>(tileset.Data.Blocks.Select(p => new TilesetEntryModel(p)));
+            _blocks = new ObservableCollectionEx<TilesetEntryModel>(tileset.Data.Blocks.Select(p => new TilesetEntryModel(p, this)));
             _selectedPalette = _palettes[0];
             _blockEditorViewModel = parentEditorModel;
             _phHandler = new PropertyDependencyHandler(this);
@@ -308,7 +347,10 @@ namespace map2agbgui.Models.BlockEditor
 
         private void Palettes_ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if(e.PropertyName == "Value") RefreshPaletteTexture();
+            if (e.PropertyName == "Value")
+            {
+                foreach (TilesetEntryModel block in _blocks) block.Dirty = true;
+            }
         }
 
         #endregion
@@ -328,43 +370,157 @@ namespace map2agbgui.Models.BlockEditor
             return new LazyReference<Tileset>(tileset);
         }
 
-        private static BitmapPalette greyPalette = new BitmapPalette(Enumerable.Range(0, 15).Select(p => Color.FromArgb((byte)((p << 4) + 8), 0, 0, 0)).ToList());
-        private void PrepareForPaletteShader(ref WriteableBitmap bitmap)
+        public void Dispose()
+        {
+            if (backroundRendererTask != null) backroundRendererTask.Abort();
+        }
+
+        #endregion
+
+        #region Threads
+
+        public void EnsureBlockRendererRunning()
+        {
+            if (backroundRendererTask == null || backroundRendererTask.ThreadState == System.Threading.ThreadState.Stopped)
+            {
+                backroundRendererTask = new Thread(BackgroundBlockRenderer);
+                backroundRendererTask.SetApartmentState(ApartmentState.STA);
+                backroundRendererTask.Name = "BackroundRendererTask";
+                backroundRendererTask.Start();
+            }
+        }
+
+        private unsafe void BackgroundBlockRenderer()
         {
 #if DEBUG
-            Debug.WriteLine("TilesetModel: PrepareForPaletteShader");
+            Debug.WriteLine("BackgroundBlockRenderer: Started");
 #endif
-            WriteableBitmap newbitmap = new WriteableBitmap(bitmap.PixelWidth, bitmap.PixelHeight, bitmap.DpiX, bitmap.DpiY, bitmap.Format, greyPalette);
-            uint bufferLen = (uint)(bitmap.PixelHeight * bitmap.PixelWidth * bitmap.Format.BitsPerPixel) / 8;
+            IsRendering = true;
+            try
+            {
+                while (true)
+                {
+                    TilesetEntryModel dirtyBlock = null;
+                    try
+                    {
+                        dirtyBlock = _blocks.First(p => p.Dirty);
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        break;
+                    }
+                    RenderProgress = 100 - (int)((100f / (float)_blocks.Count) * (float)_blocks.Count(p => p.Dirty));
+
+                    //targets for tile copies
+                    WriteableBitmap newBlockImage = new WriteableBitmap(16, 16, 96, 96, PixelFormats.Bgra32, null);
+                    WriteableBitmap newBlockImageOverlay = new WriteableBitmap(16, 16, 96, 96, PixelFormats.Bgra32, null);
+                    newBlockImage.Lock();
+                    byte* blockData = (byte*)newBlockImage.BackBuffer;
+                    newBlockImageOverlay.Lock();
+                    byte* blockDataOverlay = (byte*)newBlockImageOverlay.BackBuffer;
+
+                    //copy tiles
+                    for (int k = 0; k < 5; k += 4) for (int i = 0; i < 4; i++)
+                        {
+                            //TODO hflip and vflip
+                            Int32Rect pos = new Int32Rect((i == 1 || i == 3) ? 8 : 0, (i == 2 || i == 3) ? 8 : 0, 8, 8);
+                            WriteableBitmap tile = GetTile(dirtyBlock.Tilemap[i + k].TileID);
+                            IList<Color> currentPalette = _palettes[dirtyBlock.Tilemap[i + k].PalIndex].Value.Colors.Select(p => p.Color).ToList();
+                            currentPalette[0] = Color.FromArgb(0, 0, 0, 0); //color 0 = transparent
+                            ChangePalette(ref tile, new BitmapPalette(currentPalette));
+                            WriteableBitmap fbitmap = new WriteableBitmap(new FormatConvertedBitmap(tile, PixelFormats.Bgra32, null, 0));
+                            fbitmap.Lock();
+                            byte* fbData = (byte*)fbitmap.BackBuffer;
+                            ((k == 0) ? newBlockImage : newBlockImageOverlay).WritePixels(pos, (IntPtr)fbData, 256, 32);
+                            fbitmap.Unlock();
+                        }
+
+                    newBlockImageOverlay.AddDirtyRect(new Int32Rect(0, 0, 16, 16));
+                    newBlockImageOverlay.Unlock();
+                    newBlockImage.AddDirtyRect(new Int32Rect(0, 0, 16, 16));
+                    newBlockImage.Unlock();
+
+                    //merge targets
+                    AddTransparentBlock(newBlockImage, newBlockImageOverlay);
+                    newBlockImage.Freeze();
+
+                    Application.Current.Dispatcher.Invoke(DispatcherPriority.Background, new Action(() =>
+                    {
+                        dirtyBlock.Graphic = newBlockImage;
+                        dirtyBlock.Dirty = false;
+                    }));
+                }
+            }
+            catch (ThreadAbortException)
+            {
+#if DEBUG
+                Debug.WriteLine("BackgroundBlockRenderer: Aborted");
+#endif
+            }
+#if DEBUG
+            Debug.WriteLine("BackgroundBlockRenderer: Ended");
+#endif
+            IsRendering = false;
+        }
+
+        #endregion
+
+        #region Imaging methods
+
+        #region Native
+
+        [DllImport("msvcrt.dll", EntryPoint = "memcpy", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+        public static extern IntPtr memcpy(IntPtr dest, IntPtr src, UIntPtr count);
+
+        #endregion
+
+        private void ChangePalette(ref WriteableBitmap bitmap, BitmapPalette palette)
+        {
+            if (bitmap == null) return;
+            WriteableBitmap newbitmap = new WriteableBitmap(bitmap.PixelWidth, bitmap.PixelHeight, bitmap.DpiX, bitmap.DpiY, bitmap.Format, palette);
+            int bufferLen = (bitmap.PixelHeight * bitmap.PixelWidth * bitmap.Format.BitsPerPixel) >> 3;
             newbitmap.Lock();
             bitmap.Lock();
             memcpy(newbitmap.BackBuffer, bitmap.BackBuffer, (UIntPtr)bufferLen);
             bitmap.Unlock();
             newbitmap.AddDirtyRect(new Int32Rect(0, 0, newbitmap.PixelWidth, newbitmap.PixelHeight));
             newbitmap.Unlock();
+            newbitmap.Freeze();
             bitmap = newbitmap;
         }
 
-        private unsafe void RefreshPaletteTexture()
+        private unsafe WriteableBitmap GetTile(int tileID)
         {
-#if DEBUG
-            Debug.WriteLine("TilesetModel: RefreshPaletteTexture");
-#endif
-            if (_palettesTexture == null) return;
-            _palettesTexture.Lock();
-            byte* data = (byte*)_palettesTexture.BackBuffer;
-            for (int i = 0; i < 6; i++)
+            WriteableBitmap tile = new WriteableBitmap(8, 8, 96, 96, PixelFormats.Indexed4, _graphicBuffer.Palette);
+            int cols = _graphicBuffer.PixelWidth >> 3;
+            int yoffset = tileID / cols;
+            int xoffset = tileID - (yoffset * cols);
+            tile.Lock();
+            _graphicBuffer.CopyPixels(new Int32Rect(xoffset << 3, yoffset << 3, 8, 8), tile.BackBuffer, 32, 4);
+            tile.AddDirtyRect(new Int32Rect(0, 0, 8, 8));
+            tile.Unlock();
+            return tile;
+        }
+
+        private unsafe void AddTransparentBlock(WriteableBitmap target, WriteableBitmap overlay)
+        {
+            target.Lock();
+            byte* targetData = (byte*)target.BackBuffer;
+            overlay.Lock();
+            byte* overlayData = (byte*)overlay.BackBuffer;
+            for(int i=0; i<1024; i+=4)
             {
-                int rowOffset = i * _palettesTexture.BackBufferStride;
-                for (int j = 0; j < 16; j++)
+                if (overlayData[i + 3] != 0)
                 {
-                    data[rowOffset + (j * 4)] = (byte)(_palettes[i].Value.Colors[j].Blue << 3);
-                    data[rowOffset + (j * 4) + 1] = (byte)(_palettes[i].Value.Colors[j].Green << 3);
-                    data[rowOffset + (j * 4) + 2] = (byte)(_palettes[i].Value.Colors[j].Red << 3);
+                    targetData[i] = overlayData[i];
+                    targetData[i + 1] = overlayData[i + 1];
+                    targetData[i + 2] = overlayData[i + 2];
+                    targetData[i + 3] = overlayData[i + 3];
                 }
             }
-            _palettesTexture.AddDirtyRect(new Int32Rect(0, 0, 16, 6));
-            _palettesTexture.Unlock();
+            overlay.Unlock();
+            target.AddDirtyRect(new Int32Rect(0, 0, 16, 16));
+            target.Unlock();
         }
 
         #endregion

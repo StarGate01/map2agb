@@ -45,7 +45,7 @@ namespace map2agbgui.Extensions
                 for (int i=0; i< dependency.Count(); i++)
                     _parent._caller.RaisePropertyChanged(dependency.ElementAt(i));
 #if DEBUG
-                Debug.WriteLine(DateTime.Now.ToString() + " PropertyDependencyHandler.CollectionChangedClass: Success: " + _parent._caller.GetType().Name + ", Target: " + string.Join(" ", dependency) + ", Invoker: " + _propertyName);
+                Debug.WriteLine("PropertyDependencyHandler.CollectionChangedClass: Success: " + _parent._caller.GetType().Name + ", Target: " + string.Join(" ", dependency) + ", Invoker: " + _propertyName);
 #endif
             }
 
@@ -72,7 +72,7 @@ namespace map2agbgui.Extensions
                         for (int k = 0; k < dependency.ElementAt(i).Second.Count(); k++)
                             _parent._caller.RaisePropertyChanged(dependency.ElementAt(i).Second.ElementAt(k));
 #if DEBUG
-                        Debug.WriteLine(DateTime.Now.ToString() + " PropertyDependencyHandler.ItemPropertyChangedClass: Success: " + _parent._caller.GetType().Name + ", Target: " + string.Join(" ", dependency.ElementAt(i).Second) + ", Invoker: " + _propertyName);
+                        Debug.WriteLine("PropertyDependencyHandler.ItemPropertyChangedClass: Success: " + _parent._caller.GetType().Name + ", Target: " + string.Join(" ", dependency.ElementAt(i).Second) + ", Invoker: " + _propertyName);
 #endif
                     }
             }
@@ -100,7 +100,7 @@ namespace map2agbgui.Extensions
                         for (int k = 0; k < dependency.ElementAt(i).Second.Count(); k++)
                             _parent._caller.RaisePropertyChanged(dependency.ElementAt(i).Second.ElementAt(k));
 #if DEBUG
-                        Debug.WriteLine(DateTime.Now.ToString() + " PropertyDependencyHandler.ChildPropertyChangedClass: Success: " + _parent._caller.GetType().Name + ", Target: " + string.Join(" ", dependency.ElementAt(i).Second) + ", Invoker: " + _propertyName);
+                        Debug.WriteLine("PropertyDependencyHandler.ChildPropertyChangedClass: Success: " + _parent._caller.GetType().Name + ", Target: " + string.Join(" ", dependency.ElementAt(i).Second) + ", Invoker: " + _propertyName);
 #endif
                     }
             }
@@ -172,7 +172,7 @@ namespace map2agbgui.Extensions
                 for (int j = 0; j < dependency.Count(); j++)
                     _caller.RaisePropertyChanged(dependency.ElementAt(j));
 #if DEBUG
-                Debug.WriteLine(DateTime.Now.ToString() + " PropertyDependencyHandler: Success: " + _caller.GetType().Name + ", Target: " + string.Join(" ", dependency) + ", Invoker: " + e.PropertyName);
+                Debug.WriteLine("PropertyDependencyHandler: Success: " + _caller.GetType().Name + ", Target: " + string.Join(" ", dependency) + ", Invoker: " + e.PropertyName);
 #endif
             }
             if (colPropDepAttrs.ContainsKey(e.PropertyName))

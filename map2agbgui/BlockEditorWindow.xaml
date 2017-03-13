@@ -8,7 +8,8 @@
         xmlns:model="clr-namespace:map2agbgui.Models.BlockEditor"
         xmlns:c="clr-namespace:map2agbgui.Converters"
         xmlns:effects="clr-namespace:map2agbgui.Effects"
-        Title="Tileset Editor" Height="400" Width="600" MinWidth="600" WindowStartupLocation="CenterOwner" SourceInitialized="Window_SourceInitialized" ResizeMode="NoResize">
+        xmlns:controls="clr-namespace:map2agbgui.Controls"
+        Title="Tileset Editor" Height="600" Width="970" WindowStartupLocation="CenterOwner" SourceInitialized="Window_SourceInitialized" ResizeMode="NoResize">
 
     <Window.Resources>
         <ContextMenu x:Key="tilesetContextMenu">
@@ -35,7 +36,6 @@
         </c:ValueConverterGroup>
         <c:IntToFloatConverter x:Key="intToFloatConverter" />
         <c:BoolToFloatConverter x:Key="boolToFloatConverter" />
-        <ImageBrush ImageSource="Assets/TestBlock_16x16.bmp" x:Key="testBlock" />
     </Window.Resources>
 
     <Grid d:DataContext="{d:DesignInstance Type=model:BlockEditorModel, IsDesignTimeCreatable=True}">
@@ -143,7 +143,7 @@
                                             </ItemsControl.ItemsPanel>
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
-                                                    <Rectangle Fill="{Binding Brush}" Margin="0,1" Height="10" Width="7" />
+                                                    <Rectangle Fill="{Binding Brush}" Margin="0,1" Height="10" Width="13" />
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>
                                         </ItemsControl>
@@ -188,16 +188,12 @@
                                     <TextBlock Text="No image" Foreground="#FFD10000" FontSize="10" />
                                 </StackPanel>
                             </Border>
-                            <!--<Border Grid.Row="6" Grid.Column="1" Height="60" RenderOptions.BitmapScalingMode="NearestNeighbor" Background="{Binding Value.PalettesTexture}" />-->
                             <Image Margin="3" Grid.Row="6" Grid.Column="1" Visibility="{Binding Value.ValidImage, Converter={StaticResource booleanToVisibilityConverter}}" Source="{Binding Value.Graphic}" RenderTransformOrigin="0.5,0.5" >
                                 <Image.LayoutTransform>
                                     <TransformGroup>
                                         <RotateTransform Angle="90"/>
                                     </TransformGroup>
                                 </Image.LayoutTransform>
-                                <Image.Effect>
-                                    <effects:PaletteEffect Palette="{Binding Value.PalettesTexture}" PaletteIndex="{Binding ElementName=PaletteListBox, Path=SelectedIndex, Converter={StaticResource intToFloatConverter}}"  />
-                                </Image.Effect>
                             </Image>
                         </Grid>
                     </GroupBox>
@@ -235,34 +231,159 @@
                         </Grid>
                     </GroupBox>
                     <Grid Grid.Row="1" DataContext="{Binding ElementName=TilesetListBox, Path=SelectedItem}" >
-                        <!--<Rectangle Height="256" Width="256">
-                            <Rectangle.Fill>
-                                <VisualBrush RenderOptions.CachingHint="Cache">
-                                    <VisualBrush.Visual>
-                                        <Image Source="{Binding Value.Graphic}" RenderOptions.BitmapScalingMode="NearestNeighbor" />
-                                    </VisualBrush.Visual>
-                                </VisualBrush>
-                            </Rectangle.Fill>
-                            <Rectangle.Effect>
-                                <effects:BlockCompositorEffect 
-                                    LowGraphic="{Binding Value.GraphicTexture}"
-                                    LowGraphicWidth="{Binding Value.Graphic.PixelWidth}"
-                                    LowGraphicHeight="{Binding Value.Graphic.PixelHeight}"
-                                    HighGraphic="{Binding Value.AdditionalDesignerTileset.Value.GraphicTexture}"
-                                    HighGraphicWidth="{Binding Value.AdditionalDesignerTileset.Value.Graphic.PixelWidth}"
-                                    HighGraphicHeight="{Binding Value.AdditionalDesignerTileset.Value.Graphic.PixelHeight}"
-                                    MergedPalette="{Binding Value.PalettesTexture}" 
-                                    Secondary="{Binding Value.Secondary}"
-                                    BottomLayer_TopLeft="{Binding Value.Blocks[0].Tilemap[0].ShaderParams}"
-                                    BottomLayer_TopRight="{Binding Value.Blocks[0].Tilemap[1].ShaderParams}"
-                                    BottomLayer_BottomLeft="{Binding Value.Blocks[0].Tilemap[2].ShaderParams}"
-                                    BottomLayer_BottomRight="{Binding Value.Blocks[0].Tilemap[3].ShaderParams}"
-                                    TopLayer_TopLeft="{Binding Value.Blocks[0].Tilemap[4].ShaderParams}"
-                                    TopLayer_TopRight="{Binding Value.Blocks[0].Tilemap[5].ShaderParams}"
-                                    TopLayer_BottomLeft="{Binding Value.Blocks[0].Tilemap[6].ShaderParams}"
-                                    TopLayer_BottomRight="{Binding Value.Blocks[0].Tilemap[7].ShaderParams}"/>
-                            </Rectangle.Effect>
-                        </Rectangle>-->
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="270"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <GroupBox Grid.Column="0" Grid.RowSpan="2" Margin="0,0,5,0" >
+                            <GroupBox.Header>
+                                <WrapPanel>
+                                    <TextBlock Text="All Blocks" FontWeight="Bold" />
+                                    <TextBlock Visibility="{Binding Value.IsRendering, Converter={StaticResource booleanToVisibilityConverter}}" Text="  Bitmap cache: "/>
+                                    <ProgressBar Visibility="{Binding Value.IsRendering, Converter={StaticResource booleanToVisibilityConverter}}" Width="60" Value="{Binding Value.RenderProgress}" Maximum="100" Minimum="0" />
+                                </WrapPanel>
+                            </GroupBox.Header>
+                            <ListBox Margin="3" SelectedIndex="0" x:Name="BlocksListBox" ItemsSource="{Binding Value.Blocks}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel />
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                                <ListBox.ItemContainerStyle>
+                                    <Style TargetType="ListBoxItem">
+                                        <Setter Property="Padding" Value="0"/>
+                                    </Style>
+                                </ListBox.ItemContainerStyle>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border BorderThickness="1" BorderBrush="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+                                            <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Height="32" Width="32" Source="{Binding Graphic}" />
+                                        </Border>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </GroupBox>
+                        <GroupBox Grid.Column="1"  >
+                            <GroupBox.Header>
+                                <WrapPanel>
+                                    <TextBlock Text="Selected Block " FontWeight="Bold" />
+                                    <TextBlock Text="#" />
+                                    <TextBlock Text="{Binding ElementName=BlocksListBox, Path=SelectedIndex}" />
+                                </WrapPanel>
+                            </GroupBox.Header>
+                            <Grid DataContext="{Binding ElementName=BlocksListBox, Path=SelectedItem}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Image Margin="3" Grid.Column="0" RenderOptions.BitmapScalingMode="NearestNeighbor" Width="64" Height="64" Source="{Binding Graphic}" />
+                                <Grid Grid.Row="0" Grid.Column="1">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="70" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Behaviour:" VerticalAlignment="Center" FontWeight="Bold" />
+                                    <TextBox Grid.Row="0" Grid.Column="1" Margin="3" Text="{Binding Behaviour.Behaviour, Mode=TwoWay, Converter={StaticResource byteToHexStringConverter}}" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="HM-Usage:" VerticalAlignment="Center" FontWeight="Bold" />
+                                    <TextBox Grid.Row="1" Grid.Column="1" Margin="3" Text="{Binding Behaviour.HMUsage, Mode=TwoWay, Converter={StaticResource byteToHexStringConverter}}" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
+                                </Grid>
+                                <Grid Margin="3" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Field 2:" VerticalAlignment="Center" />
+                                    <TextBox Grid.Row="0" Grid.Column="1" Margin="3" Text="{Binding Behaviour.Field2, Mode=TwoWay, Converter={StaticResource byteToHexStringConverter}}" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Field 3:" VerticalAlignment="Center" />
+                                    <TextBox Grid.Row="1" Grid.Column="1" Margin="3" Text="{Binding Behaviour.Field3, Mode=TwoWay, Converter={StaticResource byteToHexStringConverter}}" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Field 4:" VerticalAlignment="Center" />
+                                    <TextBox Grid.Row="2" Grid.Column="1" Margin="3" Text="{Binding Behaviour.Field4, Mode=TwoWay, Converter={StaticResource byteToHexStringConverter}}" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
+                                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Field 5:" VerticalAlignment="Center" />
+                                    <TextBox Grid.Row="3" Grid.Column="1" Margin="3" Text="{Binding Behaviour.Field5, Mode=TwoWay, Converter={StaticResource byteToHexStringConverter}}" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
+                                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Field 6:" VerticalAlignment="Center" />
+                                    <TextBox Grid.Row="4" Grid.Column="1" Margin="3" Text="{Binding Behaviour.Field6, Mode=TwoWay, Converter={StaticResource byteToHexStringConverter}}" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
+                                </Grid>
+                                <GroupBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
+                                    <GroupBox.Header>
+                                        <TextBlock Text="Tiles" FontWeight="Bold" />
+                                    </GroupBox.Header>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Background" HorizontalAlignment="Left" Margin="3,0,0,2" />
+                                        <Rectangle Grid.Row="1" Grid.Column="0" Height="64" Width="64" Fill="Gray" Margin="3,0,0,0" />
+                                        <TextBlock Grid.Row="0" Grid.Column="1" Text="Overlay" Margin="5,0,0,2" HorizontalAlignment="Left" />
+                                        <Rectangle Grid.Row="1" Grid.Column="1" Height="64" Width="64" Fill="Gray" Margin="5,0,0,0" />
+                                        <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Margin="3,3,3,0" >
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Tile-ID: " VerticalAlignment="Center" HorizontalAlignment="Left" Margin="2,0,0,0" />
+                                            <TextBox Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Margin="0,3" />
+                                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Palette: " VerticalAlignment="Center" HorizontalAlignment="Left" Margin="2,0,0,0" />
+                                            <ComboBox Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Margin="0,3" />
+                                            <TextBlock Grid.Row="2" Grid.Column="0" Text="H-Flip: " VerticalAlignment="Center" HorizontalAlignment="Left" Margin="2,0,0,0" />
+                                            <CheckBox Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Margin="0,3" />
+                                            <TextBlock Grid.Row="3" Grid.Column="0" Text="V-Flip: " VerticalAlignment="Center" HorizontalAlignment="Left" Margin="2,0,0,0" />
+                                            <CheckBox Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" Margin="0,3" />
+                                        </Grid>
+                                        <!--<Button Grid.Row="4" Grid.ColumnSpan="4" Width="100" Padding="2" Margin="3,2,0,2" Content="Apply changes" HorizontalAlignment="Left" />
+                                        <Button Grid.Row="5" Grid.ColumnSpan="4" Width="70" Padding="2" Margin="3,2,0,2" Content="Revert" HorizontalAlignment="Left" />-->
+                                    </Grid>
+                                </GroupBox>
+                            </Grid>
+                        </GroupBox>
+                        <GroupBox Grid.Row="1" Grid.Column="2" Margin="5,0,0,0"  >
+                            <GroupBox.Header>
+                                <WrapPanel>
+                                    <TextBlock Text="All Tiles" FontWeight="Bold" />
+                                </WrapPanel>
+                            </GroupBox.Header>
+                            <TabControl Margin="3">
+                                <TabItem Header="Current">
+                                    <ScrollViewer Margin="3">
+                                        <Image Width="256" RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{Binding Value.Graphic}" />
+                                    </ScrollViewer>
+                                </TabItem>
+                                <TabItem Header="Additional">
+                                    <ScrollViewer Margin="3">
+                                        <Image Width="256" RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{Binding Value.AdditionalDesignerTileset.Value.Graphic}" />
+                                    </ScrollViewer>
+                                </TabItem>
+                            </TabControl>
+                        </GroupBox>
                     </Grid>
                 </Grid>
             </TabItem>

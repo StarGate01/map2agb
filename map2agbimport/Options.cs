@@ -20,7 +20,7 @@ namespace map2agbimport
         [Option('t', "tileset", DefaultValue = false, HelpText = "If set, the tilesets of the map will be exported")]
         public bool ExportTileset { get; set; }
 
-        [Option('m', "map", DefaultValue = true, HelpText = "If set, the map data will be exported")]
+        [Option('m', "map", DefaultValue = false, HelpText = "If set, the map data will be exported")]
         public bool ExportMap { get; set; }
 
         [Option('n', "number", Required = true, HelpText = "The map number which should be exported")]

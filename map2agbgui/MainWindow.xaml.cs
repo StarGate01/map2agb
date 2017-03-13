@@ -69,8 +69,20 @@ namespace map2agbgui
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             MessageBoxResult result = MessageBox.Show("Save changes?", "Exit", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning, MessageBoxResult.Cancel);
-            if (result == MessageBoxResult.Yes) e.Cancel = !SaveProjectAs(lastSaveLocation);
-            else if (result == MessageBoxResult.Cancel) e.Cancel = true;
+            if (result == MessageBoxResult.Yes)
+            {
+                e.Cancel = !SaveProjectAs(lastSaveLocation);
+                return;
+            }
+            else if (result == MessageBoxResult.Cancel)
+            {
+                e.Cancel = true;
+                return;
+            }
+            else
+            {
+                App.MainViewModel.Dispose();
+            }
         }
 
         #endregion

@@ -33,6 +33,13 @@ namespace map2agblib.Imaging
             Blue = b;
         }
 
+        public ShortColor(ushort color)
+        {
+            Red = (byte)(color & 0x1F);
+            Green = (byte)((color & 0x3E0) >> 5);
+            Blue = (byte)((color & 0x7C00) >> 10);
+        }
+
     }
 
 }

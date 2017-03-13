@@ -27,7 +27,7 @@ namespace map2agblib.Tilesets
             }
             set
             {
-                if (value > (1 << 9))
+                if (value >= 1 << 10)
                     throw new ArgumentOutOfRangeException("value");
                 _tileId = value;
             }
@@ -45,7 +45,7 @@ namespace map2agblib.Tilesets
             }
             set
             {
-                if (value > (1 << 4))
+                if (value >= (1 << 4))
                     throw new ArgumentOutOfRangeException("value");
                 _palIndex = value;
             }
@@ -68,6 +68,14 @@ namespace map2agblib.Tilesets
         public BlockTilemap()
         {
 
+        }
+
+        public BlockTilemap(ushort blob)
+        {
+            TileId = (ushort)(blob & 0x3FF);
+            HFlip = (blob & 0x400) > 0;
+            VFlip = (blob & 0x800) > 0;
+            PalIndex = (byte)((blob & 0xF000) >> 12);
         }
     }
 }

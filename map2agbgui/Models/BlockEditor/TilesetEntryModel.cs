@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using map2agblib.Tilesets;
+using System.Windows;
+using map2agbgui.Extensions;
+using System.Windows.Media.Imaging;
+using System.Windows.Media;
 
 namespace map2agbgui.Models.BlockEditor
 {
@@ -14,6 +18,20 @@ namespace map2agbgui.Models.BlockEditor
     {
 
         #region Properties
+
+        private TilesetModel _tilesetViewModel;
+        public TilesetModel TilesetViewModel
+        {
+            get
+            {
+                return _tilesetViewModel;
+            }
+            set
+            {
+                _tilesetViewModel = value;
+                RaisePropertyChanged("TilesetViewModel");
+            }
+        }
 
         private BlockBehaviourModel _behaviour;
         public BlockBehaviourModel Behaviour
@@ -29,8 +47,8 @@ namespace map2agbgui.Models.BlockEditor
             }
         }
 
-        private BlockTilemapModel[] _tilemap;
-        public BlockTilemapModel[] Tilemap
+        private ObservableCollectionEx<BlockTilemapModel> _tilemap;
+        public ObservableCollectionEx<BlockTilemapModel> Tilemap
         {
             get
             {
@@ -39,7 +57,38 @@ namespace map2agbgui.Models.BlockEditor
             set
             {
                 _tilemap = value;
+                _tilemap.ItemPropertyChanged += Tilemap_ItemPropertyChanged;
                 RaisePropertyChanged("Tilemap");
+            }
+        }
+
+        private bool _dirty;
+        public bool Dirty
+        {
+            get
+            {
+                return _dirty;
+            }
+            set
+            {
+                _dirty = value;
+                if(_dirty == true) RaisePropertyChanged("Graphic");
+                RaisePropertyChanged("Dirty");
+            }
+        }
+
+        private BitmapSource _graphic;
+        public BitmapSource Graphic
+        {
+            get
+            {
+                if(_dirty) _tilesetViewModel.EnsureBlockRendererRunning();
+                return _graphic;
+            }
+            set
+            {
+                _graphic = value;
+                RaisePropertyChanged("Graphic");
             }
         }
 
@@ -47,10 +96,30 @@ namespace map2agbgui.Models.BlockEditor
 
         #region Constructor
 
-        public TilesetEntryModel(TilesetEntry entry) : base(entry)
+        public TilesetEntryModel(TilesetEntry entry, TilesetModel parent) : base(entry)
         {
             _behaviour = new BlockBehaviourModel(entry.Behaviour);
-            _tilemap = entry.TilemapEntry.Select(p => new BlockTilemapModel(p)).ToArray();
+            _tilemap = new ObservableCollectionEx<BlockTilemapModel>(entry.TilemapEntry.Select(p => new BlockTilemapModel(p)));
+            _tilemap.ItemPropertyChanged += Tilemap_ItemPropertyChanged;
+            _tilesetViewModel = parent;
+            _dirty = true;
+        }
+
+#if DEBUG
+        public TilesetEntryModel() : this(MockData.MockRomData().Tilesets["TSE0"].Data.Blocks[0], new TilesetModel(MockData.MockRomData().Tilesets["TSE0"], new BlockEditorModel()))
+        {
+            if (!(bool)(DesignerProperties.IsInDesignModeProperty.GetMetadata(typeof(DependencyObject)).DefaultValue))
+                throw new InvalidOperationException("NSEditorModel can only be constructed without parameters by the designer");
+        }
+#endif
+
+        #endregion
+
+        #region Events
+
+        private void Tilemap_ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            Dirty = true;
         }
 
         #endregion
