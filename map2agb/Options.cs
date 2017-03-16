@@ -14,7 +14,7 @@ namespace map2agb
     class Options
     {
         [Option('m', "mode", Required = true,
-            HelpText = "Compiling mode: map compiles .map files, tileset compiles .ts files and meta compiles .meta files"
+            HelpText = "Compiling mode: map compiles .mapheader files, tileset compiles .tileset files and meta compiles .meta files"
             )]
         public string Mode { get; set; }
 

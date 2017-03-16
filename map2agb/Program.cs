@@ -23,7 +23,6 @@ namespace map2agb
             String outPath = opts.OutputPath;
             List<string> inputFiles = opts.InputFiles;
             MapHeader mapHeaderBuilder = new MapHeader();
-            
 
             try {
 
@@ -31,8 +30,21 @@ namespace map2agb
                 StringBuilder b = new StringBuilder();
                 foreach (String inputFile in inputFiles)
                 {
+                    MapHeader mapHeader;
                     // First try to import
-                    MapHeader mapHeader = mapHeaderBuilder.ImportFromFile(inputFile);
+                    try {
+                        mapHeader = mapHeaderBuilder.ImportFromFile(inputFile);
+                    }
+                    catch (IOException ioex)
+                    {
+                        Console.Error.WriteLine("IOError for file '" + inputFile + "'");
+                        throw ioex;
+                    }catch(Exception ex)
+                    {
+                        Console.Error.WriteLine("Error at parsing map input file '" + inputFile + "'");
+                        throw ex;
+                    }
+                    
                     try
                     {
                         // Try to convert
