@@ -52,6 +52,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\map2agbimport\map2agbimport.csproj">
+      <Project>{02bd409d-c1ef-4a92-ba20-d8e4d82e0e51}</Project>
+      <Name>map2agbimport</Name>
+    </ProjectReference>
     <ProjectReference Include="..\map2agblib\map2agblib.csproj">
       <Project>{0dcb2103-4515-436c-8cca-a37267f1ed09}</Project>
       <Name>map2agblib</Name>

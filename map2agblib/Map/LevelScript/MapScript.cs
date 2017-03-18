@@ -76,7 +76,9 @@ namespace map2agblib.Map.LevelScript
             set
             {
                 if (Layout != MapScriptLayout.ExtendedScript)
-                    throw new InvalidOperationException();
+                {
+                    //this might be invalid, yet for the sake of serialization it must not throw an exception
+                }
                 _variable = value;
             }
         }

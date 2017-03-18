@@ -90,7 +90,7 @@ namespace map2agblib.Map.Event
                 }
                 else
                 {
-                    throw new InvalidOperationException();
+                    //this might be invalid, yet for the sake of serialization it must not throw an exception
                 }
             }
         }
@@ -109,7 +109,9 @@ namespace map2agblib.Map.Event
                 if (Layout == SignType.Item)
                     _itemId = value;
                 else
-                    throw new InvalidOperationException();
+                {
+                    //this might be invalid, yet for the sake of serialization it must not throw an exception
+                }
             }
         }
 
@@ -127,7 +129,9 @@ namespace map2agblib.Map.Event
                 if (Layout == SignType.Item)
                     _hiddenId = value;
                 else
-                    throw new InvalidOperationException();
+                {
+                    //this might be invalid, yet for the sake of serialization it must not throw an exception
+                }
             }
         }
 
@@ -145,7 +149,9 @@ namespace map2agblib.Map.Event
                 if (Layout == SignType.Item)
                     _count = value;
                 else
-                    throw new InvalidOperationException();
+                {
+                    //this might be invalid, yet for the sake of serialization it must not throw an exception
+                }
             }
         }
 
@@ -163,7 +169,9 @@ namespace map2agblib.Map.Event
                 if (Layout == SignType.Item)
                     _detectorDisabled = value;
                 else
-                    throw new InvalidOperationException();
+                {
+                    //this might be invalid, yet for the sake of serialization it must not throw an exception
+                }
             }
         }
 
@@ -181,7 +189,9 @@ namespace map2agblib.Map.Event
                 if (Layout == SignType.Item)
                     _isCoin = value;
                 else
-                    throw new InvalidOperationException();
+                {
+                    //this might be invalid, yet for the sake of serialization it must not throw an exception
+                }
             }
         }
         #endregion
