@@ -158,15 +158,26 @@ namespace map2agbimport
 
             reader.BaseStream.Seek(borderOffset & 0x1FFFFFF, SeekOrigin.Begin);
 
-            ushort[][] borderBlock = Enumerable.Repeat(new ushort[borderWidth], borderHeight).ToArray();
+            ushort[][] borderBlock = new ushort[borderHeight][];
             for (int y = 0; y < borderHeight; ++y)
+            {
+                borderBlock[y] = new ushort[borderWidth];
                 for (int x = 0; x < borderWidth; ++x)
+                {
                     borderBlock[y][x] = reader.ReadUInt16();
+                }
+            }
 
-            ushort[][] mapBlock = Enumerable.Repeat(new ushort[footer.Width], (int)footer.Height).ToArray();
+            //ushort[][] mapBlock = Enumerable.Repeat(new ushort[footer.Width], (int)footer.Height).ToArray();
+            ushort[][] mapBlock = new ushort[footer.Height][];
             for (int y = 0; y < footer.Height; ++y)
+            {
+                mapBlock[y] = new ushort[footer.Width];
                 for (int x = 0; x < footer.Width; ++x)
+                {
                     mapBlock[y][x] = reader.ReadUInt16();
+                }
+            }
 
             footer.FirstTilesetID = prefix + TS_PRIM_SUF;
             footer.SecondTilesetID = prefix + TS_SEC_SUF;
@@ -295,7 +306,7 @@ namespace map2agbimport
         {
             if (!Directory.Exists(tilesetDirectory))
                 throw new ArgumentException(string.Format("Directory {0} does not exists", tilesetDirectory), tilesetDirectory);
-            
+
             reader.BaseStream.Seek(offset, SeekOrigin.Begin);
             Tileset output = new Tileset(reader.ReadBoolean(), reader.ReadBoolean());
             output.Field2 = reader.ReadByte();
@@ -318,7 +329,7 @@ namespace map2agbimport
                 for (int j = 0; j < 16; ++j)
                 {
                     palette[i][j] = new ShortColor(reader.ReadUInt16());
-                    
+
                 }
                 output.Palettes[i] = new Palette(palette[i]);
             }
