@@ -16,8 +16,8 @@ namespace map2agbtest
     {
         static void Main(string[] args)
         {
-            BinaryReader reader = new BinaryReader(new FileStream(@"D:\onedrive\Hacking\Romhacking\Ressources\Pokemon FireRed.gba", FileMode.Open, FileAccess.Read));
-            MapHeader header = AgbImport.HeaderFromStream(reader, 0x3526A8, 3, 0);
+            BinaryReader reader = new BinaryReader(new FileStream(@"D:\onedrive\Hacking\Romhacking\Ressources\Feuerrot\Pokemon Feuerrot (D).gba", FileMode.Open, FileAccess.Read));
+            MapHeader header = AgbImport.HeaderFromStream(reader, 0x3525CC, 3, 0);
             header.ExportToFile(header, "test.header");
             MapHeader importedHeader = header.ImportFromFile("test.header");
 

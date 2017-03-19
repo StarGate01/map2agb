@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace map2agblib.Map
 {
+    [DataContract]
     public class EventHeader
     {
         #region Properties
@@ -16,21 +17,25 @@ namespace map2agblib.Map
         /// <summary>
         /// Gets the list of NPCs on the Event Page
         /// </summary>
+        [DataMember]
         public List<EventEntityPerson> Persons { get; private set; }
 
         /// <summary>
         /// Gets the list of Warps on the Event Page
         /// </summary>
+        [DataMember]
         public List<EventEntityWarp> Warps { get; private set; }
 
         /// <summary>
         /// Gets the list of Scripts on the Event Page
         /// </summary>
+        [DataMember]
         public List<EventEntityTrigger> ScriptTriggers { get; private set; }
 
         /// <summary>
         /// Gets the list of Signs on the Event Page
         /// </summary>
+        [DataMember]
         public List<EventEntitySign> Signs { get; set; }
 
         #endregion
