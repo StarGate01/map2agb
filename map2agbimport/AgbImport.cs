@@ -179,8 +179,8 @@ namespace map2agbimport
                 }
             }
 
-            footer.FirstTilesetID = prefix + TS_PRIM_SUF;
-            footer.SecondTilesetID = prefix + TS_SEC_SUF;
+            footer.FirstTilesetID = TS_PRIM_SUF + blocksetOneOffset.ToString("X8");
+            footer.SecondTilesetID = TS_SEC_SUF + blocksetTwoOffset.ToString("X8");
             footer.BorderBlock = borderBlock;
             footer.MapBlock = mapBlock;
             footer.BorderWidth = borderWidth;
@@ -351,6 +351,7 @@ namespace map2agbimport
                                          new BlockTilemap(reader.ReadUInt16()), new BlockTilemap(reader.ReadUInt16()) });
             }
             output.AnimationInitFunctionInternal = animationOffset;
+            output.AnimationInitFunction = "0x" + animationOffset.ToString("X8");
 
             reader.BaseStream.Seek(behaviorOffset, SeekOrigin.Begin);
             for (int i = 0; i < maxBlocks; ++i)
