@@ -65,11 +65,11 @@ namespace map2agbimport
                     IsTrainer = reader.ReadByte(),
                     FieldD = reader.ReadByte(),
                     AlertRadius = reader.ReadUInt16(),
-                    Script = prefix + "_" + NPC_D + "_" + i.ToString("D2"),
                     InternalScript = reader.ReadUInt32(),
                     Flag = reader.ReadUInt16(),
                     Padding = reader.ReadUInt16()
                 });
+                events.Persons[i].Script = "0x" + events.Persons[i].InternalScript.ToString("X8");
             }
 
             reader.BaseStream.Seek(warpOffset & 0x1FFFFFF, SeekOrigin.Begin);
@@ -109,8 +109,8 @@ namespace map2agbimport
                 else
                 {
                     /* ITEM ID ??? */
-                    events.Signs[i].Script = prefix + "_" + SIGN_D + "_" + i.ToString("D2");
                     events.Signs[i].InternalScript = reader.ReadUInt32();
+                    events.Signs[i].Script = "0x" + events.Signs[i].InternalScript.ToString("X8");
                 }
             }
 
@@ -129,8 +129,8 @@ namespace map2agbimport
                     FieldA = reader.ReadByte(),
                     FieldB = reader.ReadByte(),
                     InternalScript = reader.ReadUInt32(),
-                    Script = prefix + "_" + SCRIPT_D + "_" + i.ToString("D2")
                 });
+                events.ScriptTriggers[i].Script = "0x" + events.ScriptTriggers[i].InternalScript.ToString("X8");
             }
             return events;
         }
@@ -225,25 +225,27 @@ namespace map2agbimport
             while ((scrType = reader.ReadByte()) != 0)
             {
                 MapScript script = new MapScript((MapScript.MapScriptTypes)scrType);
+                uint sIntern = 0;
                 switch (script.Layout)
                 {
                     case MapScript.MapScriptLayout.Script:
 
                         //TODO: Save internal stuff
-                        reader.ReadUInt32();
+                        sIntern = reader.ReadUInt32();
                         break;
                     case MapScript.MapScriptLayout.ExtendedScript:
                         long pos = reader.BaseStream.Position + 4;
                         reader.BaseStream.Seek(reader.ReadUInt32() & 0x1FFFFFF, SeekOrigin.Begin);
                         script.Variable = reader.ReadUInt16();
                         script.Value = reader.ReadUInt16();
+                        sIntern = reader.ReadUInt32();
                         //TODO: Save internal stuff
                         reader.BaseStream.Seek(pos, SeekOrigin.Begin);
                         break;
                     case MapScript.MapScriptLayout.None:
                         throw new Exception("invalid code reached");
                 }
-                script.Script = prefix + "_" + LSCRIPT_D + i.ToString("D2");
+                script.Script = "0x" + sIntern.ToString("X8");
                 scriptHeader.MapScripts.Add(script);
                 i++;
             }
