@@ -10,7 +10,7 @@ using map2agblib.Map.Event;
 namespace map2agb
 {
     /// <summary>
-    /// Static lass to compile a MapHeader instance
+    /// Static class to compile a MapHeader instance
     /// </summary>
     class MapCompiler
     {
@@ -45,19 +45,21 @@ namespace map2agb
 
             // Create MapHeader structure
             b.Append("@ Section: MapHeader"); b.Append(Environment.NewLine);
+            b.Append(".align 2"); b.Append(Environment.NewLine);
             b.Append(".global mapheader_"); b.Append(baseSymbol); b.Append(Environment.NewLine);
             b.Append("mapheader_"); b.Append(baseSymbol); b.Append(":"); b.Append(Environment.NewLine);
             b.Append("\t.word mapfooter_"); b.Append(baseSymbol); b.Append(Environment.NewLine);
             b.Append("\t.word mapevents_"); b.Append(baseSymbol); b.Append(Environment.NewLine);
             b.Append("\t.word mapscriptheader_"); b.Append(baseSymbol); b.Append(Environment.NewLine);
             b.Append("\t.word mapconnection_header_"); b.Append(baseSymbol); b.Append(Environment.NewLine);
-            b.Append("\t.hword ");  b.Append(Environment.NewLine);
+            b.Append("\t.hword "); b.Append(mapHeader.Music.ToString()); b.Append(Environment.NewLine);
             b.Append("\t.hword "); b.Append(mapHeader.Index.ToString()); b.Append(Environment.NewLine);
             b.Append("\t.byte "); b.Append(mapHeader.Name.ToString()); b.Append(Environment.NewLine);
             b.Append("\t.byte "); b.Append(mapHeader.Flash.ToString()); b.Append(Environment.NewLine);
             b.Append("\t.byte "); b.Append(mapHeader.Weather.ToString()); b.Append(Environment.NewLine);
             b.Append("\t.byte "); b.Append(mapHeader.Type.ToString()); b.Append(Environment.NewLine);
-            b.Append("\t.byte "); b.Append(mapHeader.Unknown.ToString()); b.Append(Environment.NewLine);
+            b.Append("\t.hword "); b.Append(mapHeader.Unknown.ToString()); b.Append(Environment.NewLine);
+            b.Append("\t.byte "); b.Append(mapHeader.ShowName.ToString()); b.Append(Environment.NewLine);
             b.Append("\t.byte "); b.Append(mapHeader.BattleStyle.ToString()); b.Append(Environment.NewLine);
 
             // Append the MapFooter structure
@@ -91,6 +93,7 @@ namespace map2agb
             StringBuilder b = new StringBuilder();
             // Create MapFooter structure
             b.Append("@ Section: MapFooter"); b.Append(Environment.NewLine);
+            b.Append(".align 2"); b.Append(Environment.NewLine);
             b.Append(".global mapfooter_"); b.Append(baseSymbol); b.Append(Environment.NewLine);
             b.Append("mapfooter_"); b.Append(baseSymbol); b.Append(":"); b.Append(Environment.NewLine);
             b.Append("\t.word "); b.Append(mapFooter.Width.ToString()); b.Append(Environment.NewLine);
@@ -98,7 +101,7 @@ namespace map2agb
             b.Append("\t.word mapborderblocks_"); b.Append(baseSymbol); b.Append(Environment.NewLine);
             b.Append("\t.word mapblocks_"); b.Append(baseSymbol); b.Append(Environment.NewLine);
             b.Append("\t.word "); b.Append(mapFooter.FirstTilesetID); b.Append(Environment.NewLine);
-            b.Append("\t.word 0"); b.Append(mapFooter.FirstTilesetID); b.Append(Environment.NewLine);
+            b.Append("\t.word "); b.Append(mapFooter.SecondTilesetID); b.Append(Environment.NewLine);
             b.Append("\t.byte "); b.Append(mapFooter.BorderWidth.ToString()); b.Append(Environment.NewLine);
             b.Append("\t.byte "); b.Append(mapFooter.BorderHeight.ToString()); b.Append(Environment.NewLine);
             b.Append("\t.hword "); b.Append(mapFooter.Padding); b.Append(Environment.NewLine);
@@ -125,6 +128,7 @@ namespace map2agb
 
             StringBuilder b = new StringBuilder();
             b.Append("@ Section: BorderBlocks"); b.Append(Environment.NewLine);
+            b.Append(".align 2"); b.Append(Environment.NewLine);
             b.Append(".global mapborderblocks_"); b.Append(baseSymbol); b.Append(Environment.NewLine);
             b.Append("mapborderblocks_"); b.Append(baseSymbol); b.Append(":"); b.Append(Environment.NewLine);
             for (int i = 0; i < mapFooter.BorderHeight; i++)
@@ -148,6 +152,7 @@ namespace map2agb
         {
             StringBuilder b = new StringBuilder();
             b.Append("@ Section: MapBlocks"); b.Append(Environment.NewLine);
+            b.Append(".align 2"); b.Append(Environment.NewLine);
             b.Append(".global mapblocks_"); b.Append(baseSymbol); b.Append(Environment.NewLine);
             b.Append("mapblocks_"); b.Append(baseSymbol); b.Append(":"); b.Append(Environment.NewLine);
             for (int i = 0; i < mapFooter.Height; i++)
@@ -173,12 +178,13 @@ namespace map2agb
             StringBuilder s = new StringBuilder();
             // Create EventHeader structure
             b.Append("@ Section: MapEvents"); b.Append(Environment.NewLine);
+            b.Append(".align 2"); b.Append(Environment.NewLine);
             b.Append(".global mapevents_"); b.Append(baseSymbol); b.Append(Environment.NewLine);
             b.Append("mapevents_"); b.Append(baseSymbol); b.Append(":"); b.Append(Environment.NewLine);
             b.Append("\t.byte "); b.Append(eventHeader.Persons.Count.ToString()); b.Append(Environment.NewLine);
             b.Append("\t.byte "); b.Append(eventHeader.Warps.Count.ToString()); b.Append(Environment.NewLine);
-            b.Append("\t.byte "); b.Append(eventHeader.Signs.Count.ToString()); b.Append(Environment.NewLine);
             b.Append("\t.byte "); b.Append(eventHeader.ScriptTriggers.Count.ToString()); b.Append(Environment.NewLine);
+            b.Append("\t.byte "); b.Append(eventHeader.Signs.Count.ToString()); b.Append(Environment.NewLine);
 
             if (eventHeader.Persons.Count > 0)
             {
@@ -204,7 +210,7 @@ namespace map2agb
             {
                 b.Append("\t.word 0"); b.Append(Environment.NewLine);
             }
-            if (eventHeader.Signs.Count > 0)
+            if (eventHeader.ScriptTriggers.Count > 0)
             {
                 b.Append("\t.word mapevents_script_triggers_"); b.Append(baseSymbol); b.Append(Environment.NewLine);
 
@@ -216,7 +222,7 @@ namespace map2agb
             {
                 b.Append("\t.word 0"); b.Append(Environment.NewLine);
             }
-            if(eventHeader.ScriptTriggers.Count > 0)
+            if(eventHeader.Signs.Count > 0)
             {
                 b.Append("\t.word mapevents_signs_"); b.Append(baseSymbol); b.Append(Environment.NewLine);
 
@@ -243,6 +249,7 @@ namespace map2agb
         {
             StringBuilder b = new StringBuilder();
             b.Append("@ Section: MapEvents, Persons"); b.Append(Environment.NewLine);
+            b.Append(".align 2"); b.Append(Environment.NewLine);
             b.Append(".global mapevents_persons_"); b.Append(baseSymbol); b.Append(Environment.NewLine);
             b.Append("mapevents_persons_"); b.Append(baseSymbol); b.Append(":"); b.Append(Environment.NewLine);
             foreach (EventEntityPerson person in persons)
@@ -279,6 +286,7 @@ namespace map2agb
         {
             StringBuilder b = new StringBuilder();
             b.Append("@ Section: MapEvents, Warps"); b.Append(Environment.NewLine);
+            b.Append(".align 2"); b.Append(Environment.NewLine);
             b.Append(".global mapevents_warps_"); b.Append(baseSymbol); b.Append(Environment.NewLine);
             b.Append("mapevents_warps_"); b.Append(baseSymbol); b.Append(":"); b.Append(Environment.NewLine);
             foreach (EventEntityWarp warp in warps)
@@ -288,8 +296,8 @@ namespace map2agb
                 b.Append("\t.hword "); b.Append(warp.Y.ToString()); b.Append(Environment.NewLine);
                 b.Append("\t.byte "); b.Append(warp.Height.ToString()); b.Append(Environment.NewLine);
                 b.Append("\t.byte "); b.Append(warp.TargetWarp.ToString()); b.Append(Environment.NewLine);
-                b.Append("\t.byte "); b.Append(warp.TargetBank.ToString()); b.Append(Environment.NewLine);
                 b.Append("\t.byte "); b.Append(warp.TargetMap.ToString()); b.Append(Environment.NewLine);
+                b.Append("\t.byte "); b.Append(warp.TargetBank.ToString()); b.Append(Environment.NewLine);
             }
 
             return b.ToString();
@@ -305,6 +313,7 @@ namespace map2agb
         {
             StringBuilder b = new StringBuilder();
             b.Append("@ Section: MapEvents, Warps"); b.Append(Environment.NewLine);
+            b.Append(".align 2"); b.Append(Environment.NewLine);
             b.Append(".global mapevents_script_triggers_"); b.Append(baseSymbol); b.Append(Environment.NewLine);
             b.Append("mapevents_script_triggers_"); b.Append(baseSymbol); b.Append(":"); b.Append(Environment.NewLine);
             foreach (EventEntityTrigger trigger in triggers)
@@ -334,8 +343,9 @@ namespace map2agb
         {
             StringBuilder b = new StringBuilder();
             b.Append("@ Section: MapEvents, Signs"); b.Append(Environment.NewLine);
-            b.Append(".global mapevents_sings_"); b.Append(baseSymbol); b.Append(Environment.NewLine);
-            b.Append("mapevents_sings_"); b.Append(baseSymbol); b.Append(":"); b.Append(Environment.NewLine);
+            b.Append(".align 2"); b.Append(Environment.NewLine);
+            b.Append(".global mapevents_signs_"); b.Append(baseSymbol); b.Append(Environment.NewLine);
+            b.Append("mapevents_signs_"); b.Append(baseSymbol); b.Append(":"); b.Append(Environment.NewLine);
             foreach (EventEntitySign sing in sings)
             {
                 b.Append("@//new structure"); b.Append(Environment.NewLine);
@@ -356,7 +366,6 @@ namespace map2agb
                 else
                 {
                     // Script layout, so the script related fields are used for exporting
-                    b.Append("\t.hword "); b.Append(sing.ItemId.ToString()); b.Append(Environment.NewLine);
                     b.Append("\t.word "); b.Append(sing.Script); b.Append(Environment.NewLine);
                 }
             }
@@ -380,18 +389,18 @@ namespace map2agb
             foreach (map2agblib.Map.LevelScript.MapScript mapScript in mapScriptHeader.MapScripts)
             {
                 // List all MapScripts
-                b.Append("\t.byte "); b.Append(mapScript.Type.ToString()); b.Append(Environment.NewLine);
+                b.Append("\t.byte "); b.Append(((int)mapScript.Type).ToString()); b.Append(Environment.NewLine);
                 if(mapScript.Layout == map2agblib.Map.LevelScript.MapScript.MapScriptLayout.ExtendedScript)
                 {
                     // Append a reference to a MapScript struct that holds trigger parameters and append the structure to s (the structure StringBuilder)
                     b.Append("\t.word mapscript_"); b.Append(baseSymbol); b.Append(mapScript.Type.ToString()); b.Append(Environment.NewLine);
 
                     s.Append("@ MapScript Entry, Type "); s.Append(mapScript.Type.ToString()); s.Append(Environment.NewLine);
-                    s.Append(".global mapscript_"); b.Append(baseSymbol); b.Append(mapScript.Type.ToString()); b.Append(Environment.NewLine);
-                    s.Append(".mapscript_"); b.Append(baseSymbol); b.Append(mapScript.Type.ToString()); b.Append(":"); b.Append(Environment.NewLine);
-                    s.Append("\t.hword "); b.Append(mapScript.Variable.ToString()); b.Append(Environment.NewLine);
-                    s.Append("\t.hword "); b.Append(mapScript.Value.ToString()); b.Append(Environment.NewLine);
-                    s.Append("\t.word "); b.Append(mapScript.Script); b.Append(Environment.NewLine);
+                    s.Append(".global mapscript_"); s.Append(baseSymbol); s.Append(mapScript.Type.ToString()); s.Append(Environment.NewLine);
+                    s.Append("mapscript_"); s.Append(baseSymbol); s.Append(mapScript.Type.ToString()); s.Append(":"); s.Append(Environment.NewLine);
+                    s.Append("\t.hword "); s.Append(mapScript.Variable.ToString()); s.Append(Environment.NewLine);
+                    s.Append("\t.hword "); s.Append(mapScript.Value.ToString()); s.Append(Environment.NewLine);
+                    s.Append("\t.word "); s.Append(mapScript.Script); s.Append(Environment.NewLine);
                     s.Append(Environment.NewLine);
 
                 }
@@ -403,6 +412,7 @@ namespace map2agb
 
                 
             }
+            b.Append("\t.byte 0"); b.Append(Environment.NewLine);
             b.Append(Environment.NewLine);
             b.Append(s.ToString());
 
@@ -413,6 +423,7 @@ namespace map2agb
         {
             StringBuilder b = new StringBuilder();
             b.Append("@ Section: MapConnections "); b.Append(Environment.NewLine);
+            b.Append(".align 2"); b.Append(Environment.NewLine);
             b.Append(".global mapconnection_header_"); b.Append(baseSymbol); b.Append(Environment.NewLine);
             b.Append("mapconnection_header_"); b.Append(baseSymbol); b.Append(":"); b.Append(Environment.NewLine);
             b.Append("\t.word "); b.Append(connectionHeader.Connections.Count.ToString()); b.Append(Environment.NewLine);
@@ -429,11 +440,12 @@ namespace map2agb
             if(connectionHeader.Connections.Count > 0)
             {
                 b.Append(".global mapconnections_"); b.Append(baseSymbol); b.Append(Environment.NewLine);
+                b.Append(".align 2"); b.Append(Environment.NewLine);
                 b.Append("mapconnections_"); b.Append(baseSymbol); b.Append(":"); b.Append(Environment.NewLine);
                 foreach (Connection connection in connectionHeader.Connections)
                 {
-                    b.Append("@//new structure");
-                    b.Append("\t.word "); b.Append(connection.Direction.ToString()); b.Append(Environment.NewLine);
+                    b.Append("@//new structure"); b.Append(Environment.NewLine);
+                    b.Append("\t.word "); b.Append(((int)connection.Direction).ToString()); b.Append(Environment.NewLine);
                     b.Append("\t.word "); b.Append(connection.Displacement.ToString()); b.Append(Environment.NewLine);
                     b.Append("\t.byte "); b.Append(connection.Bank.ToString()); b.Append(Environment.NewLine);
                     b.Append("\t.byte "); b.Append(connection.Map.ToString()); b.Append(Environment.NewLine);

@@ -16,7 +16,8 @@ namespace map2agblib.Tilesets
 
         public const int MAX_SECOND_TILESET_SIZE = 0x180;
         public const int MAX_FIRST_TILESET_SIZE = 0x280;
-        public const int MAX_PALETTES = 6;
+        public const int MAX_PALETTES_PRIMARY = 7;
+        public const int MAX_PALETTES_SECONDARY = 6;
 
         #region Properties
 
@@ -90,7 +91,7 @@ namespace map2agblib.Tilesets
 
             Blocks = Secondary ? new TilesetEntry[MAX_SECOND_TILESET_SIZE] : new TilesetEntry[MAX_FIRST_TILESET_SIZE];
             for (int i = 0; i < Blocks.Length; i++) Blocks[i] = new TilesetEntry();
-            Palettes = new Palette[MAX_PALETTES];
+            Palettes = new Palette[isSecondary ? MAX_PALETTES_SECONDARY : MAX_PALETTES_PRIMARY];
             for (int i = 0; i < Palettes.Length; i++) Palettes[i] = new Palette();
 
             Graphic = string.Empty;

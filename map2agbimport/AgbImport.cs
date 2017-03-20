@@ -17,8 +17,8 @@ namespace map2agbimport
     public static class AgbImport
     {
 
-        public const string TS_PRIM_SUF = "tsp";
-        public const string TS_SEC_SUF = "tss";
+        public const string TS_PRIM_SUF = "_primary";
+        public const string TS_SEC_SUF = "_secondary";
 
         public const string NPC_D = "npc";
         public const string SIGN_D = "sgn";
@@ -179,8 +179,8 @@ namespace map2agbimport
                 }
             }
 
-            footer.FirstTilesetID = TS_PRIM_SUF + blocksetOneOffset.ToString("X8");
-            footer.SecondTilesetID = TS_SEC_SUF + blocksetTwoOffset.ToString("X8");
+            footer.FirstTilesetID = "tileset_" + blocksetOneOffset.ToString("X8") + TS_PRIM_SUF;
+            footer.SecondTilesetID = "tileset_" + blocksetTwoOffset.ToString("X8") + TS_SEC_SUF;
             footer.BorderBlock = borderBlock;
             footer.MapBlock = mapBlock;
             footer.BorderWidth = borderWidth;
@@ -322,8 +322,9 @@ namespace map2agbimport
             if (output.Secondary)
                 palOffset = palOffset + 0xE0;
             reader.BaseStream.Seek(palOffset, SeekOrigin.Begin);
-            ShortColor[][] palette = new ShortColor[6][];
-            for (int i = 0; i < 6; ++i)
+            int palette_cnt = output.Secondary ? 6 : 7;
+            ShortColor[][] palette = new ShortColor[palette_cnt][];
+            for (int i = 0; i < palette_cnt; ++i)
             {
                 palette[i] = new ShortColor[16];
                 for (int j = 0; j < 16; ++j)
@@ -336,7 +337,7 @@ namespace map2agbimport
             reader.BaseStream.Seek(imageOffset, SeekOrigin.Begin);
             byte[] tileset = reader.ReadLzArray().ToArray();
             TileCollection set = new TileCollection(tileset);
-            set.ToImage(16, palette[1]).Save(tilesetDirectory + "/" + offset.ToString("X7") + "_tileset_" +
+            set.ToImage(16, palette[1]).Save(tilesetDirectory + "/tileset_" + (offset + 0x08000000).ToString("X8") + "_" +
                 (output.Secondary ? "secondary" : "primary") + ".png");
 
             reader.BaseStream.Seek(blockOffset, SeekOrigin.Begin);

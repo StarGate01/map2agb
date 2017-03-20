@@ -134,7 +134,14 @@ namespace map2agblib.Tilesets
         #region Constructor
         public BlockBehaviour(uint data)
         {
-            //todo from data blob
+            Behavior = (byte)(data & 0xFF); //redundant cast, but who cares
+            HmUsage = (byte)((data >> 8) & 0x1F);
+            Field2 = (byte)((data >> 13) & 0xF);
+            Field3 = (byte)((data >> 17) & 0x3F);
+            Field4 = (byte)((data >> 23) & 0x7);
+            Field5 = (byte)((data >> 26) & 0x3);
+            Field6 = (byte)((data >> 28) & 0x7);
+            Field7 = (byte)((data >> 31) & 0x1) > 0;
         }
 
         /// <summary>
@@ -166,8 +173,10 @@ namespace map2agblib.Tilesets
         #region Methods
         public uint ToUint32()
         {
-            //todo: make data blob from properties
-            return 0;
+            return (uint) (Behavior | (HmUsage << 8) | (Field2 << 13) |
+                (Field3 << 17) | (Field4 << 23) | (Field5 << 26) |
+                (Field6 << 28) | (Field7 ? (1 << 31) : 0));
+
         }
         #endregion
     }

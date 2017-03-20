@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using map2agblib.Data;
+using map2agblib.Tilesets;
 
 namespace map2agb
 {
@@ -47,8 +48,11 @@ namespace map2agb
                     
                     try
                     {
+
                         // Try to convert
-                        String baseSymbol = Path.GetFileNameWithoutExtension(inputFile);
+                        String baseSymbol = opts.baseSymbol;
+                        if (baseSymbol == null) baseSymbol = Path.GetFileNameWithoutExtension(inputFile);
+
                         b.Append(MapCompiler.MapToString(mapHeader, baseSymbol));
                     }
                     catch (Exception ex)
@@ -84,7 +88,67 @@ namespace map2agb
         /// <returns></returns>
         public static int ParseTileset(Options opts)
         {
-            return 0;
+            String outPath = opts.OutputPath;
+            List<string> inputFiles = opts.InputFiles;
+            Tileset tilesetBuilder = new Tileset();
+
+            try
+            {
+
+                //Append all maps into this single StringBuilder's String
+                StringBuilder b = new StringBuilder();
+                foreach (String inputFile in inputFiles)
+                {
+                    Tileset tileset;
+                    // First try to import
+                    try
+                    {
+                        tileset = tilesetBuilder.ImportFromFile(inputFile);
+                    }
+                    catch (IOException ioex)
+                    {
+                        Console.Error.WriteLine("IOError for file '" + inputFile + "'");
+                        throw ioex;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.Error.WriteLine("Error at parsing map input file '" + inputFile + "'");
+                        throw ex;
+                    }
+
+                    try
+                    {
+                        // Try to convert
+                        String baseSymbol = opts.baseSymbol;
+                        if (baseSymbol == null) baseSymbol = Path.GetFileNameWithoutExtension(inputFile) + (tileset.Secondary ? "_secondary" : "_primary") ;
+
+                        b.Append(TilesetCompiler.TilesetToString(tileset, baseSymbol));
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.Error.WriteLine("Error at converting tileset '" + inputFile + "':");
+                        throw ex;
+                    }
+
+                }
+                try
+                {
+                    // Export all files
+                    File.WriteAllText(outPath, b.ToString());
+
+                }
+                catch (Exception ex)
+                {
+                    Console.Error.WriteLine("Error at exporting file '" + outPath + "':");
+                    throw ex;
+                }
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine(ex.Message);
+                return 1;
+            }
         }
 
         /// <summary>

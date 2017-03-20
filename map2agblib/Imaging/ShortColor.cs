@@ -22,6 +22,11 @@ namespace map2agblib.Imaging
         [DataMember]
         public byte Green { get; set; }
 
+        public ushort ToUShort()
+        {
+            return (ushort)(Red | (Green << 5) | (Blue << 10));
+        }
+
         public ShortColor()
         {
         }

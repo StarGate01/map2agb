@@ -23,6 +23,9 @@ namespace map2agb
             )]
         public string OutputPath { get; set; }
 
+        [Option('S', Required = false, HelpText = "Specifies the base symbol [filename without suffix]")]
+        public string baseSymbol { get; set; }
+
         [ValueList(typeof(List<string>))]
         public List<string> InputFiles { get; set; }
 

@@ -43,8 +43,8 @@ namespace map2agbimport
                             if (!Directory.Exists(opt.OutputFolder + "/tileset"))
                                 Directory.CreateDirectory(opt.OutputFolder + "/tileset");
                             Tuple<Tileset, Tileset> sets = AgbImport.TilesetsFromStream(br, header, opt.OutputFolder + "/tileset");
-                            sets.Item1.ExportToFile(sets.Item1, opt.OutputFolder + "/tileset/" + header.Footer.FirstTilesetInternal.ToString("X8") + "_tileset.tileset");
-                            sets.Item2.ExportToFile(sets.Item2, opt.OutputFolder + "/tileset/" + header.Footer.SecondTilesetInternal.ToString("X8") + "_tileset.tileset");
+                            sets.Item1.ExportToFile(sets.Item1, opt.OutputFolder + "/tileset/tileset_" + header.Footer.FirstTilesetInternal.ToString("X8") + ".tileset");
+                            sets.Item2.ExportToFile(sets.Item2, opt.OutputFolder + "/tileset/tileset_" + header.Footer.SecondTilesetInternal.ToString("X8") + ".tileset");
                             //TODO import tileset
                             //TODO serialize
                         }
@@ -62,7 +62,7 @@ namespace map2agbimport
                         fs.Dispose();
                 }
             }
-            Console.ReadKey();
+            //Console.ReadKey();
         }
     }
 }

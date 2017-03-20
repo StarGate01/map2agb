@@ -62,6 +62,11 @@ namespace map2agblib.Tilesets
         public bool VFlip { get; set; }
         #endregion
 
+        public ushort ToUShort()
+        {
+            return (ushort)(TileId | (HFlip ? 0x400 : 0) | (VFlip ? 0x800 : 0) | (PalIndex << 12));
+        }
+
         /// <summary>
         /// Creates a new Tilemap part with values of 0
         /// </summary>

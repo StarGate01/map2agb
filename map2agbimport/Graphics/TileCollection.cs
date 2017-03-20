@@ -32,6 +32,11 @@ namespace map2agbimport.Graphics
         {
             int width = tileWidth * 8;
             int height = (Tiles.Length / (tileWidth)) * 8;
+            if(Tiles.Length % tileWidth != 0)
+            {
+                height += 8; //one extra line to collect all tiles that would be cutoff
+            }
+
 
             Bitmap bmp = new Bitmap(width, height, PixelFormat.Format4bppIndexed);
             BitmapData bmpData = bmp.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.WriteOnly, bmp.PixelFormat);
@@ -51,7 +56,14 @@ namespace map2agbimport.Graphics
                 {
                     /* unused locals, remove once finished */
                     /* TODO: find error, remove unused locals */
-                    byte b = Tiles[(i / 8) * tileWidth + (j / 4)].Indices[(4 * (i % 8)) + (j % 4)];
+                    byte b;
+                    try {
+                        b = Tiles[(i / 8) * tileWidth + (j / 4)].Indices[(4 * (i % 8)) + (j % 4)];
+                    }
+                    catch (Exception)
+                    {
+                        b = 0; //empty bit when the size exceeds the collectable amount
+                    }
                     byte n1 = (byte)(b & 0xF);
                     byte n2 = (byte)((b & 0xF0) >> 4);
                     b = (byte)((n2) | (byte)((n1) << 4));
