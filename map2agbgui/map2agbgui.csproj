@@ -318,6 +318,10 @@
   <ItemGroup>
     <Resource Include="Assets\ImportFile_16x.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Effects\PaletteEffect.hlsl" />
+    <None Include="Effects\TileEffect.hlsl" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- <Target Name="EffectCompile" Condition="'@(Effect)' != '' ">
     <PixelShaderCompile Sources="@(Effect)">
