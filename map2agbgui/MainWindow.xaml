@@ -235,6 +235,18 @@
                         </MenuItem.Icon>
                     </MenuItem>
                 </MenuItem> -->
+                <MenuItem Header="_Import">
+                    <MenuItem x:Name="ImportMapMenuButton" Header="Map from ROM" Click="ImportMapMenuButton_Click">
+                        <MenuItem.Icon>
+                            <Image Source="Assets/ImportFile_16x.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem x:Name="ImportTilesetMenuButton" Header="Tileset from ROM" Click="ImportTilesetMenuButton_Click">
+                        <MenuItem.Icon>
+                            <Image Source="Assets/ImportFile_16x.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
                 <MenuItem Header="_Help">
                     <MenuItem x:Name="AboutMenuButton" Header="_About" Command="Help" InputGestureText="F1">
                         <MenuItem.Icon>

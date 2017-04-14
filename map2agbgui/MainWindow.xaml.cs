@@ -116,6 +116,16 @@ namespace map2agbgui
             SaveProjectAs(null);
         }
 
+        private void ImportMapMenuButton_Click(object sender, RoutedEventArgs e)
+        {
+            SaveProjectAs(lastSaveLocation);
+        }
+
+        private void ImportTilesetMenuButton_Click(object sender, RoutedEventArgs e)
+        {
+            SaveProjectAs(lastSaveLocation);
+        }
+
         #endregion
 
         #region Eventhandler Secondary menubar
@@ -361,8 +371,8 @@ namespace map2agbgui
         }
 
 
+
         #endregion
 
-       
     }
 }
