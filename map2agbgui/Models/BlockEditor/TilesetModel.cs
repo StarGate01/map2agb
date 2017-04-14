@@ -395,6 +395,13 @@ namespace map2agbgui.Models.BlockEditor
 #if DEBUG
             Debug.WriteLine("BackgroundBlockRenderer: Started");
 #endif
+            if(_graphicBuffer == null)
+            {
+#if DEBUG
+                Debug.WriteLine("BackgroundBlockRenderer: Aborted (graphic = null)");
+#endif
+                return;
+            }
             IsRendering = true;
             try
             {

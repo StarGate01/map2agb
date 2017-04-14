@@ -264,7 +264,7 @@
                                 </ListBox.ItemTemplate>
                             </ListBox>
                         </GroupBox>
-                        <GroupBox Grid.Column="1"  >
+                        <GroupBox Grid.Column="1" Visibility="{Binding ElementName=BlocksListBox, Path=SelectedItem, Converter={StaticResource nullToVisibilityConverter}}">
                             <GroupBox.Header>
                                 <WrapPanel>
                                     <TextBlock Text="Selected Block " FontWeight="Bold" />
@@ -365,7 +365,7 @@
                                 </GroupBox>
                             </Grid>
                         </GroupBox>
-                        <GroupBox Grid.Row="1" Grid.Column="2" Margin="5,0,0,0"  >
+                        <GroupBox Grid.Row="1" Grid.Column="2" Margin="5,0,0,0" Visibility="{Binding ElementName=BlocksListBox, Path=SelectedItem, Converter={StaticResource nullToVisibilityConverter}}" >
                             <GroupBox.Header>
                                 <WrapPanel>
                                     <TextBlock Text="All Tiles" FontWeight="Bold" />
@@ -384,6 +384,14 @@
                                 </TabItem>
                             </TabControl>
                         </GroupBox>
+                        <Grid Grid.Column="1" Grid.ColumnSpan="2" Visibility="{Binding ElementName=BlocksListBox, Path=SelectedItem, Converter={StaticResource inverseNullToVisibilityConverter}}" >
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Image Grid.Row="0" Source="Assets/Document_256x.png" Width="128" Height="128" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
+                            <TextBlock Grid.Row="1" Text="No block selected" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="20" />
+                        </Grid>
                     </Grid>
                 </Grid>
             </TabItem>
