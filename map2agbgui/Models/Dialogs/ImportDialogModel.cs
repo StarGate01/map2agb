@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace map2agbgui.Models.Dialogs
 {
@@ -68,6 +69,26 @@ namespace map2agbgui.Models.Dialogs
                 RaisePropertyChanged("Map");
             }
         }
+
+        #endregion
+
+        #region Constructor
+
+        public ImportDialogModel(string romPath, long offset, int bank, int map)
+        {
+            _ROMPath = romPath;
+            _offset = offset;
+            _bank = bank;
+            _map = map;
+        }
+
+#if DEBUG
+        public ImportDialogModel() : this(@"C:\Users\Christoph\Downloads\Feuerrot CLEAN.gba", 0x083525CC, 0, 0)
+        {
+            if (!(bool)(DesignerProperties.IsInDesignModeProperty.GetMetadata(typeof(DependencyObject)).DefaultValue))
+                throw new InvalidOperationException("ImportDialogModel can only be constructed without parameters by the designer");
+        }
+#endif
 
         #endregion
 

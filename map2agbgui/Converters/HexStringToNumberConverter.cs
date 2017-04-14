@@ -72,4 +72,35 @@ namespace map2agbgui.Converters
 
     }
 
+    [ValueConversion(typeof(string), typeof(long))]
+    public class LongToHexStringConverter : IValueConverter
+    {
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            long number = (long)value;
+            return string.Format("0x{0:X16}", number);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            try
+            {
+                string strval = value.ToString();
+                long intval = 0;
+                if (strval.ToLower().StartsWith("0x"))
+                {
+                    strval = strval.Substring(2);
+                    intval = long.Parse(strval, NumberStyles.HexNumber);
+                }
+                else intval = long.Parse(strval, NumberStyles.Integer);
+                if (intval < long.MinValue) intval = long.MinValue;
+                if (intval > long.MaxValue) intval = long.MaxValue;
+                return (long)intval;
+            }
+            catch (Exception) { return 0; }
+        }
+
+    }
+
 }

@@ -5,8 +5,53 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:map2agbgui"
         mc:Ignorable="d"
-        Title="ImportDialogWindow" Height="300" Width="300">
-    <Grid>
-        
+        xmlns:model="clr-namespace:map2agbgui.Models.Dialogs"
+        xmlns:c="clr-namespace:map2agbgui.Converters"
+        Title="Import from ROM" Width="400" SourceInitialized="Window_SourceInitialized" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" SizeToContent="Height">
+
+    <Window.Resources>
+        <c:LongToHexStringConverter x:Key="longToHexStringConverter" />
+    </Window.Resources>
+    
+    <Grid d:DataContext="{d:DesignInstance Type=model:ImportDialogModel, IsDesignTimeCreatable=True}" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Margin="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <TextBlock Text="ROM path: " Grid.Row="0" Grid.Column="0" Margin="0,0,3,0" />
+            <TextBox Text="{Binding ROMPath, Mode=TwoWay}" Grid.Row="0" Grid.Column="1" Margin="0,0,0,3" />
+            <Button Content="..." x:Name="SelectROMButton" Click="SelectROMButton_Click" Grid.Row="0" Grid.Column="2" Margin="3,0,0,3" Padding="5,1" />
+            <TextBlock Text="Map table offset:" Grid.Row="1" Grid.Column="0" Margin="0,0,3,0" />
+            <TextBox Text="{Binding Offset, Mode=TwoWay, Converter={StaticResource longToHexStringConverter}}" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Margin="0,0,0,3" />
+            <TextBlock Text="Bank number:" Grid.Row="2" Grid.Column="0" />
+            <TextBox Text="{Binding Bank, Mode=TwoWay}" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2" Margin="0,0,0,3" />
+            <TextBlock Text="Map number:" Grid.Row="3" Grid.Column="0" />
+            <TextBox Text="{Binding Map, Mode=TwoWay}" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="2" Margin="0,0,0,3" />
+        </Grid>
+        <Grid Grid.Row="1">
+            <Border BorderThickness="0 1 0 0" Grid.Row="3" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Button MinWidth="90" Grid.Column="1" Margin="5" Padding="3" x:Name="ImportButton" Content="Import" IsDefault="True" Click="ImportButton_Click" />
+                    <Button  MinWidth="90" Grid.Column="2" Margin="5" Padding="3" x:Name="CancelButton" Content="Cancel" IsCancel="True" Click="CancelButton_Click" />
+                </Grid>
+            </Border>
+        </Grid>
     </Grid>
 </Window>

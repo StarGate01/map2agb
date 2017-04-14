@@ -21,6 +21,7 @@ using map2agbgui.Models;
 using map2agbgui.Models.Main.Maps;
 
 using Win32Forms = System.Windows.Forms;
+using map2agbgui.Models.Dialogs;
 
 namespace map2agbgui
 {
@@ -119,11 +120,32 @@ namespace map2agbgui
         private void ImportMapMenuButton_Click(object sender, RoutedEventArgs e)
         {
             SaveProjectAs(lastSaveLocation);
+            if (lastSaveLocation == null)
+            {
+                MessageBox.Show("Please save your project before importing data!", "Error importing", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            ImportDialogModel data = new ImportDialogModel("", 0, 0, 0);
+            ImportDialogWindow importDialogWindow = new ImportDialogWindow(data);
+            importDialogWindow.Owner = this;
+            bool result = (bool)importDialogWindow.ShowDialog();
+            if(result)
+            {
+                MessageBox.Show("Import from: " + data.ROMPath + ", offset = " + data.Offset + ", bank = " + data.Bank + ", map = " + data.Map);
+                //TODO import
+                //TODO warn when map replacement
+            }
         }
 
         private void ImportTilesetMenuButton_Click(object sender, RoutedEventArgs e)
         {
             SaveProjectAs(lastSaveLocation);
+            if (lastSaveLocation == null)
+            {
+                MessageBox.Show("Please save your project before importing data!", "Error importing", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            MessageBox.Show("Not yet implemented");
         }
 
         #endregion
