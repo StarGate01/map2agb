@@ -200,22 +200,25 @@ namespace map2agbimport
         private static ConnectionHeader ConnectionsFromReader(BinaryReader reader, uint connectionOffset)
         {
             ConnectionHeader connections = new ConnectionHeader();
-            reader.BaseStream.Seek(connectionOffset & 0x1FFFFFF, SeekOrigin.Begin);
-
-            uint connectionCount = reader.ReadUInt32();
-            reader.BaseStream.Seek(reader.ReadUInt32() & 0x1FFFFFF, SeekOrigin.Begin);
-
-            for (int i = 0; i < connectionCount; ++i)
+            if (connectionOffset != 0)
             {
-                connections.Connections.Add(new Connection()
+                reader.BaseStream.Seek(connectionOffset & 0x1FFFFFF, SeekOrigin.Begin);
+
+                uint connectionCount = reader.ReadUInt32();
+                reader.BaseStream.Seek(reader.ReadUInt32() & 0x1FFFFFF, SeekOrigin.Begin);
+
+                for (int i = 0; i < connectionCount; ++i)
                 {
-                    Direction = (Connection.ConnectionDirection)reader.ReadUInt32(),
-                    Displacement = reader.ReadInt32(),
-                    Bank = reader.ReadByte(),
-                    Map = reader.ReadByte(),
-                    FieldA = reader.ReadByte(),
-                    FieldB = reader.ReadByte()
-                });
+                    connections.Connections.Add(new Connection()
+                    {
+                        Direction = (Connection.ConnectionDirection)reader.ReadUInt32(),
+                        Displacement = reader.ReadInt32(),
+                        Bank = reader.ReadByte(),
+                        Map = reader.ReadByte(),
+                        FieldA = reader.ReadByte(),
+                        FieldB = reader.ReadByte()
+                    });
+                }
             }
             return connections;
         }
