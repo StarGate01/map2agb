@@ -19,7 +19,7 @@ using System.Windows.Interop;
 using map2agblib.Map;
 using map2agbgui.Models;
 using map2agbgui.Models.Main.Maps;
-
+using map2agbimport;
 using Win32Forms = System.Windows.Forms;
 using map2agbgui.Models.Dialogs;
 
@@ -131,9 +131,16 @@ namespace map2agbgui
             bool result = (bool)importDialogWindow.ShowDialog();
             if(result)
             {
-                MessageBox.Show("Import from: " + data.ROMPath + ", offset = " + data.Offset + ", bank = " + data.Bank + ", map = " + data.Map);
                 //TODO import
                 //TODO warn when map replacement
+                try
+                {
+                    MapHeader importedData = AgbImport.HeaderFromStream(new BinaryReader(File.OpenRead(data.ROMPath)), data.Offset, data.Bank, data.Map);
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show("Error importing: " + ex.Message, "Import error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
 

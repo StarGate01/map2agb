@@ -42,8 +42,8 @@ namespace map2agbgui.Models.Dialogs
             }
         }
 
-        private int _bank;
-        public int Bank
+        private byte _bank;
+        public byte Bank
         {
             get
             {
@@ -56,8 +56,8 @@ namespace map2agbgui.Models.Dialogs
             }
         }
 
-        private int _map;
-        public int Map
+        private byte _map;
+        public byte Map
         {
             get
             {
@@ -74,7 +74,7 @@ namespace map2agbgui.Models.Dialogs
 
         #region Constructor
 
-        public ImportDialogModel(string romPath, long offset, int bank, int map)
+        public ImportDialogModel(string romPath, long offset, byte bank, byte map)
         {
             _ROMPath = romPath;
             _offset = offset;
